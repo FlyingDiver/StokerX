@@ -1,0 +1,64 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf150
+{\fonttbl\f0\froman\fcharset0 TimesNewRomanPSMT;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww19660\viewh21200\viewkind0
+\pard\tx700\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\tx9640\li700\fi-360\ri-2500\pardirnatural\qc
+
+\f0\fs36 \cf0 README for StokerX version 0.5\
+\pard\tx700\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\tx9640\li700\fi-360\ri-2500\pardirnatural
+
+\fs28 \cf0 \
+Highlights of this version:\
+\
+1. 	Rewrote a major chunk of the app, so there might be regressions in some areas.  Test carefully.\
+\
+2. 	I've spent a lot of time reworking things so that preference changes go live without a restart.  Please report any inconsistencies.\
+\
+3. 	Blower activity metrics are completely new, with a popup to specify the time period for recent activity versus activity since start of logging.\
+\
+4. 	Open Lid detection is implemented.  In the Preferences panel, you can specify the temperature drop required to activate the blower hold, and the duration of the hold.  This is all new code, and has not been tested in operation.  I do not recommend enabling this on an unattended (overnight) smoke, at least for this version.\
+\
+5. 	Twitter integration implemented.  It uses OAuth authentication, which requires that the user specifically authorize StokerX to send tweets on your behalf. There is a menu item on the Notifications menu to Authorize the application.  Selecting it will open a browser window on twitter.com with a URL that specifies that StokerX is requesting authorization.  When you click the link to allow access, Twitter will display an authorization code (PIN number).  Copy and paste that number into the alert window that StokerX displays.  StokerX will remember that authorization token, and use it until you use the Deauthorize menu item to remove it.  There is also a menu item to enable/disable Tweets on a global basis.\
+\
+6. 	The Notification system has been implemented.  This provides various types of notifications (audible, visual, email, twitter) alerts under certain conditions.  When you open the Notifications Criteria window, there will be a table with a list of notification rules.  You can enable or disable rules in this window.  Controls at the bottom allow for adding, removing, or editing the rules. \
+\
+	For sensor temperature alerts, the value field is temperature.  For periodic notifications, the field is in seconds.  No alert will be triggered more often than once per minute.  Twitter will reject alerts that are identical to a recent previous alert.\
+\
+	The email address used for notifications is specified in the Preferences panel.\
+\
+7.	Visual Notifications use the Growl framework.  If you do not have Growl already installed, StokerX will ask if it can install it.  If you do not install Growl, Visual notifications will not work.\
+\
+8.	Implemented the Sparkle auto-update framework.  After this version is installed, the application will automatically check for updates.  This is the same framework used by many commercial applications.  There are controls for this on the Preferences panel.\
+\
+\
+-----\
+\
+To Do:\
+\
+1.	Try (again) to get Twitter authorization working without kicking you out to a web browser and requiring cut and paste of the PIN number.  I'm pretty sure it's possible, but it's very tricky.\
+\
+2.	Add Preference control to select the Audible Alert sound to use.\
+\
+-----\
+\
+Known Bugs:\
+\
+None\
+-----\
+\
+Old stuff:\
+\
+	Enter the IP address of your Stoker in the Preference panel.\
+\
+	You can set the limits for the vertical (temp) axis of the graph.  \
+\
+	Telnet mode restarts the Stoker with telnet output enabled.  This mode has lower overhead on the Stoker, but can possibly leave the Stoker in a weird state if the application is unable to turn off the telnet output.  Power cycling the Stoker should correct that.  If not checked, the Stoker will run in "HTTP" mode, which uses http queries for the JSON format data.\
+\
+	You can change the name and/or target temperature for the sensors by editing the Sensor table. You can change the plot color for a sensor by clicking on the color block.\
+\
+	Please send bug reports and suggestions to joe@flyingdiver.com, or post in the appropriate thread on TVWBB: http://tvwbb.com/eve/forums/a/frm/f/9270072103 \
+\
+Thanks!\
+\
+joe aka FlyingDiver\
+}

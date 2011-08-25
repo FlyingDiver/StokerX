@@ -1,0 +1,594 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		C90C709912861E5E005D55B2 /* SendExpect.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C709712861E5E005D55B2 /* SendExpect.m */; };
+		C917FC381310C6A300B6063E /* nsColorSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = C917FC371310C6A300B6063E /* nsColorSupport.m */; };
+		C91ADC1C1402A72800A6472E /* MGTwitterFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */; };
+		C91ADC601402ABD900A6472E /* NotificationRule.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC5F1402ABD900A6472E /* NotificationRule.m */; };
+		C91ADC631402ACF600A6472E /* NotificationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC621402ACF600A6472E /* NotificationTest.m */; };
+		C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC651402B1D700A6472E /* NotificationAction.m */; };
+		C929300413F810C2007F685C /* StokerXTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = C929300313F810C2007F685C /* StokerXTwitter.m */; };
+		C9366AB0127F882700D79303 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C9366AAF127F882700D79303 /* AsyncSocket.m */; };
+		C94149B814059CDF006BDCE0 /* ReadMe.html in Resources */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
+		C94149BA1405A0C0006BDCE0 /* ReadMe.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
+		C9503CE213FED6F8008B794F /* EmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C9503CE113FED6F8008B794F /* EmailSender.m */; };
+		C967349013E46DD70042841B /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C967348F13E46DD70042841B /* PreferencesController.m */; };
+		C9867AE712330DB900023BC8 /* StokerXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */; };
+		C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9867AF9123319D500023BC8 /* QuartzCore.framework */; };
+		C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = C99B857113FFD61700E27494 /* dsa_pub.pem */; };
+		C99B85C014002FB000E27494 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C99B85BF14002FB000E27494 /* Credits.rtf */; };
+		C9A3616813FCB87500D98912 /* Notifications.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9A3616613FCB87400D98912 /* Notifications.xib */; };
+		C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9B1CF63123352B200648DF4 /* Preferences.xib */; };
+		C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */; };
+		C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
+		C9CC35161402A34500A6227A /* OAuthConsumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35151402A34500A6227A /* OAuthConsumer.framework */; };
+		C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
+		C9CC351A1402A3F800A6227A /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */; };
+		C9CC351B1402A41300A6227A /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
+		C9CC351C1402A41600A6227A /* OAuthConsumer.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35151402A34500A6227A /* OAuthConsumer.framework */; };
+		C9CC351D1402A41800A6227A /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
+		C9CC351E1402A42800A6227A /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */; };
+		C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */ = {isa = PBXBuildFile; fileRef = C9D5550813FEDCBE0066BB27 /* Mail.app */; };
+		C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */; };
+		C9D7D85513FB4D8200E5BA00 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7D85413FB4D8200E5BA00 /* NotificationController.m */; };
+		C9D86CC01402A703002EDF13 /* MGTwitterFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */; };
+		C9EB1D231226FF930067E58E /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */; };
+		C9EB1D241226FF930067E58E /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1C1226FF930067E58E /* NSString+SBJSON.m */; };
+		C9EB1D251226FF930067E58E /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1E1226FF930067E58E /* SBJsonBase.m */; };
+		C9EB1D261226FF930067E58E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D201226FF930067E58E /* SBJsonParser.m */; };
+		C9EB1D271226FF930067E58E /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D221226FF930067E58E /* SBJsonWriter.m */; };
+		C9EC2EEA1278F6DA00289387 /* Stoker.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC2EE91278F6DA00289387 /* Stoker.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		C9503CE713FED827008B794F /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.app";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
+			);
+			script = "sdef \"$INPUT_FILE_PATH\" | sdp -fh -o \"$DERIVED_FILES_DIR\" --basename \"$INPUT_FILE_BASE\" --bundleid `defaults read \"$INPUT_FILE_PATH/Contents/Info\" CFBundleIdentifier`";
+		};
+/* End PBXBuildRule section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C90DEEA713ECF722006607BC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C9CC351B1402A41300A6227A /* Sparkle.framework in CopyFiles */,
+				C9D86CC01402A703002EDF13 /* MGTwitterFramework.framework in CopyFiles */,
+				C9CC351E1402A42800A6227A /* Growl-WithInstaller.framework in CopyFiles */,
+				C9CC351D1402A41800A6227A /* CorePlot.framework in CopyFiles */,
+				C9CC351C1402A41600A6227A /* OAuthConsumer.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C94149B91405A0B7006BDCE0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				C94149BA1405A0C0006BDCE0 /* ReadMe.html in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		256AC3D80F4B6AC300CF3369 /* StokerXAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StokerXAppDelegate.h; sourceTree = "<group>"; };
+		256AC3F00F4B6AF500CF3369 /* StokerX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StokerX_Prefix.pch; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		8D1107310486CEB800E47090 /* StokerX-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "StokerX-Info.plist"; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* StokerX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StokerX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C90C709612861E5E005D55B2 /* SendExpect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendExpect.h; sourceTree = "<group>"; };
+		C90C709712861E5E005D55B2 /* SendExpect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendExpect.m; sourceTree = "<group>"; };
+		C917FC361310C6A300B6063E /* nsColorSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsColorSupport.h; sourceTree = "<group>"; };
+		C917FC371310C6A300B6063E /* nsColorSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nsColorSupport.m; sourceTree = "<group>"; };
+		C91ADC5E1402ABD900A6472E /* NotificationRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationRule.h; sourceTree = "<group>"; };
+		C91ADC5F1402ABD900A6472E /* NotificationRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationRule.m; sourceTree = "<group>"; };
+		C91ADC611402ACF600A6472E /* NotificationTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationTest.h; sourceTree = "<group>"; };
+		C91ADC621402ACF600A6472E /* NotificationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationTest.m; sourceTree = "<group>"; };
+		C91ADC641402B1D700A6472E /* NotificationAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationAction.h; sourceTree = "<group>"; };
+		C91ADC651402B1D700A6472E /* NotificationAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationAction.m; sourceTree = "<group>"; };
+		C929300213F810C2007F685C /* StokerXTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StokerXTwitter.h; sourceTree = "<group>"; };
+		C929300313F810C2007F685C /* StokerXTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerXTwitter.m; sourceTree = "<group>"; };
+		C9366AAE127F882700D79303 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
+		C9366AAF127F882700D79303 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
+		C94149B714059CDF006BDCE0 /* ReadMe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ReadMe.html; sourceTree = "<group>"; };
+		C9503CE013FED6F8008B794F /* EmailSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailSender.h; sourceTree = "<group>"; };
+		C9503CE113FED6F8008B794F /* EmailSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailSender.m; sourceTree = "<group>"; };
+		C967348E13E46DD10042841B /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = StokerX.xcodeproj/../PreferencesController.h; sourceTree = SOURCE_ROOT; };
+		C967348F13E46DD70042841B /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = StokerX.xcodeproj/../PreferencesController.m; sourceTree = SOURCE_ROOT; };
+		C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerXAppDelegate.m; sourceTree = "<group>"; };
+		C9867AF9123319D500023BC8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C99B857113FFD61700E27494 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
+		C99B85BF14002FB000E27494 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		C9A3616713FCB87400D98912 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Notifications.xib; sourceTree = "<group>"; };
+		C9B1CF64123352B200648DF4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
+		C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LVColorWellCell.h; sourceTree = "<group>"; };
+		C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LVColorWellCell.m; sourceTree = "<group>"; };
+		C9CC35131402A33900A6227A /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = ../Frameworks/CorePlot.framework; sourceTree = "<group>"; };
+		C9CC35151402A34500A6227A /* OAuthConsumer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OAuthConsumer.framework; path = ../Frameworks/OAuthConsumer.framework; sourceTree = "<group>"; };
+		C9CC35171402A34C00A6227A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Growl-WithInstaller.framework"; path = "../Frameworks/Growl-WithInstaller.framework"; sourceTree = "<group>"; };
+		C9D5550813FEDCBE0066BB27 /* Mail.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = Mail.app; path = /Users/jkeenan/Projects/StokerX/../../../../Applications/Mail.app; sourceTree = "<absolute>"; };
+		C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
+		C9D7D85313FB4D8200E5BA00 /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
+		C9D7D85413FB4D8200E5BA00 /* NotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationController.m; sourceTree = "<group>"; };
+		C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MGTwitterFramework.framework; path = ../Frameworks/MGTwitterFramework.framework; sourceTree = "<group>"; };
+		C9EB1D181226FF930067E58E /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		C9EB1D191226FF930067E58E /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
+		C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
+		C9EB1D1B1226FF930067E58E /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
+		C9EB1D1C1226FF930067E58E /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
+		C9EB1D1D1226FF930067E58E /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
+		C9EB1D1E1226FF930067E58E /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonBase.m; sourceTree = "<group>"; };
+		C9EB1D1F1226FF930067E58E /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
+		C9EB1D201226FF930067E58E /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
+		C9EB1D211226FF930067E58E /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		C9EB1D221226FF930067E58E /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		C9EC2EE81278F6DA00289387 /* Stoker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stoker.h; sourceTree = "<group>"; };
+		C9EC2EE91278F6DA00289387 /* Stoker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stoker.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */,
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */,
+				C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */,
+				C9CC35161402A34500A6227A /* OAuthConsumer.framework in Frameworks */,
+				C91ADC1C1402A72800A6472E /* MGTwitterFramework.framework in Frameworks */,
+				C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */,
+				C9CC351A1402A3F800A6227A /* Growl-WithInstaller.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				C9BE1F1E12E4C355007FAEC5 /* Color */,
+				C9EB1D171226FF930067E58E /* JSON */,
+				C9213669131607D000CFB978 /* Socket Classes */,
+				C95D195514017D76000EF515 /* Notifications */,
+				C9503CE013FED6F8008B794F /* EmailSender.h */,
+				C9503CE113FED6F8008B794F /* EmailSender.m */,
+				256AC3D80F4B6AC300CF3369 /* StokerXAppDelegate.h */,
+				C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */,
+				C929300213F810C2007F685C /* StokerXTwitter.h */,
+				C929300313F810C2007F685C /* StokerXTwitter.m */,
+				C9EC2EE81278F6DA00289387 /* Stoker.h */,
+				C9EC2EE91278F6DA00289387 /* Stoker.m */,
+				C967348E13E46DD10042841B /* PreferencesController.h */,
+				C967348F13E46DD70042841B /* PreferencesController.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */,
+				C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */,
+				C9CC35171402A34C00A6227A /* Sparkle.framework */,
+				C9CC35151402A34500A6227A /* OAuthConsumer.framework */,
+				C9CC35131402A33900A6227A /* CorePlot.framework */,
+				C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */,
+				C9867AF9123319D500023BC8 /* QuartzCore.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* StokerX.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* StokerX */ = {
+			isa = PBXGroup;
+			children = (
+				C9D5550813FEDCBE0066BB27 /* Mail.app */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				C94149B714059CDF006BDCE0 /* ReadMe.html */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = StokerX;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				256AC3F00F4B6AF500CF3369 /* StokerX_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C99B857113FFD61700E27494 /* dsa_pub.pem */,
+				8D1107310486CEB800E47090 /* StokerX-Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+				C9B1CF63123352B200648DF4 /* Preferences.xib */,
+				C9A3616613FCB87400D98912 /* Notifications.xib */,
+				C99B85BF14002FB000E27494 /* Credits.rtf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C9213669131607D000CFB978 /* Socket Classes */ = {
+			isa = PBXGroup;
+			children = (
+				C90C709612861E5E005D55B2 /* SendExpect.h */,
+				C90C709712861E5E005D55B2 /* SendExpect.m */,
+				C9366AAE127F882700D79303 /* AsyncSocket.h */,
+				C9366AAF127F882700D79303 /* AsyncSocket.m */,
+			);
+			name = "Socket Classes";
+			sourceTree = "<group>";
+		};
+		C95D195514017D76000EF515 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				C9D7D85313FB4D8200E5BA00 /* NotificationController.h */,
+				C9D7D85413FB4D8200E5BA00 /* NotificationController.m */,
+				C91ADC641402B1D700A6472E /* NotificationAction.h */,
+				C91ADC651402B1D700A6472E /* NotificationAction.m */,
+				C91ADC5E1402ABD900A6472E /* NotificationRule.h */,
+				C91ADC5F1402ABD900A6472E /* NotificationRule.m */,
+				C91ADC611402ACF600A6472E /* NotificationTest.h */,
+				C91ADC621402ACF600A6472E /* NotificationTest.m */,
+			);
+			name = Notifications;
+			sourceTree = "<group>";
+		};
+		C9BE1F1E12E4C355007FAEC5 /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				C917FC361310C6A300B6063E /* nsColorSupport.h */,
+				C917FC371310C6A300B6063E /* nsColorSupport.m */,
+				C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */,
+				C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */,
+			);
+			name = Color;
+			sourceTree = "<group>";
+		};
+		C9EB1D171226FF930067E58E /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				C9EB1D181226FF930067E58E /* JSON.h */,
+				C9EB1D191226FF930067E58E /* NSObject+SBJSON.h */,
+				C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */,
+				C9EB1D1B1226FF930067E58E /* NSString+SBJSON.h */,
+				C9EB1D1C1226FF930067E58E /* NSString+SBJSON.m */,
+				C9EB1D1D1226FF930067E58E /* SBJsonBase.h */,
+				C9EB1D1E1226FF930067E58E /* SBJsonBase.m */,
+				C9EB1D1F1226FF930067E58E /* SBJsonParser.h */,
+				C9EB1D201226FF930067E58E /* SBJsonParser.m */,
+				C9EB1D211226FF930067E58E /* SBJsonWriter.h */,
+				C9EB1D221226FF930067E58E /* SBJsonWriter.m */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* StokerX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "StokerX" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+				C90DEEA713ECF722006607BC /* CopyFiles */,
+				C94149B91405A0B7006BDCE0 /* CopyFiles */,
+			);
+			buildRules = (
+				C9503CE713FED827008B794F /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = StokerX;
+			productInstallPath = "$(HOME)/Applications";
+			productName = StokerX;
+			productReference = 8D1107320486CEB800E47090 /* StokerX.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Joseph P Keenan Jr";
+			};
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "StokerX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				de,
+				it,
+				es,
+				ca,
+				cs,
+				cy,
+				da,
+				el,
+				en,
+				fi,
+				fr,
+				he,
+				hu,
+				id,
+				is,
+				ja,
+				ko,
+				nl,
+				no,
+				pl,
+				pt,
+				ru,
+				sk,
+				sv,
+				th,
+				tr,
+				zh_CN,
+				zh_TW,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* StokerX */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* StokerX */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */,
+				C9A3616813FCB87500D98912 /* Notifications.xib in Resources */,
+				C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */,
+				C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */,
+				C99B85C014002FB000E27494 /* Credits.rtf in Resources */,
+				C94149B814059CDF006BDCE0 /* ReadMe.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				C9EB1D231226FF930067E58E /* NSObject+SBJSON.m in Sources */,
+				C9EB1D241226FF930067E58E /* NSString+SBJSON.m in Sources */,
+				C9EB1D251226FF930067E58E /* SBJsonBase.m in Sources */,
+				C9EB1D261226FF930067E58E /* SBJsonParser.m in Sources */,
+				C9EB1D271226FF930067E58E /* SBJsonWriter.m in Sources */,
+				C9867AE712330DB900023BC8 /* StokerXAppDelegate.m in Sources */,
+				C9EC2EEA1278F6DA00289387 /* Stoker.m in Sources */,
+				C9366AB0127F882700D79303 /* AsyncSocket.m in Sources */,
+				C90C709912861E5E005D55B2 /* SendExpect.m in Sources */,
+				C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */,
+				C917FC381310C6A300B6063E /* nsColorSupport.m in Sources */,
+				C967349013E46DD70042841B /* PreferencesController.m in Sources */,
+				C929300413F810C2007F685C /* StokerXTwitter.m in Sources */,
+				C9D7D85513FB4D8200E5BA00 /* NotificationController.m in Sources */,
+				C9503CE213FED6F8008B794F /* EmailSender.m in Sources */,
+				C91ADC601402ABD900A6472E /* NotificationRule.m in Sources */,
+				C91ADC631402ACF600A6472E /* NotificationTest.m in Sources */,
+				C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58150DA1D0A300B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		C9A3616613FCB87400D98912 /* Notifications.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C9A3616713FCB87400D98912 /* English */,
+			);
+			name = Notifications.xib;
+			sourceTree = "<group>";
+		};
+		C9B1CF63123352B200648DF4 /* Preferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C9B1CF64123352B200648DF4 /* English */,
+			);
+			name = Preferences.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "StokerX-Info.plist";
+				INSTALL_PATH = /Applications;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = StokerX;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../Frameworks\"",
+				);
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "StokerX-Info.plist";
+				INSTALL_PATH = /Applications;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = StokerX;
+				SKIP_INSTALL = NO;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = "";
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "StokerX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "StokerX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

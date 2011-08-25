@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1138.15">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 35.0px; text-align: center; text-indent: -18.0px; font: 18.0px 'Times New Roman'}
+    p.p2 {margin: 0.0px 0.0px 0.0px 35.0px; text-indent: -18.0px; font: 14.0px 'Times New Roman'; min-height: 16.0px}
+    p.p3 {margin: 0.0px 0.0px 0.0px 35.0px; text-indent: -18.0px; font: 14.0px 'Times New Roman'}
+    span.Apple-tab-span {white-space:pre}
+  </style>
+</head>
+<body>
+<p class="p1">README for StokerX version 0.5</p>
+<p class="p2"><br></p>
+<p class="p3">Highlights of this version:</p>
+<p class="p2"><br></p>
+<p class="p3">1. <span class="Apple-tab-span">	</span>Rewrote a major chunk of the app, so there might be regressions in some areas.<span class="Apple-converted-space">  </span>Test carefully.</p>
+<p class="p2"><br></p>
+<p class="p3">2. <span class="Apple-tab-span">	</span>I've spent a lot of time reworking things so that preference changes go live without a restart.<span class="Apple-converted-space">  </span>Please report any inconsistencies.</p>
+<p class="p2"><br></p>
+<p class="p3">3. <span class="Apple-tab-span">	</span>Blower activity metrics are completely new, with a popup to specify the time period for recent activity versus activity since start of logging.</p>
+<p class="p2"><br></p>
+<p class="p3">4. <span class="Apple-tab-span">	</span>Open Lid detection is implemented.<span class="Apple-converted-space">  </span>In the Preferences panel, you can specify the temperature drop required to activate the blower hold, and the duration of the hold.<span class="Apple-converted-space">  </span>This is all new code, and has not been tested in operation.<span class="Apple-converted-space">  </span>I do not recommend enabling this on an unattended (overnight) smoke, at least for this version.</p>
+<p class="p2"><br></p>
+<p class="p3">5. <span class="Apple-tab-span">	</span>Twitter integration implemented.<span class="Apple-converted-space">  </span>It uses OAuth authentication, which requires that the user specifically authorize StokerX to send tweets on your behalf. There is a menu item on the Notifications menu to Authorize the application.<span class="Apple-converted-space">  </span>Selecting it will open a browser window on twitter.com with a URL that specifies that StokerX is requesting authorization.<span class="Apple-converted-space">  </span>When you click the link to allow access, Twitter will display an authorization code (PIN number).<span class="Apple-converted-space">  </span>Copy and paste that number into the alert window that StokerX displays.<span class="Apple-converted-space">  </span>StokerX will remember that authorization token, and use it until you use the Deauthorize menu item to remove it.<span class="Apple-converted-space">  </span>There is also a menu item to enable/disable Tweets on a global basis.</p>
+<p class="p2"><br></p>
+<p class="p3">6. <span class="Apple-tab-span">	</span>The Notification system has been implemented.<span class="Apple-converted-space">  </span>This provides various types of notifications (audible, visual, email, twitter) alerts under certain conditions.<span class="Apple-converted-space">  </span>When you open the Notifications Criteria window, there will be a table with a list of notification rules.<span class="Apple-converted-space">  </span>You can enable or disable rules in this window.<span class="Apple-converted-space">  </span>Controls at the bottom allow for adding, removing, or editing the rules.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>For sensor temperature alerts, the value field is temperature.<span class="Apple-converted-space">  </span>For periodic notifications, the field is in seconds.<span class="Apple-converted-space">  </span>No alert will be triggered more often than once per minute.<span class="Apple-converted-space">  </span>Twitter will reject alerts that are identical to a recent previous alert.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>The email address used for notifications is specified in the Preferences panel.</p>
+<p class="p2"><br></p>
+<p class="p3">7.<span class="Apple-tab-span">	</span>Visual Notifications use the Growl framework.<span class="Apple-converted-space">  </span>If you do not have Growl already installed, StokerX will ask if it can install it.<span class="Apple-converted-space">  </span>If you do not install Growl, Visual notifications will not work.</p>
+<p class="p2"><br></p>
+<p class="p3">8.<span class="Apple-tab-span">	</span>Implemented the Sparkle auto-update framework.<span class="Apple-converted-space">  </span>After this version is installed, the application will automatically check for updates.<span class="Apple-converted-space">  </span>This is the same framework used by many commercial applications.<span class="Apple-converted-space">  </span>There are controls for this on the Preferences panel.</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">-----</p>
+<p class="p2"><br></p>
+<p class="p3">To Do:</p>
+<p class="p2"><br></p>
+<p class="p3">1.<span class="Apple-tab-span">	</span>Try (again) to get Twitter authorization working without kicking you out to a web browser and requiring cut and paste of the PIN number.<span class="Apple-converted-space">  </span>I'm pretty sure it's possible, but it's very tricky.</p>
+<p class="p2"><br></p>
+<p class="p3">2.<span class="Apple-tab-span">	</span>Add Preference control to select the Audible Alert sound to use.</p>
+<p class="p2"><br></p>
+<p class="p3">-----</p>
+<p class="p2"><br></p>
+<p class="p3">Known Bugs:</p>
+<p class="p2"><br></p>
+<p class="p3">None</p>
+<p class="p3">-----</p>
+<p class="p2"><br></p>
+<p class="p3">Old stuff:</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>Enter the IP address of your Stoker in the Preference panel.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>You can set the limits for the vertical (temp) axis of the graph. <span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>Telnet mode restarts the Stoker with telnet output enabled.<span class="Apple-converted-space">  </span>This mode has lower overhead on the Stoker, but can possibly leave the Stoker in a weird state if the application is unable to turn off the telnet output.<span class="Apple-converted-space">  </span>Power cycling the Stoker should correct that.<span class="Apple-converted-space">  </span>If not checked, the Stoker will run in "HTTP" mode, which uses http queries for the JSON format data.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>You can change the name and/or target temperature for the sensors by editing the Sensor table. You can change the plot color for a sensor by clicking on the color block.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>Please send bug reports and suggestions to joe@flyingdiver.com, or post in the appropriate thread on TVWBB: http://tvwbb.com/eve/forums/a/frm/f/9270072103<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">Thanks!</p>
+<p class="p2"><br></p>
+<p class="p3">joe aka FlyingDiver</p>
+</body>
+</html>
