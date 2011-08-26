@@ -249,6 +249,9 @@
 		return;
 	
     [request setHTTPMethod:@"POST"];
+
+	NSLog(@"StokerXTwitter OAMutableURLRequest = %@", request);
+
     OADataFetcher *fetcher = [[[OADataFetcher alloc] init] autorelease];	
     [fetcher fetchDataWithRequest:request delegate:self didFinishSelector:@selector(setAccessToken:withData:) didFailSelector:@selector(failAccessToken:data:)];
 }
