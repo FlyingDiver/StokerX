@@ -33,7 +33,7 @@
 		
 		// set up the menus properly
 		
-		[authorizeTwitterMenuItem setTitle: @"Deauthorize"];
+		[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
 		[enableTwitterMenuItem setEnabled: YES];
 		
 		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweets] boolValue])
@@ -48,7 +48,7 @@
 	else
 	{
 //		NSLog(@"StokerXTwitter awakeFromNib: No accessToken from saved defaults");
-		[authorizeTwitterMenuItem setTitle: @"Authorize"];
+		[authorizeTwitterMenuItem setTitle: @"Authorize Twitter"];
 		[enableTwitterMenuItem setEnabled: NO];
 		[enableTwitterMenuItem setState: NSOffState];
 	}
@@ -78,7 +78,7 @@
 			
 			// set up the menus properly
 			
-			[authorizeTwitterMenuItem setTitle: @"Deauthorize"];
+			[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
 			[enableTwitterMenuItem setEnabled: YES];
 			
 			if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweets] boolValue])
@@ -113,7 +113,7 @@
 			twitterEngine = nil;
 		}
 		twitterIsAvailable = NO;
-		[authorizeTwitterMenuItem setTitle: @"Authorize"];
+		[authorizeTwitterMenuItem setTitle: @"Authorize Twitter"];
 		[enableTwitterMenuItem setEnabled: NO];
 		[enableTwitterMenuItem setState: NSOffState];
 	}
@@ -283,7 +283,7 @@
 			
 	// set up the menus properly
 	
-	[authorizeTwitterMenuItem setTitle: @"Deauthorize"];
+	[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
 	[enableTwitterMenuItem setEnabled: YES];
 	
 	if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweets] boolValue])
