@@ -194,40 +194,14 @@
 	[dataString release];
 	dataString = nil;
 	
-    NSString *urlString = [NSString stringWithFormat: @"%@?oauth_token=%@", kOAuthTwitterAuthorizeURL, self.requestToken.key];
-    NSURL *requestURL = [NSURL URLWithString: urlString];
-		
-    [[NSWorkspace sharedWorkspace] openURL: requestURL];
 
-	NSAlert *alert = [NSAlert alertWithMessageText: @"Enter PIN number from Twitter"										 
-									 defaultButton: @"OK"									
-								   alternateButton: @"Cancel"									
-									   otherButton: nil							 
-						 informativeTextWithFormat:@""];
-		
-	NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
-	[input setStringValue: @""];
-	[alert setAccessoryView: input];
-	NSInteger button = [alert runModal];
+	OAMutableURLRequest* requestURL = [[[OAMutableURLRequest alloc] initWithURL:[NSURL URLWithString:kOAuthTwitterAuthorizeURL] consumer:nil token:self.requestToken realm:nil signatureProvider:nil] autorelease];	
+	[requestURL setParameters:[NSArray arrayWithObject:[[[OARequestParameter alloc] initWithName:@"oauth_token" value: self.requestToken.key] autorelease]]];	
 
-	if (button == NSAlertDefaultReturn) 
-	{
-		[input validateEditing];
-		
-		NSLog(@"StokerXTwitter setRequestToken: User entered PIN %@, proceeding", [input stringValue]);
-
-		self.requestToken.secret = [input stringValue];
-		[self getAccessToken];
-	} 
-	else if (button == NSAlertAlternateReturn) 
-	{
-		NSLog(@"StokerXTwitter setRequestToken: User cancelled");
-	} 
-	else 
-	{
-		NSLog(@"StokerXTwitter setRequestToken: Invalid input dialog button %ld", (long) button);
-	}
-	[input release];
+	[[webview mainFrame] loadRequest: requestURL];
+	if (![[NSApp mainWindow] isVisible])
+		[[NSApp mainWindow] makeKeyAndOrderFront:self];
+	[NSApp beginSheet: webSheet modalForWindow: [NSApp mainWindow] modalDelegate:self didEndSelector: @selector(webSheetDidEnd:returnCode:contextInfo:) contextInfo:nil];
 }
 
 
@@ -238,7 +212,7 @@
 
 - (void)getAccessToken
 {
-	NSLog(@"StokerXTwitter getAccessToken");
+	NSLog(@"StokerXTwitter getAccessToken, key = %@, secret = %@", requestToken.key, requestToken.secret);
 
     OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:[NSURL URLWithString:kOAuthTwitterAccessTokenURL] 
 																	consumer: self.consumer
@@ -249,6 +223,9 @@
 		return;
 	
     [request setHTTPMethod:@"POST"];
+
+	NSLog(@"StokerXTwitter OAMutableURLRequest = %@", request.signature);
+
     OADataFetcher *fetcher = [[[OADataFetcher alloc] init] autorelease];	
     [fetcher fetchDataWithRequest:request delegate:self didFinishSelector:@selector(setAccessToken:withData:) didFailSelector:@selector(failAccessToken:data:)];
 }
@@ -375,5 +352,65 @@
 {
 //	NSLog(@"MGTwitterEngine Delegate: Access token received! %@",aToken);
 }
+
+#pragma mark -
+#pragma mark WebView Sheet Methods
+
+- (IBAction)cancelWebSheet:(id)sender;
+{
+	[webSheet endEditingFor:nil];
+    [NSApp endSheet:webSheet returnCode:[sender tag]];
+}
+
+
+- (void)webSheetDidEnd:(NSWindow*)sheet returnCode:(int)returnCode contextInfo:(void*)contextInfo;
+{	
+	NSLog(@"webSheetDidEnd:returnCode: %d", returnCode);
+    [sheet orderOut:self];	
+}
+
+
+- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame;
+{	
+	NSLog(@"webView:didFinishLoadForFrame:");
+	NSLog(@"URL: %@", [NSURL URLWithString:[sender mainFrameURL]]);	
+}
+
+- (void)webView: (WebView *)webView decidePolicyForNavigationAction: (NSDictionary *)actionInformation request: (NSURLRequest *)request frame: (WebFrame *)frame
+				decisionListener: (id<WebPolicyDecisionListener>)listener 
+{
+	NSString *urlString = [[actionInformation objectForKey:@"WebActionOriginalURLKey"] absoluteString];
+
+	NSLog(@"webView:decidePolicyForNavigationAction: \rurl=%@", urlString);
+	
+	if ([urlString rangeOfString:@"oauth_verifier"].location != NSNotFound)
+	{		
+		NSString *oauthToken = nil;
+		NSString *oauthVerifier = nil;
+		
+		NSScanner *scanner = [NSScanner scannerWithString: urlString];
+		
+		[scanner scanUpToString:@"oauth_token=" intoString: nil];
+		[scanner scanString: @"oauth_token=" intoString:nil];
+		[scanner scanUpToString:@"&" intoString: &oauthToken];
+		
+		[scanner scanUpToString:@"oauth_verifier=" intoString: nil];
+		[scanner scanString: @"oauth_verifier=" intoString:nil];
+		oauthVerifier = [urlString substringFromIndex:[scanner scanLocation]];
+		
+		NSLog(@"oauthToken = '%@'",oauthToken);
+		NSLog(@"oauthVerifier = '%@'", oauthVerifier);
+		self.requestToken.secret = oauthVerifier;
+		
+		[listener ignore];
+		[NSApp endSheet:webSheet returnCode: 0];
+		[self getAccessToken];
+	}
+	else
+		[listener use];
+}
+
+
+
 
 @end

@@ -27,6 +27,7 @@
 		C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9867AF9123319D500023BC8 /* QuartzCore.framework */; };
 		C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = C99B857113FFD61700E27494 /* dsa_pub.pem */; };
 		C99B85C014002FB000E27494 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C99B85BF14002FB000E27494 /* Credits.rtf */; };
+		C99F90B414074B8200083B27 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99F90B314074B8200083B27 /* WebKit.framework */; };
 		C9A3616813FCB87500D98912 /* Notifications.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9A3616613FCB87400D98912 /* Notifications.xib */; };
 		C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9B1CF63123352B200648DF4 /* Preferences.xib */; };
 		C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */; };
@@ -125,6 +126,7 @@
 		C9867AF9123319D500023BC8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C99B857113FFD61700E27494 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		C99B85BF14002FB000E27494 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		C99F90B314074B8200083B27 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		C9A3616713FCB87400D98912 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Notifications.xib; sourceTree = "<group>"; };
 		C9B1CF64123352B200648DF4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LVColorWellCell.h; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C99F90B414074B8200083B27 /* WebKit.framework in Frameworks */,
 				C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */,
@@ -196,6 +199,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C99F90B314074B8200083B27 /* WebKit.framework */,
 				C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */,
 				C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */,
 				C9CC35171402A34C00A6227A /* Sparkle.framework */,
