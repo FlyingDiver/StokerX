@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 #import "PreferencesController.h"
-#import "MGTwitterFramework/MGTwitterEngine.h"
-#import "OAuthConsumer/OAuthConsumer.h"
+#import "GTMOAuthWindowController.h"
+#import "JSON.h"
 
 // These two strings identify the application (StokerX) sending the tweet
 
@@ -19,56 +19,23 @@
 
 // These are for the test application
 
-#define kOAuthConsumerKey				@"E4PzQuxgs0qbNvthaW61rg"
-#define kOAuthConsumerSecret			@"3h2wjBs9fMPGg4Vbfx4fNROxyX2amQf6CBo5rdg"
+#define kOAuthConsumerKey		@"E4PzQuxgs0qbNvthaW61rg"
+#define kOAuthConsumerSecret	@"3h2wjBs9fMPGg4Vbfx4fNROxyX2amQf6CBo5rdg"
 
+#define MAX_MESSAGE_LENGTH		140		// twitter max
 
-// URLs for obtaining an authorization token from Twitter
-
-#define kOAuthTwitterRequestTokenURL	@"http://api.twitter.com/oauth/request_token"
-#define kOAuthTwitterAuthorizeURL		@"http://api.twitter.com/oauth/authorize"
-#define kOAuthTwitterAccessTokenURL		@"http://api.twitter.com/oauth/access_token"
-
-#define kOAuthTwitterDefaultsDomain		@"api.twitter.com"
-#define kOAuthTwitterDefaultsPrefix		@"StokerX"
-
-
-
-@interface StokerXTwitter : NSObject <MGTwitterEngineDelegate> 
+@interface StokerXTwitter : NSObject
 {
-	MGTwitterEngine		*twitterEngine;	
-	OAToken				*requestToken;
-	OAToken				*accessToken;
-	OAConsumer			*consumer;
-	
-	Boolean				twitterIsAvailable;
+	GTMOAuthAuthentication *mAuth;
 	
 	IBOutlet NSMenuItem	*authorizeTwitterMenuItem;
 	IBOutlet NSMenuItem	*enableTwitterMenuItem;
-
-	IBOutlet NSWindow		*webSheet;
-	IBOutlet WebView		*webview;
 }
 
-- (IBAction) authorizeTwitter: (id) sender;
+- (IBAction) signInOutClicked: (id) sender;
 - (IBAction) enableTwitter: (id) sender;
-
-- (IBAction)cancelWebSheet:(id)sender;
 
 - (void) sendTweet: (NSString *) tweet;
 
-- (void) getRequestToken;
-- (void) setRequestToken:(OAServiceTicket *)ticket withData:(NSData *)data;
-- (void) failRequestToken:(OAServiceTicket *)ticket data:(NSData *)data;
-
-- (void) getAccessToken;
-- (void) setAccessToken:(OAServiceTicket *)ticket withData:(NSData *)data;
-- (void) failAccessToken:(OAServiceTicket *)ticket data:(NSData *)data;
-
-- (NSString *) usernameFromHTTPResponseBody:(NSString *)body;
-
-@property (nonatomic, retain) OAConsumer	*consumer;
-@property (nonatomic, retain) OAToken		*requestToken;
-@property (nonatomic, retain) OAToken		*accessToken;
 
 @end
