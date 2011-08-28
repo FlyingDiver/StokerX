@@ -306,7 +306,6 @@
 {
 	NSLog(@"StokerXAppDelegate: statusText: %@", status);
 	[statusField setStringValue: status];
-	[tweetController sendTweet: status];
 }
 
 - (IBAction)showPreferencePanel:(id)sender
