@@ -341,9 +341,9 @@
 				C99A1150140899C60004E35E /* GTMOAuthAuthentication.m */,
 				C99A1151140899C60004E35E /* GTMOAuthSignIn.h */,
 				C99A1152140899C60004E35E /* GTMOAuthSignIn.m */,
-				C99A1153140899C60004E35E /* GTMOAuthWindow.xib */,
 				C99A1154140899C60004E35E /* GTMOAuthWindowController.h */,
 				C99A1155140899C60004E35E /* GTMOAuthWindowController.m */,
+				C99A1153140899C60004E35E /* GTMOAuthWindow.xib */,
 			);
 			path = GTMOAuth;
 			sourceTree = "<group>";
@@ -592,6 +592,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -615,6 +616,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;

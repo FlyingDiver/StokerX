@@ -10,8 +10,6 @@
 
 
 @interface EmailSender: NSObject 
-{
-}
 
 - (void)sendEmailMessage:(id)sender;
 

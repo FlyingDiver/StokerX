@@ -8,73 +8,41 @@
 
 #import "StokerXTwitter.h"
 
-
-@interface StokerXTwitter ()
-
-- (void)signInToTwitter;
-- (void)signOut;
-- (BOOL)isSignedIn;
-
-- (GTMOAuthAuthentication *) authForTwitter;
-
-- (void)windowController:(GTMOAuthWindowController *)windowController
-        finishedWithAuth:(GTMOAuthAuthentication *)auth
-                   error:(NSError *)error;
-
-- (void)updateUI;
-- (void)setAuthentication:(GTMOAuthAuthentication *)auth;
-- (void)signInFetchStateChanged:(NSNotification *)note;
-- (void)signInNetworkLost:(NSNotification *)note;
-
-- (void)doAnAuthenticatedAPIFetch;
-
-@end
-
-
 @implementation StokerXTwitter
 
 static NSString *const kTwitterKeychainItemName = @"StokerX: Twitter";
 static NSString *const kTwitterServiceName = @"Twitter";
 
+@synthesize myAuth;
+
 - (void)dealloc 
 {
-	[mAuth release];
+	[myAuth release];
 	[super dealloc];
 }
 
 - (void) awakeFromNib
 {	
-	NSLog(@"StokerXTwitter awakeFromNib");
+//	Enabling this causes Fetcher logs to be written to the desktop!
+//	[GTMHTTPFetcher setLoggingEnabled:YES];
+
+	// Just in case the authentication background processes fail
 	
-	GTMOAuthAuthentication *auth;
-    auth = [self authForTwitter];
+	[[NSNotificationCenter defaultCenter] addObserver: self
+											 selector: @selector(signInNetworkLost:)
+												 name: kGTMOAuthNetworkLost
+											   object: nil];
 	
 	// save the authentication object, which holds the auth tokens
-	[self setAuthentication:auth];
 	
-	// this is optional:
-	//
-	// we'll watch for the "hidden" fetches that occur to obtain tokens
-	// during authentication, and start and stop our indeterminate progress
-	// indicator during the fetches
-	//
-	// usually, these fetches are very brief
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self
-		   selector:@selector(signInFetchStateChanged:)
-			   name:kGTMOAuthFetchStarted
-			 object:nil];
-	[nc addObserver:self
-		   selector:@selector(signInFetchStateChanged:)
-			   name:kGTMOAuthFetchStopped
-			 object:nil];
-	[nc addObserver:self
-		   selector:@selector(signInNetworkLost:)
-			   name:kGTMOAuthNetworkLost
-			 object:nil];
+	GTMOAuthAuthentication *auth = [self authForTwitter];	
+	self.myAuth = auth;
 	
-	// check for saved access token from previous authentication
+	[GTMOAuthWindowController authorizeFromKeychainForName: kTwitterKeychainItemName
+											authentication: auth];
+	[self updateUI];
 
+/*
     if (auth) 
 	{
 		if ([GTMOAuthWindowController authorizeFromKeychainForName:kTwitterKeychainItemName
@@ -99,17 +67,19 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		else
 		{
 			NSLog(@"StokerXTwitter awakeFromNib: No accessToken from saved defaults");
+
 			[authorizeTwitterMenuItem setTitle: @"Authorize Twitter"];
 			[enableTwitterMenuItem setEnabled: NO];
 			[enableTwitterMenuItem setState: NSOffState];
 		}
+		[self updateUI];
 	}
-	[self updateUI];
+ */
 }
 
-- (GTMOAuthAuthentication *)authForTwitter 
+- (GTMOAuthAuthentication *) authForTwitter 
 {
-	NSLog(@"StokerXTwitter authForTwitter");
+//	NSLog(@"StokerXTwitter authForTwitter");
 
 	NSString *myConsumerKey = kOAuthConsumerKey;
 	NSString *myConsumerSecret = kOAuthConsumerSecret;
@@ -120,9 +90,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		return nil;
 	}
 	
-	GTMOAuthAuthentication *auth = [[[GTMOAuthAuthentication alloc] initWithSignatureMethod:kGTMOAuthSignatureMethodHMAC_SHA1
-                                                        consumerKey:myConsumerKey
-                                                         privateKey:myConsumerSecret] autorelease];
+	GTMOAuthAuthentication *auth = [[[GTMOAuthAuthentication alloc] initWithSignatureMethod: kGTMOAuthSignatureMethodHMAC_SHA1
+																				consumerKey: myConsumerKey
+																				 privateKey: myConsumerSecret] autorelease];
 	
 	// setting the service name lets us inspect the auth object later to know what service it is for
 	[auth setServiceProvider: kTwitterServiceName];
@@ -130,9 +100,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	return auth;
 }
 
-- (void)signInToTwitter 
+- (void) signInToTwitter 
 {	
-	NSLog(@"StokerXTwitter signInToTwitter");
+//	NSLog(@"StokerXTwitter signInToTwitter");
 
 	[self signOut];
 	
@@ -142,7 +112,8 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	NSString *scope = @"https://api.twitter.com/";
 	
 	GTMOAuthAuthentication *auth = [self authForTwitter];
-	if (!auth) return;
+	if (!auth) 
+		return;
 	
 	// set the callback URL to which the site should redirect, and for which
 	// the OAuth controller should look to determine when sign-in has
@@ -153,62 +124,52 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	[auth setCallback:@"http://www.flyingdiver.com/Stoker/OAuth-Twitter.php"];
 	
 	GTMOAuthWindowController *windowController;
-	windowController = [[[GTMOAuthWindowController alloc] initWithScope:scope
-                                                               language:nil
-                                                        requestTokenURL:requestURL
-                                                      authorizeTokenURL:authorizeURL
-                                                         accessTokenURL:accessURL
-                                                         authentication:auth
-                                                         appServiceName:kTwitterKeychainItemName
-                                                         resourceBundle:nil] autorelease];
+	windowController = [[[GTMOAuthWindowController alloc] initWithScope: scope
+                                                               language: nil
+                                                        requestTokenURL: requestURL
+                                                      authorizeTokenURL: authorizeURL
+                                                         accessTokenURL: accessURL
+                                                         authentication: auth
+                                                         appServiceName: kTwitterKeychainItemName
+                                                         resourceBundle: nil] autorelease];
 	[windowController signInSheetModalForWindow: [NSApp mainWindow]
 									   delegate:self
 							   finishedSelector:@selector(windowController:finishedWithAuth:error:)];
 	[self updateUI];
 }
 
-- (void)windowController:(GTMOAuthWindowController *)windowController
-        finishedWithAuth:(GTMOAuthAuthentication *)auth
-                   error:(NSError *)error 
+- (void) windowController: (GTMOAuthWindowController *)windowController
+         finishedWithAuth: (GTMOAuthAuthentication *)auth
+                    error: (NSError *)error 
 {
-	NSLog(@"StokerXTwitter windowController:finishedWithAuth:error:");
-
-	if (error != nil) 
+	if (error) 
 	{
 		// Authentication failed (perhaps the user denied access, or closed the window before granting access)
 		
-		NSLog(@"Authentication error: %@", error);
-		NSData *responseData = [[error userInfo] objectForKey:@"data"]; // kGTMHTTPFetcherStatusDataKey
+		NSLog(@"StokerXTwitter Authentication error: %@", error);
+		NSData *responseData = [[error userInfo] objectForKey: @"data"];	// kGTMHTTPFetcherStatusDataKey
 		if ([responseData length] > 0) 
 		{
 			// show the body of the server's authentication failure response
-			NSString *str = [[[NSString alloc] initWithData:responseData
-												   encoding:NSUTF8StringEncoding] autorelease];
-			NSLog(@"%@", str);
+			NSString *str = [[[NSString alloc] initWithData: responseData
+												   encoding: NSUTF8StringEncoding] autorelease];
+			NSLog(@"%@", str); 
 		}
-		[self setAuthentication:nil];
+		self.myAuth = nil;
 	} 
 	else 
-	{
-		NSLog(@"Authentication succeeded");
-				
-		// Authentication succeeded
-		//
-		// At this point, we either use the authentication object to explicitly authorize requests, like
-		//
-		//   [auth authorizeRequest:myNSURLMutableRequest]
-		//
-		// or store the authentication object into a Google API service object like
-		//
-		//   [[self contactService] setAuthorizer:auth];
+	{						
+		NSLog(@"StokerXTwitter Authentication succeeded");
+		self.myAuth = auth;
 		
-		[self setAuthentication:auth];
-		
-		// Just to prove we're signed in, we'll attempt an authenticated update for the signed-in user
-		
-		[self doAnAuthenticatedAPIFetch];
-
-		[self sendTweet:@"GTMOAuth Authentication succeeded"];
+		NSData *responseData = [[error userInfo] objectForKey: @"data"];	// kGTMHTTPFetcherStatusDataKey
+		if ([responseData length] > 0) 
+		{
+			// show the body of the server's authentication failure response
+			NSString *str = [[[NSString alloc] initWithData: responseData
+												   encoding: NSUTF8StringEncoding] autorelease];
+			NSLog(@"%@", str); 
+		}		
 	}
 	
 	[self updateUI];
@@ -216,14 +177,10 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 - (void)updateUI 
 {	
-	// update the text showing the signed-in state and the button title
+	// update the menu items to reflect the authorized state
 	
 	if ([self isSignedIn]) 
-	{
-		NSLog(@"StokerXTwitter updateUI - Signed In");
-		
-		// set up the menus properly
-		
+	{				
 		[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
 		[enableTwitterMenuItem setEnabled: YES];
 		
@@ -237,9 +194,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		}
 	} 
 	else 
-	{
-		NSLog(@"StokerXTwitter updateUI - Not Signed In");
-				
+	{				
 		[authorizeTwitterMenuItem setTitle: @"Authorize Twitter"];
 		[enableTwitterMenuItem setEnabled: NO];
 		[enableTwitterMenuItem setState: NSOffState];
@@ -247,60 +202,24 @@ static NSString *const kTwitterServiceName = @"Twitter";
 }
 
 
-- (void)setAuthentication:(GTMOAuthAuthentication *)auth 
-{
-	[mAuth autorelease];
-	mAuth = [auth retain];
-}
-
-- (void) signInOutClicked: (id) sender
-{
-	if (![self isSignedIn]) 
-	{
-		NSLog(@"StokerXTwitter signInOutClicked: Signing In");
-		[self signInToTwitter];
-	} 
-	else 
-	{
-		NSLog(@"StokerXTwitter signInOutClicked: Signing Out");
-		// sign out
-		[self signOut];
-	}
-}
-
 - (BOOL)isSignedIn {
-	BOOL isSignedIn = [mAuth canAuthorize];
+	BOOL isSignedIn = [myAuth canAuthorize];
 	return isSignedIn;
 }
 
 - (void)signOut 
 {	
+//	NSLog(@"StokerXTwitter signOut");
+
 	// remove the stored Twitter authentication from the keychain
 	[GTMOAuthWindowController removeParamsFromKeychainForName:kTwitterKeychainItemName];
 	
 	// discard our retains authentication object
-	[self setAuthentication:nil];
+	self.myAuth = nil;
 	
 	[self updateUI];
 }
 
-#pragma mark -
-
-- (void)signInFetchStateChanged:(NSNotification *)note 
-{
-	NSLog(@"StokerXTwitter signInFetchStateChanged: %@, %@", [note name], [[note userInfo] objectForKey:kGTMOAuthFetchTypeKey]);
-
-	// this just lets the user know something is happening during the sign-in sequence's "invisible" fetches to obtain tokens
-
-	if ([[note name] isEqual:kGTMOAuthFetchStarted]) 
-	{
-//		[mSpinner startAnimation:self];
-	} 
-	else 
-	{
-//		[mSpinner stopAnimation:self];
-	}
-}
 
 - (void)signInNetworkLost:(NSNotification *)note 
 {
@@ -319,6 +238,17 @@ static NSString *const kTwitterServiceName = @"Twitter";
 #pragma mark -
 #pragma mark Twitter Menu Handling Methods
 
+- (void) signInOutClicked: (id) sender
+{
+	if (![self isSignedIn]) 
+	{
+		[self signInToTwitter];
+	} 
+	else 
+	{
+		[self signOut];
+	}
+}
 
 
 - (void) enableTwitter: (id) sender
@@ -337,73 +267,6 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		NSLog(@"StokerXTwitter enableTwitter: unknown state");
 }
 
-
-- (void) sendTweet: (NSString *) tweet
-{
-	if ([self isSignedIn])
-	{
-		NSString *trimmedText = [tweet precomposedStringWithCanonicalMapping];
-		
-		if ([trimmedText length] > MAX_MESSAGE_LENGTH) {
-			trimmedText = [trimmedText substringToIndex:MAX_MESSAGE_LENGTH];
-		}
-			
-		NSString *body = [NSString stringWithFormat: @"status=%@", trimmedText];
-		
-		NSString *urlStr = @"http://api.twitter.com/1/statuses/update.json";
-		NSURL *url = [NSURL URLWithString:urlStr];
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-		[request setHTTPMethod:@"POST"]; 
-		[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-		[request setHTTPBody: [body dataUsingEncoding:NSUTF8StringEncoding]];
-		[mAuth authorizeRequest: request];
-
-		GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];				
-		
-		[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
-		{
-			if (error != nil) 
-			{
-				NSLog(@"StokerXTwitter fetch error: %@", error);
-			} 
-			else 
-			{
-				NSLog(@"StokerXTwitter sendTweet: Successful - %@", tweet);
-			}
-		}];
-
-	}
-	else
-	{
-		NSLog(@"StokerXTwitter sendTweet: Failed - not authenticated");
-	}
-}
-
-- (void)doAnAuthenticatedAPIFetch 
-{
-	NSURL *url = [NSURL URLWithString: @"http://api.twitter.com/1/statuses/home_timeline.json"];
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-//	[mAuth authorizeRequest:request];
-				
-	GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
-	[myFetcher setAuthorizer: mAuth];
-	
-	[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
-	 {
-		 if (error != nil) 
-		 {
-			 NSLog(@"API fetch error: %@", error);
-		 } 
-		 else 
-		 {
-			 NSArray *results = [[[[NSString alloc] initWithData: retrievedData encoding: NSUTF8StringEncoding] autorelease] JSONValue];
-			 NSLog(@"StokerXTwitter doAnAuthenticatedAPIFetch sucessful for user: %@", [[[results objectAtIndex: 0] objectForKey:@"user"] objectForKey:@"name"]);
-		 }
-	 }];
-
-}
-
-
 - (BOOL)validateMenuItem:(NSMenuItem *) item 
 {
     if ([item action] == @selector(enableTwitter:))
@@ -418,5 +281,43 @@ static NSString *const kTwitterServiceName = @"Twitter";
 }
 		
 
+
+- (void) sendTweet: (NSString *) tweet
+{	
+	if ([self isSignedIn])
+	{		
+		NSString *trimmedText = [tweet precomposedStringWithCanonicalMapping];
+		
+		if ([trimmedText length] > MAX_MESSAGE_LENGTH) {
+			trimmedText = [trimmedText substringToIndex:MAX_MESSAGE_LENGTH];
+		}
+		
+		NSString *body = [NSString stringWithFormat: @"status=%@", trimmedText];
+		
+		NSString *urlStr = @"http://api.twitter.com/1/statuses/update.json";
+		NSURL *url = [NSURL URLWithString:urlStr];
+		
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+		[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+		[request setHTTPMethod:@"POST"]; 
+		[request setHTTPBody: [body dataUsingEncoding:NSUTF8StringEncoding]];
+		[myAuth authorizeRequest: request];
+		
+		GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
+		[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
+		 {
+			 if (error != nil) 
+			 {
+				 NSLog(@"StokerXTwitter sendTweet error: %@", error);
+			 } 
+			 else 
+			 {
+//				 NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
+//				 NSLog(@"StokerXTwitter sendTweet Successful: #%@ @ %@", [results objectForKey: @"id"], [results objectForKey: @"created_at"]);
+			 }
+		 }];
+		
+	}
+}
 
 @end

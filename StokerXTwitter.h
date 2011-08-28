@@ -7,35 +7,46 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <WebKit/WebKit.h>
 #import "PreferencesController.h"
 #import "GTMOAuthWindowController.h"
 #import "JSON.h"
 
 // These two strings identify the application (StokerX) sending the tweet
 
-//#define	kOAuthConsumerKey		@"UjMLz291haVFTs1cRdVA"
-//#define	kOAuthConsumerSecret	@"H9dgyFaEZhbFK45lZs7CdCACKnBAM1Jnj7rLmw5SJk"
+#define	kOAuthConsumerKey		@"UjMLz291haVFTs1cRdVA"
+#define	kOAuthConsumerSecret	@"H9dgyFaEZhbFK45lZs7CdCACKnBAM1Jnj7rLmw5SJk"
 
 // These are for the test application
 
-#define kOAuthConsumerKey		@"E4PzQuxgs0qbNvthaW61rg"
-#define kOAuthConsumerSecret	@"3h2wjBs9fMPGg4Vbfx4fNROxyX2amQf6CBo5rdg"
+// #define kOAuthConsumerKey		@"yF1oP08RQhPGrFvUbEkNQ"
+// #define kOAuthConsumerSecret	@"tT2eVOidKDhwuP5RJoj5Rf9CQPHfyd2c9wAcAKOOE"
 
 #define MAX_MESSAGE_LENGTH		140		// twitter max
 
 @interface StokerXTwitter : NSObject
-{
-	GTMOAuthAuthentication *mAuth;
-	
+{	
 	IBOutlet NSMenuItem	*authorizeTwitterMenuItem;
 	IBOutlet NSMenuItem	*enableTwitterMenuItem;
 }
 
 - (IBAction) signInOutClicked: (id) sender;
 - (IBAction) enableTwitter: (id) sender;
-
 - (void) sendTweet: (NSString *) tweet;
 
+
+- (void)signInToTwitter;
+- (void)signOut;
+- (BOOL)isSignedIn;
+
+- (GTMOAuthAuthentication *) authForTwitter;
+
+- (void)windowController:(GTMOAuthWindowController *)windowController
+        finishedWithAuth:(GTMOAuthAuthentication *)auth
+                   error:(NSError *)error;
+
+- (void)updateUI;
+- (void)signInNetworkLost:(NSNotification *)note;
+
+@property (nonatomic, retain) GTMOAuthAuthentication *myAuth;
 
 @end
