@@ -36,7 +36,7 @@
 		[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
 		[enableTwitterMenuItem setEnabled: YES];
 		
-		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweets] boolValue])
+		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweetsKey] boolValue])
 		{
 			[enableTwitterMenuItem setState: NSOnState];
 		}
@@ -81,7 +81,7 @@
 			[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
 			[enableTwitterMenuItem setEnabled: YES];
 			
-			if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweets] boolValue])
+			if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweetsKey] boolValue])
 			{
 				[enableTwitterMenuItem setState: NSOnState];
 			}
@@ -125,12 +125,12 @@
 	if ([enableTwitterMenuItem state] == NSOffState)
 	{
 		[enableTwitterMenuItem setState: NSOnState];
-		[[NSUserDefaults standardUserDefaults] setBool: YES forKey: kSendTweets];	
+		[[NSUserDefaults standardUserDefaults] setBool: YES forKey: kSendTweetsKey];	
 	}
 	else if  ([enableTwitterMenuItem state] == NSOnState)
 	{
 		[enableTwitterMenuItem setState: NSOffState];
-		[[NSUserDefaults standardUserDefaults] setBool: NO forKey: kSendTweets];	
+		[[NSUserDefaults standardUserDefaults] setBool: NO forKey: kSendTweetsKey];	
 	}
 	else
 		NSLog(@"StokerXTwitter enableTwitter: unknown state");
@@ -286,7 +286,7 @@
 	[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
 	[enableTwitterMenuItem setEnabled: YES];
 	
-	if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweets] boolValue])
+	if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweetsKey] boolValue])
 	{
 		[enableTwitterMenuItem setState: NSOnState];
 	}

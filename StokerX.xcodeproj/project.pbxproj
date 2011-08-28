@@ -25,6 +25,11 @@
 		C967349013E46DD70042841B /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C967348F13E46DD70042841B /* PreferencesController.m */; };
 		C9867AE712330DB900023BC8 /* StokerXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */; };
 		C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9867AF9123319D500023BC8 /* QuartzCore.framework */; };
+		C98BDAF2140A61AE00D1424F /* SoundPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = C98BDAEF140A61AE00D1424F /* SoundPicker.m */; };
+		C98BDAF3140A61AE00D1424F /* SoundPickerDropView.m in Sources */ = {isa = PBXBuildFile; fileRef = C98BDAF1140A61AE00D1424F /* SoundPickerDropView.m */; };
+		C98BDAF9140A62EC00D1424F /* loud.psd in Resources */ = {isa = PBXBuildFile; fileRef = C98BDAF6140A62EC00D1424F /* loud.psd */; };
+		C98BDAFA140A62EC00D1424F /* quiet.psd in Resources */ = {isa = PBXBuildFile; fileRef = C98BDAF7140A62EC00D1424F /* quiet.psd */; };
+		C98BDAFB140A62EC00D1424F /* SoundPickerBackground.psd in Resources */ = {isa = PBXBuildFile; fileRef = C98BDAF8140A62EC00D1424F /* SoundPickerBackground.psd */; };
 		C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = C99B857113FFD61700E27494 /* dsa_pub.pem */; };
 		C99B85C014002FB000E27494 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C99B85BF14002FB000E27494 /* Credits.rtf */; };
 		C9A3616813FCB87500D98912 /* Notifications.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9A3616613FCB87400D98912 /* Notifications.xib */; };
@@ -123,6 +128,13 @@
 		C967348F13E46DD70042841B /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = StokerX.xcodeproj/../PreferencesController.m; sourceTree = SOURCE_ROOT; };
 		C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerXAppDelegate.m; sourceTree = "<group>"; };
 		C9867AF9123319D500023BC8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C98BDAEE140A61AE00D1424F /* SoundPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundPicker.h; sourceTree = "<group>"; };
+		C98BDAEF140A61AE00D1424F /* SoundPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundPicker.m; sourceTree = "<group>"; };
+		C98BDAF0140A61AE00D1424F /* SoundPickerDropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundPickerDropView.h; sourceTree = "<group>"; };
+		C98BDAF1140A61AE00D1424F /* SoundPickerDropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundPickerDropView.m; sourceTree = "<group>"; };
+		C98BDAF6140A62EC00D1424F /* loud.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = loud.psd; sourceTree = "<group>"; };
+		C98BDAF7140A62EC00D1424F /* quiet.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = quiet.psd; sourceTree = "<group>"; };
+		C98BDAF8140A62EC00D1424F /* SoundPickerBackground.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = SoundPickerBackground.psd; sourceTree = "<group>"; };
 		C99B857113FFD61700E27494 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		C99B85BF14002FB000E27494 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		C9A3616713FCB87400D98912 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Notifications.xib; sourceTree = "<group>"; };
@@ -175,6 +187,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C98BDAF4140A61B300D1424F /* SoundPicker */,
 				C9BE1F1E12E4C355007FAEC5 /* Color */,
 				C9EB1D171226FF930067E58E /* JSON */,
 				C9213669131607D000CFB978 /* Socket Classes */,
@@ -251,6 +264,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C98BDAF5140A62EC00D1424F /* Images */,
 				C99B857113FFD61700E27494 /* dsa_pub.pem */,
 				8D1107310486CEB800E47090 /* StokerX-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -295,6 +309,27 @@
 				C91ADC621402ACF600A6472E /* NotificationTest.m */,
 			);
 			name = Notifications;
+			sourceTree = "<group>";
+		};
+		C98BDAF4140A61B300D1424F /* SoundPicker */ = {
+			isa = PBXGroup;
+			children = (
+				C98BDAEE140A61AE00D1424F /* SoundPicker.h */,
+				C98BDAEF140A61AE00D1424F /* SoundPicker.m */,
+				C98BDAF0140A61AE00D1424F /* SoundPickerDropView.h */,
+				C98BDAF1140A61AE00D1424F /* SoundPickerDropView.m */,
+			);
+			name = SoundPicker;
+			sourceTree = "<group>";
+		};
+		C98BDAF5140A62EC00D1424F /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				C98BDAF6140A62EC00D1424F /* loud.psd */,
+				C98BDAF7140A62EC00D1424F /* quiet.psd */,
+				C98BDAF8140A62EC00D1424F /* SoundPickerBackground.psd */,
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 		C9BE1F1E12E4C355007FAEC5 /* Color */ = {
@@ -419,6 +454,9 @@
 				C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */,
 				C99B85C014002FB000E27494 /* Credits.rtf in Resources */,
 				C94149B814059CDF006BDCE0 /* ReadMe.html in Resources */,
+				C98BDAF9140A62EC00D1424F /* loud.psd in Resources */,
+				C98BDAFA140A62EC00D1424F /* quiet.psd in Resources */,
+				C98BDAFB140A62EC00D1424F /* SoundPickerBackground.psd in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +486,8 @@
 				C91ADC601402ABD900A6472E /* NotificationRule.m in Sources */,
 				C91ADC631402ACF600A6472E /* NotificationTest.m in Sources */,
 				C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */,
+				C98BDAF2140A61AE00D1424F /* SoundPicker.m in Sources */,
+				C98BDAF3140A61AE00D1424F /* SoundPickerDropView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

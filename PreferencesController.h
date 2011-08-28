@@ -8,6 +8,7 @@
 // Manages the preferences panel
 
 #import <Cocoa/Cocoa.h>
+#import "SoundPicker.h"
 
 extern NSString * const kStokeripAddressKey;
 extern NSString * const kStokerhttpPortKey;
@@ -18,7 +19,8 @@ extern NSString * const kEmailAddressKey;
 extern NSString * const kLidOffEnabledKey;
 extern NSString * const kLidOffDropKey;
 extern NSString * const kLidOffWaitKey;
-extern NSString * const kSendTweets;
+extern NSString * const kSendTweetsKey;
+extern NSString * const kAlarmSoundKey;
 
 @interface PreferencesController : NSWindowController
 {
@@ -31,6 +33,7 @@ extern NSString * const kSendTweets;
 	IBOutlet NSButton    *lidOffCheckBox;
 	IBOutlet NSTextField *lidOffDrop;
 	IBOutlet NSTextField *lidOffWait;
+	IBOutlet SoundPicker *alarmPicker;
 }
 
 - (IBAction)changeStokeripAddressField:(id)sender;

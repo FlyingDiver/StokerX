@@ -38,6 +38,7 @@
 @property (nonatomic, retain) NSMutableArray		*ruleList;	
 @property (nonatomic, retain) NSMutableArray		*sensorList;	
 @property (nonatomic, retain) NSMutableDictionary	*sensorDict;
+@property (nonatomic, retain) NSString				*alertSoundFile;
 @property (nonatomic, retain) NSSound				*alertSound;
 
 @end

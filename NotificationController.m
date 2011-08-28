@@ -8,20 +8,20 @@
 // Manages the Notifications window
 
 #import "NotificationController.h"
-
+#import "PreferencesController.h"
 #import "StokerXTwitter.h"
 #import "EmailSender.h"
 #import "StokerXAppDelegate.h"
 
 @implementation NotificationController
 
-@synthesize ruleList, sensorList, sensorDict, alertSound;
+@synthesize ruleList, sensorList, sensorDict, alertSoundFile, alertSound;
 
 #pragma mark -
 #pragma mark Constructor/Destructor Methods
 
 - (id)init
-{	
+{		
 	if (!(self = [super initWithWindowNibName:@"Notifications"]))
 		return nil;
 				
@@ -36,10 +36,23 @@
 	
 	[GrowlApplicationBridge setGrowlDelegate: self]; 
 	
-	// Make a preference!
+	// Setup the alert sound from defaults...
 	
-	self.alertSound = [NSSound soundNamed:@"Glass"];
-
+	NSString *soundFile = [[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Path", kAlarmSoundKey]];
+	if (soundFile)
+	{
+		self.alertSoundFile = soundFile;
+		self.alertSound = [[[NSSound alloc] initWithContentsOfFile: soundFile byReference: YES] autorelease];
+		
+		if ([[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Volume", kAlarmSoundKey]])
+			[self.alertSound setVolume:  [[[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Volume", kAlarmSoundKey]] floatValue]];
+	}
+	else
+	{
+		self.alertSoundFile = nil;
+		self.alertSound = [NSSound soundNamed:@"Glass"];
+	}
+	
 	return self;
 }
 
@@ -48,6 +61,7 @@
 	self.sensorDict = nil;
 	self.sensorList = nil;
 	self.ruleList = nil;
+	self.alertSoundFile = nil;
 	self.alertSound = nil;
 	
     [super dealloc];
@@ -55,6 +69,8 @@
 
 - (void)windowDidLoad
 {
+	NSLog(@"NotificationController windowDidLoad");
+
 	[[self window] setFrameAutosaveName:@"Rules Window"];
 	[[self window] makeKeyAndOrderFront: self];
 		
@@ -93,22 +109,17 @@
 	{
 		Boolean found = NO;
 		for (NSMutableDictionary *sensor in sensorList)
-		{			
-//			NSLog(@"validating rules, rule sensor = %@, sensor list = %@", [rule objectForKey: @"id"], [sensor objectForKey: @"id"]);
-			
+		{						
 			if ([[rule sensorID] isEqualTo: [sensor objectForKey: @"id"]])
 			{
-//				NSLog(@"\trule/sensor match found");
 				found = YES;
 				break;
 			}
 		}
 		if (!found)
 		{
-//			NSLog(@"\trule/sensor match not found");
 			[rule setEnabled: NO];		
-		}
-		
+		}		
 	}
 	
 	// now we can display the notifications table
@@ -161,8 +172,6 @@
 			}
 		}
 	}
-	
-//	NSLog(@"notificationsTextForSensor: %@ = %@", sensorID, text);
 	
 	return text;
 }
@@ -226,7 +235,7 @@
 
 
 - (void) doNotification: (NotificationRule *) rule withMessage: (NSString *) message
-{
+{	
 	NSNumber *lastNotification = [rule lastNotified];
 	
 	// check to see if this notification has been done in the last minute.  Alerts are never repeated sooner than that
@@ -238,13 +247,31 @@
 	
 	switch ([rule action])		// branch depending on notification to use
 	{				
-		case kAudibleAlarm:			
-			NSLog(@"Notification kAudibleAlarm, message = \"%@\"\r%@", message, rule);
-			[alertSound play];
+		case kAudibleAlarm:					
+		{		
+			// reload the alarm sound file just in case the user changed it since last audible alarm
+			
+			NSString *newSoundFile = [[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Path", kAlarmSoundKey]];
+			if (newSoundFile && [newSoundFile isNotEqualTo: alertSoundFile])
+			{
+				NSLog(@"doNotification: kAudibleAlarm with new sound file: %@", newSoundFile);
+				
+				self.alertSound = [[[NSSound alloc] initWithContentsOfFile: newSoundFile byReference: YES] autorelease];
+				self.alertSoundFile = newSoundFile;
+				
+				// check the volume while we're here
+				
+				if ([[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Volume", kAlarmSoundKey]])
+					[self.alertSound setVolume:  [[[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Volume", kAlarmSoundKey]] floatValue]];
+			}
+			if (![self.alertSound play])
+				NSLog(@"Error playing alertSound");
+			
 			break;
+		}
 			
 		case kVisualAlarm:
-			NSLog(@"Notification kVisualAlarm, message = \"%@\"\r%@", message, rule);
+		{
 			[GrowlApplicationBridge notifyWithTitle: @"StokerX"				
 										description: message	
 								   notificationName: @"VisualAlarm"		
@@ -253,26 +280,33 @@
 										   isSticky: NO		
 									   clickContext: nil];
 			break;
+		}
 			
 		case kEmailNotification:
-			NSLog(@"Notification kEmailNotification, message = \"%@\"\r%@", message, rule);
+		{
 			EmailSender *emailSender = [[[EmailSender alloc] init] autorelease];
 			[emailSender sendEmailMessage: message];
 			break;
+		}
 			
 		case kTwitterNotification:
-			NSLog(@"Notification kTwitterNotification, message = \"%@\"\r%@", message, rule);	
+		{
 			[[[NSApp delegate] tweetController] sendTweet: message];
 			
 			break;
+		}
 			
 		case kAppError:
+		{
 			NSLog(@"Notification kAppError, message = \"%@\"\r%@", message, rule);						
 			break;
+		}	
 			
 		default:
+		{
 			NSLog(@"Unknown condition for notification, message = \"%@\"\r%@", message, rule);
 			break;
+		}
 	}
 	
 }

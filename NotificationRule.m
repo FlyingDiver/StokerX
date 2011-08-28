@@ -25,8 +25,7 @@ static NSMutableArray *_RuleList = nil;
 	}
 		
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: @"StokerX"];
-	
+	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]];
 	NSString *saveFilePath = [supportDir stringByAppendingPathComponent: kSavedNotificationsFile];
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -39,66 +38,6 @@ static NSMutableArray *_RuleList = nil;
 		[unarchiver finishDecoding];
 		[unarchiver release];
 	}
-/*	else
-	{
-		NSLog(@"[NotificationRule ruleList] Creating ruleList from scratch");
-
-		_RuleList = [[NSMutableArray alloc] initWithCapacity: 10];	// empty array
-		NotificationRule *newRule;
-		
-		newRule = [[NotificationRule alloc] init];
-		newRule.sensorName =  @"Pit Sensor";
-		newRule.sensorID =  @"CA0000125914D130";
-		newRule.enabled = TRUE;
-		newRule.test = kSensorOverTemp;
-		newRule.action = kAudibleAlarm;
-		newRule.value = [NSNumber numberWithDouble: 250.0];
-		[_RuleList addObject: newRule];
-		[newRule release];
-		
-		newRule = [[NotificationRule alloc] init];
-		newRule.sensorName =  @"Pit Sensor";
-		newRule.sensorID =  @"CA0000125914D130";
-		newRule.enabled = TRUE;
-		newRule.test = kSensorUnderTemp;
-		newRule.action = kVisualAlarm;
-		newRule.value = [NSNumber numberWithDouble: 200.0];
-		[_RuleList addObject: newRule];
-		[newRule release];
-		
-		newRule = [[NotificationRule alloc] init];
-		newRule.sensorName =  @"Food A";
-		newRule.sensorID =  @"FF0000125914C330";
-		newRule.enabled = TRUE;
-		newRule.test = kSensorTargetTemp;
-		newRule.action = kEmailNotification;
-		newRule.value = [NSNumber numberWithDouble: 190.0];
-		[_RuleList addObject: newRule];
-		[newRule release];
-		
-		newRule = [[NotificationRule alloc] init];
-		newRule.sensorName =  @"Food A";
-		newRule.sensorID =  @"FF0000125914C330";
-		newRule.enabled = TRUE;
-		newRule.test = kPeriodic;
-		newRule.action = kEmailNotification;
-		newRule.value = [NSNumber numberWithDouble: 600.0];
-		[_RuleList addObject: newRule];
-		[newRule release];
-		
-		newRule = [[NotificationRule alloc] init];
-		newRule.sensorName =  @"Food A";
-		newRule.sensorID =  @"FF0000125914C330";
-		newRule.enabled = TRUE;
-		newRule.test = kPeriodic;
-		newRule.action = kTwitterNotification;
-		newRule.value = [NSNumber numberWithDouble: 600.0];
-		[_RuleList addObject: newRule];
-		[newRule release];
-		
-		[self saveRules: _RuleList];
-	}
- */
 	return _RuleList;
 }
 

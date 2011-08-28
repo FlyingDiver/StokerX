@@ -18,7 +18,8 @@ NSString * const kEmailAddressKey    = @"EmailAddress";
 NSString * const kLidOffEnabledKey   = @"LidOffEnabled";
 NSString * const kLidOffDropKey      = @"LidOffDrop";
 NSString * const kLidOffWaitKey      = @"LidOffWait";
-NSString * const kSendTweets         = @"SendTweets";
+NSString * const kSendTweetsKey      = @"SendTweets";
+NSString * const kAlarmSoundKey      = @"AlarmSound";
 
 #define MIN_TEMP_AXIS			0.0
 #define MAX_TEMP_AXIS			500.0
@@ -27,9 +28,10 @@ NSString * const kSendTweets         = @"SendTweets";
 @implementation PreferencesController
 
 - (id) init
-{
+{	
 	if (!(self = [super initWithWindowNibName:@"Preferences"]))
 		return nil;
+	
 	return self;
 }
 
@@ -106,9 +108,6 @@ NSString * const kSendTweets         = @"SendTweets";
 
 - (void)windowDidLoad
 {
-	[[self window] setFrameAutosaveName:@"Prefs Window"];
-	[[self window] makeKeyAndOrderFront: self];
-	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
 		[ipAddress setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey]];
 	
@@ -133,7 +132,14 @@ NSString * const kSendTweets         = @"SendTweets";
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey])
 		[lidOffWait setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey]];
+
+	[alarmPicker setPrefsPrefix: kAlarmSoundKey];			
+	[alarmPicker setDefaultSoundPath: @"/System/Library/Sounds/Glass.aiff"];
 	
+	[[self window] setFrameAutosaveName:@"Prefs Window"];
+	[[self window] makeKeyAndOrderFront: self];
+	
+
 }
 
 @end
