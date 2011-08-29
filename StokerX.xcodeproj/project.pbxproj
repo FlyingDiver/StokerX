@@ -16,10 +16,26 @@
 		C91ADC601402ABD900A6472E /* NotificationRule.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC5F1402ABD900A6472E /* NotificationRule.m */; };
 		C91ADC631402ACF600A6472E /* NotificationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC621402ACF600A6472E /* NotificationTest.m */; };
 		C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC651402B1D700A6472E /* NotificationAction.m */; };
+		C91DD486140B269F00B67EE1 /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91DD485140B269F00B67EE1 /* Growl-WithInstaller.framework */; };
+		C91DD487140B26D100B67EE1 /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C91DD485140B269F00B67EE1 /* Growl-WithInstaller.framework */; };
+		C9270000140B27C900C5EE8B /* GTMOAuthAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = C927FFFA140B27C900C5EE8B /* GTMOAuthAuthentication.m */; };
+		C9270001140B27C900C5EE8B /* GTMOAuthSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = C927FFFC140B27C900C5EE8B /* GTMOAuthSignIn.m */; };
+		C9270002140B27C900C5EE8B /* GTMOAuthWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C927FFFD140B27C900C5EE8B /* GTMOAuthWindow.xib */; };
+		C9270003140B27C900C5EE8B /* GTMOAuthWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C927FFFF140B27C900C5EE8B /* GTMOAuthWindowController.m */; };
+		C9270014140B27D500C5EE8B /* GTMGatherInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = C9270005140B27D500C5EE8B /* GTMGatherInputStream.m */; };
+		C9270015140B27D500C5EE8B /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9270007140B27D500C5EE8B /* GTMHTTPFetcher.m */; };
+		C9270016140B27D500C5EE8B /* GTMHTTPFetcherLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = C9270009140B27D500C5EE8B /* GTMHTTPFetcherLogging.m */; };
+		C9270017140B27D500C5EE8B /* GTMHTTPFetcherService.m in Sources */ = {isa = PBXBuildFile; fileRef = C927000B140B27D500C5EE8B /* GTMHTTPFetcherService.m */; };
+		C9270018140B27D500C5EE8B /* GTMHTTPFetchHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = C927000D140B27D500C5EE8B /* GTMHTTPFetchHistory.m */; };
+		C9270019140B27D500C5EE8B /* GTMHTTPUploadFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C927000F140B27D500C5EE8B /* GTMHTTPUploadFetcher.m */; };
+		C927001A140B27D500C5EE8B /* GTMMIMEDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C9270011140B27D500C5EE8B /* GTMMIMEDocument.m */; };
+		C927001B140B27D500C5EE8B /* GTMReadMonitorInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = C9270013140B27D500C5EE8B /* GTMReadMonitorInputStream.m */; };
 		C929300413F810C2007F685C /* StokerXTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = C929300313F810C2007F685C /* StokerXTwitter.m */; };
 		C9366AB0127F882700D79303 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C9366AAF127F882700D79303 /* AsyncSocket.m */; };
 		C94149B814059CDF006BDCE0 /* ReadMe.html in Resources */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
 		C94149BA1405A0C0006BDCE0 /* ReadMe.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
+		C94BED83140B28A900CA06F8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94BED82140B28A900CA06F8 /* Security.framework */; };
+		C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94BED88140B293D00CA06F8 /* SystemConfiguration.framework */; };
 		C9503CE213FED6F8008B794F /* EmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C9503CE113FED6F8008B794F /* EmailSender.m */; };
 		C958DE13140B0EA2009E8AB6 /* StokerX.icns in Resources */ = {isa = PBXBuildFile; fileRef = C958DE12140B0EA2009E8AB6 /* StokerX.icns */; };
 		C967349013E46DD70042841B /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C967348F13E46DD70042841B /* PreferencesController.m */; };
@@ -32,16 +48,13 @@
 		C98BDAFB140A62EC00D1424F /* SoundPickerBackground.psd in Resources */ = {isa = PBXBuildFile; fileRef = C98BDAF8140A62EC00D1424F /* SoundPickerBackground.psd */; };
 		C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = C99B857113FFD61700E27494 /* dsa_pub.pem */; };
 		C99B85C014002FB000E27494 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C99B85BF14002FB000E27494 /* Credits.rtf */; };
-		C99F90B414074B8200083B27 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99F90B314074B8200083B27 /* WebKit.framework */; };
 		C9A3616813FCB87500D98912 /* Notifications.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9A3616613FCB87400D98912 /* Notifications.xib */; };
 		C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9B1CF63123352B200648DF4 /* Preferences.xib */; };
 		C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */; };
 		C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
 		C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
-		C9CC351A1402A3F800A6227A /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */; };
 		C9CC351B1402A41300A6227A /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
 		C9CC351D1402A41800A6227A /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
-		C9CC351E1402A42800A6227A /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */; };
 		C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */ = {isa = PBXBuildFile; fileRef = C9D5550813FEDCBE0066BB27 /* Mail.app */; };
 		C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */; };
 		C9D7D85513FB4D8200E5BA00 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7D85413FB4D8200E5BA00 /* NotificationController.m */; };
@@ -51,16 +64,6 @@
 		C9EB1D261226FF930067E58E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D201226FF930067E58E /* SBJsonParser.m */; };
 		C9EB1D271226FF930067E58E /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D221226FF930067E58E /* SBJsonWriter.m */; };
 		C9EC2EEA1278F6DA00289387 /* Stoker.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC2EE91278F6DA00289387 /* Stoker.m */; };
-		C9FAC94F140838E900162542 /* GTMGatherInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC929140838E900162542 /* GTMGatherInputStream.m */; };
-		C9FAC950140838E900162542 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC92B140838E900162542 /* GTMHTTPFetcher.m */; };
-		C9FAC951140838E900162542 /* GTMHTTPFetcherLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC930140838E900162542 /* GTMHTTPFetcherLogging.m */; };
-		C9FAC952140838E900162542 /* GTMHTTPFetcherService.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC932140838E900162542 /* GTMHTTPFetcherService.m */; };
-		C9FAC953140838E900162542 /* GTMHTTPFetchHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC934140838E900162542 /* GTMHTTPFetchHistory.m */; };
-		C9FAC954140838E900162542 /* GTMHTTPUploadFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC936140838E900162542 /* GTMHTTPUploadFetcher.m */; };
-		C9FAC955140838E900162542 /* GTMMIMEDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC938140838E900162542 /* GTMMIMEDocument.m */; };
-		C9FAC956140838E900162542 /* GTMReadMonitorInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC93A140838E900162542 /* GTMReadMonitorInputStream.m */; };
-		C9FAC96E140845AE00162542 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FAC96D140845AE00162542 /* SystemConfiguration.framework */; };
-		C9FAC970140845F300162542 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FAC96F140845F200162542 /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -85,8 +88,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C9CC351B1402A41300A6227A /* Sparkle.framework in CopyFiles */,
-				C9CC351E1402A42800A6227A /* Growl-WithInstaller.framework in CopyFiles */,
 				C9CC351D1402A41800A6227A /* CorePlot.framework in CopyFiles */,
+				C91DD487140B26D100B67EE1 /* Growl-WithInstaller.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,11 +126,37 @@
 		C91ADC621402ACF600A6472E /* NotificationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationTest.m; sourceTree = "<group>"; };
 		C91ADC641402B1D700A6472E /* NotificationAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationAction.h; sourceTree = "<group>"; };
 		C91ADC651402B1D700A6472E /* NotificationAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationAction.m; sourceTree = "<group>"; };
+		C91DD485140B269F00B67EE1 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Growl-WithInstaller.framework"; path = "../Frameworks/Growl-WithInstaller.framework"; sourceTree = "<group>"; };
+		C9270004140B27D500C5EE8B /* GTMGatherInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMGatherInputStream.h; sourceTree = "<group>"; };
+		C9270005140B27D500C5EE8B /* GTMGatherInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMGatherInputStream.m; sourceTree = "<group>"; };
+		C9270006140B27D500C5EE8B /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcher.h; sourceTree = "<group>"; };
+		C9270007140B27D500C5EE8B /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcher.m; sourceTree = "<group>"; };
+		C9270008140B27D500C5EE8B /* GTMHTTPFetcherLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherLogging.h; sourceTree = "<group>"; };
+		C9270009140B27D500C5EE8B /* GTMHTTPFetcherLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherLogging.m; sourceTree = "<group>"; };
+		C927000A140B27D500C5EE8B /* GTMHTTPFetcherService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherService.h; sourceTree = "<group>"; };
+		C927000B140B27D500C5EE8B /* GTMHTTPFetcherService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherService.m; sourceTree = "<group>"; };
+		C927000C140B27D500C5EE8B /* GTMHTTPFetchHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetchHistory.h; sourceTree = "<group>"; };
+		C927000D140B27D500C5EE8B /* GTMHTTPFetchHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetchHistory.m; sourceTree = "<group>"; };
+		C927000E140B27D500C5EE8B /* GTMHTTPUploadFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPUploadFetcher.h; sourceTree = "<group>"; };
+		C927000F140B27D500C5EE8B /* GTMHTTPUploadFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPUploadFetcher.m; sourceTree = "<group>"; };
+		C9270010140B27D500C5EE8B /* GTMMIMEDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMMIMEDocument.h; sourceTree = "<group>"; };
+		C9270011140B27D500C5EE8B /* GTMMIMEDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMMIMEDocument.m; sourceTree = "<group>"; };
+		C9270012140B27D500C5EE8B /* GTMReadMonitorInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMReadMonitorInputStream.h; sourceTree = "<group>"; };
+		C9270013140B27D500C5EE8B /* GTMReadMonitorInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMReadMonitorInputStream.m; sourceTree = "<group>"; };
+		C927FFF9140B27C900C5EE8B /* GTMOAuthAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthAuthentication.h; sourceTree = "<group>"; };
+		C927FFFA140B27C900C5EE8B /* GTMOAuthAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthAuthentication.m; sourceTree = "<group>"; };
+		C927FFFB140B27C900C5EE8B /* GTMOAuthSignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthSignIn.h; sourceTree = "<group>"; };
+		C927FFFC140B27C900C5EE8B /* GTMOAuthSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthSignIn.m; sourceTree = "<group>"; };
+		C927FFFD140B27C900C5EE8B /* GTMOAuthWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuthWindow.xib; sourceTree = "<group>"; };
+		C927FFFE140B27C900C5EE8B /* GTMOAuthWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthWindowController.h; sourceTree = "<group>"; };
+		C927FFFF140B27C900C5EE8B /* GTMOAuthWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthWindowController.m; sourceTree = "<group>"; };
 		C929300213F810C2007F685C /* StokerXTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StokerXTwitter.h; sourceTree = "<group>"; };
 		C929300313F810C2007F685C /* StokerXTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerXTwitter.m; sourceTree = "<group>"; };
 		C9366AAE127F882700D79303 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		C9366AAF127F882700D79303 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		C94149B714059CDF006BDCE0 /* ReadMe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ReadMe.html; sourceTree = "<group>"; };
+		C94BED82140B28A900CA06F8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = ../../../../System/Library/Frameworks/Security.framework; sourceTree = "<group>"; };
+		C94BED88140B293D00CA06F8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = ../../../../System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<group>"; };
 		C9503CE013FED6F8008B794F /* EmailSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailSender.h; sourceTree = "<group>"; };
 		C9503CE113FED6F8008B794F /* EmailSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailSender.m; sourceTree = "<group>"; };
 		C958DE12140B0EA2009E8AB6 /* StokerX.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = StokerX.icns; sourceTree = "<group>"; };
@@ -144,14 +173,12 @@
 		C98BDAF8140A62EC00D1424F /* SoundPickerBackground.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = SoundPickerBackground.psd; sourceTree = "<group>"; };
 		C99B857113FFD61700E27494 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		C99B85BF14002FB000E27494 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
-		C99F90B314074B8200083B27 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		C9A3616713FCB87400D98912 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Notifications.xib; sourceTree = "<group>"; };
 		C9B1CF64123352B200648DF4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LVColorWellCell.h; sourceTree = "<group>"; };
 		C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LVColorWellCell.m; sourceTree = "<group>"; };
 		C9CC35131402A33900A6227A /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = ../Frameworks/CorePlot.framework; sourceTree = "<group>"; };
 		C9CC35171402A34C00A6227A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Frameworks/Sparkle.framework; sourceTree = "<group>"; };
-		C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Growl-WithInstaller.framework"; path = "../Frameworks/Growl-WithInstaller.framework"; sourceTree = "<group>"; };
 		C9D5550813FEDCBE0066BB27 /* Mail.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = Mail.app; path = /Users/jkeenan/Projects/StokerX/../../../../Applications/Mail.app; sourceTree = "<absolute>"; };
 		C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		C9D7D85313FB4D8200E5BA00 /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
@@ -169,24 +196,6 @@
 		C9EB1D221226FF930067E58E /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		C9EC2EE81278F6DA00289387 /* Stoker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stoker.h; sourceTree = "<group>"; };
 		C9EC2EE91278F6DA00289387 /* Stoker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stoker.m; sourceTree = "<group>"; };
-		C9FAC928140838E900162542 /* GTMGatherInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMGatherInputStream.h; sourceTree = "<group>"; };
-		C9FAC929140838E900162542 /* GTMGatherInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMGatherInputStream.m; sourceTree = "<group>"; };
-		C9FAC92A140838E900162542 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcher.h; sourceTree = "<group>"; };
-		C9FAC92B140838E900162542 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcher.m; sourceTree = "<group>"; };
-		C9FAC92F140838E900162542 /* GTMHTTPFetcherLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherLogging.h; sourceTree = "<group>"; };
-		C9FAC930140838E900162542 /* GTMHTTPFetcherLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherLogging.m; sourceTree = "<group>"; };
-		C9FAC931140838E900162542 /* GTMHTTPFetcherService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherService.h; sourceTree = "<group>"; };
-		C9FAC932140838E900162542 /* GTMHTTPFetcherService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherService.m; sourceTree = "<group>"; };
-		C9FAC933140838E900162542 /* GTMHTTPFetchHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetchHistory.h; sourceTree = "<group>"; };
-		C9FAC934140838E900162542 /* GTMHTTPFetchHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetchHistory.m; sourceTree = "<group>"; };
-		C9FAC935140838E900162542 /* GTMHTTPUploadFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPUploadFetcher.h; sourceTree = "<group>"; };
-		C9FAC936140838E900162542 /* GTMHTTPUploadFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPUploadFetcher.m; sourceTree = "<group>"; };
-		C9FAC937140838E900162542 /* GTMMIMEDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMMIMEDocument.h; sourceTree = "<group>"; };
-		C9FAC938140838E900162542 /* GTMMIMEDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMMIMEDocument.m; sourceTree = "<group>"; };
-		C9FAC939140838E900162542 /* GTMReadMonitorInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMReadMonitorInputStream.h; sourceTree = "<group>"; };
-		C9FAC93A140838E900162542 /* GTMReadMonitorInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMReadMonitorInputStream.m; sourceTree = "<group>"; };
-		C9FAC96D140845AE00162542 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
-		C9FAC96F140845F200162542 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,15 +203,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9FAC970140845F300162542 /* Security.framework in Frameworks */,
-				C9FAC96E140845AE00162542 /* SystemConfiguration.framework in Frameworks */,
-				C99F90B414074B8200083B27 /* WebKit.framework in Frameworks */,
+				C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */,
+				C94BED83140B28A900CA06F8 /* Security.framework in Frameworks */,
 				C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */,
 				C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */,
 				C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */,
-				C9CC351A1402A3F800A6227A /* Growl-WithInstaller.framework in Frameworks */,
+				C91DD486140B269F00B67EE1 /* Growl-WithInstaller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,13 +220,13 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C927001C140B283800C5EE8B /* HTTPFetcher */,
+				C94BED81140B286E00CA06F8 /* GTMOAuth */,
 				C98BDAF4140A61B300D1424F /* SoundPicker */,
 				C9BE1F1E12E4C355007FAEC5 /* Color */,
 				C9EB1D171226FF930067E58E /* JSON */,
 				C9213669131607D000CFB978 /* Socket Classes */,
 				C95D195514017D76000EF515 /* Notifications */,
-				C9FAC927140838E900162542 /* HTTPFetcher */,
-				C99A114E140899C60004E35E /* GTMOAuth */,
 				C9503CE013FED6F8008B794F /* EmailSender.h */,
 				C9503CE113FED6F8008B794F /* EmailSender.m */,
 				256AC3D80F4B6AC300CF3369 /* StokerXAppDelegate.h */,
@@ -236,9 +244,9 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */,
-				C9CC35171402A34C00A6227A /* Sparkle.framework */,
 				C9CC35131402A33900A6227A /* CorePlot.framework */,
+				C91DD485140B269F00B67EE1 /* Growl-WithInstaller.framework */,
+				C9CC35171402A34C00A6227A /* Sparkle.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -246,12 +254,9 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */,
 				C9867AF9123319D500023BC8 /* QuartzCore.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
-				C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */,
-				C99F90B314074B8200083B27 /* WebKit.framework */,
-				C9FAC96F140845F200162542 /* Security.framework */,
-				C9FAC96D140845AE00162542 /* SystemConfiguration.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 			);
@@ -269,6 +274,8 @@
 		29B97314FDCFA39411CA2CEA /* StokerX */ = {
 			isa = PBXGroup;
 			children = (
+				C94BED88140B293D00CA06F8 /* SystemConfiguration.framework */,
+				C94BED82140B28A900CA06F8 /* Security.framework */,
 				C9D5550813FEDCBE0066BB27 /* Mail.app */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -323,6 +330,43 @@
 				C9366AAF127F882700D79303 /* AsyncSocket.m */,
 			);
 			name = "Socket Classes";
+			sourceTree = "<group>";
+		};
+		C927001C140B283800C5EE8B /* HTTPFetcher */ = {
+			isa = PBXGroup;
+			children = (
+				C9270004140B27D500C5EE8B /* GTMGatherInputStream.h */,
+				C9270005140B27D500C5EE8B /* GTMGatherInputStream.m */,
+				C9270006140B27D500C5EE8B /* GTMHTTPFetcher.h */,
+				C9270007140B27D500C5EE8B /* GTMHTTPFetcher.m */,
+				C9270008140B27D500C5EE8B /* GTMHTTPFetcherLogging.h */,
+				C9270009140B27D500C5EE8B /* GTMHTTPFetcherLogging.m */,
+				C927000A140B27D500C5EE8B /* GTMHTTPFetcherService.h */,
+				C927000B140B27D500C5EE8B /* GTMHTTPFetcherService.m */,
+				C927000C140B27D500C5EE8B /* GTMHTTPFetchHistory.h */,
+				C927000D140B27D500C5EE8B /* GTMHTTPFetchHistory.m */,
+				C927000E140B27D500C5EE8B /* GTMHTTPUploadFetcher.h */,
+				C927000F140B27D500C5EE8B /* GTMHTTPUploadFetcher.m */,
+				C9270010140B27D500C5EE8B /* GTMMIMEDocument.h */,
+				C9270011140B27D500C5EE8B /* GTMMIMEDocument.m */,
+				C9270012140B27D500C5EE8B /* GTMReadMonitorInputStream.h */,
+				C9270013140B27D500C5EE8B /* GTMReadMonitorInputStream.m */,
+			);
+			name = HTTPFetcher;
+			sourceTree = "<group>";
+		};
+		C94BED81140B286E00CA06F8 /* GTMOAuth */ = {
+			isa = PBXGroup;
+			children = (
+				C927FFF9140B27C900C5EE8B /* GTMOAuthAuthentication.h */,
+				C927FFFA140B27C900C5EE8B /* GTMOAuthAuthentication.m */,
+				C927FFFB140B27C900C5EE8B /* GTMOAuthSignIn.h */,
+				C927FFFC140B27C900C5EE8B /* GTMOAuthSignIn.m */,
+				C927FFFD140B27C900C5EE8B /* GTMOAuthWindow.xib */,
+				C927FFFE140B27C900C5EE8B /* GTMOAuthWindowController.h */,
+				C927FFFF140B27C900C5EE8B /* GTMOAuthWindowController.m */,
+			);
+			name = GTMOAuth;
 			sourceTree = "<group>";
 		};
 		C95D195514017D76000EF515 /* Notifications */ = {
@@ -388,29 +432,6 @@
 				C9EB1D221226FF930067E58E /* SBJsonWriter.m */,
 			);
 			path = JSON;
-			sourceTree = "<group>";
-		};
-		C9FAC927140838E900162542 /* HTTPFetcher */ = {
-			isa = PBXGroup;
-			children = (
-				C9FAC928140838E900162542 /* GTMGatherInputStream.h */,
-				C9FAC929140838E900162542 /* GTMGatherInputStream.m */,
-				C9FAC92A140838E900162542 /* GTMHTTPFetcher.h */,
-				C9FAC92B140838E900162542 /* GTMHTTPFetcher.m */,
-				C9FAC92F140838E900162542 /* GTMHTTPFetcherLogging.h */,
-				C9FAC930140838E900162542 /* GTMHTTPFetcherLogging.m */,
-				C9FAC931140838E900162542 /* GTMHTTPFetcherService.h */,
-				C9FAC932140838E900162542 /* GTMHTTPFetcherService.m */,
-				C9FAC933140838E900162542 /* GTMHTTPFetchHistory.h */,
-				C9FAC934140838E900162542 /* GTMHTTPFetchHistory.m */,
-				C9FAC935140838E900162542 /* GTMHTTPUploadFetcher.h */,
-				C9FAC936140838E900162542 /* GTMHTTPUploadFetcher.m */,
-				C9FAC937140838E900162542 /* GTMMIMEDocument.h */,
-				C9FAC938140838E900162542 /* GTMMIMEDocument.m */,
-				C9FAC939140838E900162542 /* GTMReadMonitorInputStream.h */,
-				C9FAC93A140838E900162542 /* GTMReadMonitorInputStream.m */,
-			);
-			path = HTTPFetcher;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -510,6 +531,7 @@
 				C98BDAFA140A62EC00D1424F /* quiet.psd in Resources */,
 				C98BDAFB140A62EC00D1424F /* SoundPickerBackground.psd in Resources */,
 				C958DE13140B0EA2009E8AB6 /* StokerX.icns in Resources */,
+				C9270002140B27C900C5EE8B /* GTMOAuthWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,6 +563,17 @@
 				C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */,
 				C98BDAF2140A61AE00D1424F /* SoundPicker.m in Sources */,
 				C98BDAF3140A61AE00D1424F /* SoundPickerDropView.m in Sources */,
+				C9270000140B27C900C5EE8B /* GTMOAuthAuthentication.m in Sources */,
+				C9270001140B27C900C5EE8B /* GTMOAuthSignIn.m in Sources */,
+				C9270003140B27C900C5EE8B /* GTMOAuthWindowController.m in Sources */,
+				C9270014140B27D500C5EE8B /* GTMGatherInputStream.m in Sources */,
+				C9270015140B27D500C5EE8B /* GTMHTTPFetcher.m in Sources */,
+				C9270016140B27D500C5EE8B /* GTMHTTPFetcherLogging.m in Sources */,
+				C9270017140B27D500C5EE8B /* GTMHTTPFetcherService.m in Sources */,
+				C9270018140B27D500C5EE8B /* GTMHTTPFetchHistory.m in Sources */,
+				C9270019140B27D500C5EE8B /* GTMHTTPUploadFetcher.m in Sources */,
+				C927001A140B27D500C5EE8B /* GTMMIMEDocument.m in Sources */,
+				C927001B140B27D500C5EE8B /* GTMReadMonitorInputStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,7 +632,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -623,7 +655,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;

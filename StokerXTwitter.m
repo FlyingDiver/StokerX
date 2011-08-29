@@ -131,6 +131,36 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	{			
 		// Authentication successful.  Do another Twitter request to confirm and get the user info (not really needed at this time)
 		
+		self.myAuth = auth;
+				
+		NSURL *url = [NSURL URLWithString: @"http://api.twitter.com/1/account/verify_credentials.json"];		
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+		[myAuth authorizeRequest: request];
+		GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
+		[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
+		 {
+			 if (error != nil) 
+			 {
+				 NSLog(@"StokerXTwitter Verification error: %@", error);
+			 } 
+			 else 
+			 {
+				 NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
+				 NSLog(@"StokerXTwitter Verification Successful for %@ (@%@)", [results objectForKey: @"name"], [results objectForKey: @"screen_name"]);
+			 }
+		 }];
+
+	}
+	
+	[self updateUI];
+}
+
+- (void)updateUI 
+{	
+	// update the menu items to reflect the authorized state
+	
+	if ([self isSignedIn]) 
+	{				
 		[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
 		[enableTwitterMenuItem setEnabled: YES];
 		
@@ -142,10 +172,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		{
 			[enableTwitterMenuItem setState: NSOffState];
 		}
-	}
-	else
-	{
-//		NSLog(@"StokerXTwitter awakeFromNib: No accessToken from saved defaults");
+	} 
+	else 
+	{				
 		[authorizeTwitterMenuItem setTitle: @"Authorize Twitter"];
 		[enableTwitterMenuItem setEnabled: NO];
 		[enableTwitterMenuItem setState: NSOffState];
@@ -193,61 +222,11 @@ static NSString *const kTwitterServiceName = @"Twitter";
 {
 	if (![self isSignedIn]) 
 	{
-		accessToken = [[OAToken alloc] initWithUserDefaultsUsingServiceProviderName: kOAuthTwitterDefaultsDomain prefix: kOAuthTwitterDefaultsPrefix];
-		if (accessToken && ([accessToken.key length] > 0) && ([accessToken.secret length] > 0))
-		{
-//			NSLog(@"StokerXTwitter authorizeTwitter: Obtained accessToken from saved defaults");
-			
-			twitterIsAvailable = YES;
-			
-			// set up the Twitter Engine
-			
-			twitterEngine = [[MGTwitterEngine alloc] initWithDelegate:self];
-			[twitterEngine setUsesSecureConnection:NO];
-			[twitterEngine setConsumerKey: kOAuthConsumerKey secret: kOAuthConsumerSecret];
-			[twitterEngine setAccessToken: accessToken];
-			[accessToken release];
-			
-			// set up the menus properly
-			
-			[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
-			[enableTwitterMenuItem setEnabled: YES];
-			
-			if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweetsKey] boolValue])
-			{
-				[enableTwitterMenuItem setState: NSOnState];
-			}
-			else
-			{
-				[enableTwitterMenuItem setState: NSOffState];
-			}
-			return;
-		}
-		
-		// No authorization token saved, so start the process
-		
-		NSLog(@"StokerXTwitter authorizeTwitter: Starting token request process");
-		
-		[self getRequestToken];
-	}
-	else		// Twitter already authorized, so we're supposed to deauthorize
+		[self signInToTwitter];
+	} 
+	else 
 	{
-		NSLog(@"StokerXTwitter authorizeTwitter: deauthorizing");
-
-		[accessToken release];
-		accessToken = [[[OAToken alloc] init] autorelease];	// get a dummy one
-		[accessToken storeInUserDefaultsWithServiceProviderName: kOAuthTwitterDefaultsDomain prefix: kOAuthTwitterDefaultsPrefix];
-		accessToken = nil;
-		
-		if (twitterEngine)
-		{
-			[twitterEngine release];
-			twitterEngine = nil;
-		}
-		twitterIsAvailable = NO;
-		[authorizeTwitterMenuItem setTitle: @"Authorize Twitter"];
-		[enableTwitterMenuItem setEnabled: NO];
-		[enableTwitterMenuItem setState: NSOffState];
+		[self signOut];
 	}
 }
 
@@ -313,118 +292,6 @@ static NSString *const kTwitterServiceName = @"Twitter";
 			 } 
 		 }];
 		
-		NSLog(@"StokerXTwitter setRequestToken: User entered PIN %@, proceeding", [input stringValue]);
-
-		self.requestToken.secret = [input stringValue];
-		[self getAccessToken];
-	} 
-	else if (button == NSAlertAlternateReturn) 
-	{
-		NSLog(@"StokerXTwitter setRequestToken: User cancelled");
-	} 
-	else 
-	{
-		NSLog(@"StokerXTwitter setRequestToken: Invalid input dialog button %ld", (long) button);
-	}
-	[input release];
-}
-
-
-- (void)failRequestToken:(OAServiceTicket *)ticket data:(NSData *)data
-{
-	NSLog(@"failRequestToken: '%@'", data);
-}
-
-- (void)getAccessToken
-{
-	NSLog(@"StokerXTwitter getAccessToken");
-
-    OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:[NSURL URLWithString:kOAuthTwitterAccessTokenURL] 
-																	consumer: self.consumer
-																	   token: self.requestToken  
-																	   realm: nil 
-														   signatureProvider: nil] autorelease];
-	if (!request)
-		return;
-	
-    [request setHTTPMethod:@"POST"];
-
-	NSLog(@"StokerXTwitter OAMutableURLRequest = %@", request);
-
-    OADataFetcher *fetcher = [[[OADataFetcher alloc] init] autorelease];	
-    [fetcher fetchDataWithRequest:request delegate:self didFinishSelector:@selector(setAccessToken:withData:) didFailSelector:@selector(failAccessToken:data:)];
-}
-
-- (void) setAccessToken:(OAServiceTicket *)ticket withData:(NSData *)data
-{
-	NSLog(@"StokerXTwitter setAccessToken: ticket.didSucceed = %d", ticket.didSucceed);
-
-	if ((!ticket.didSucceed) || (!data))
-		return;
-	
-	NSString *dataString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-	if (!dataString)
-		return;
-	
-	// Get the token and save it
-	
-	accessToken = [[[OAToken alloc] initWithHTTPResponseBody:dataString] autorelease];
-	[accessToken storeInUserDefaultsWithServiceProviderName: kOAuthTwitterDefaultsDomain prefix: kOAuthTwitterDefaultsPrefix];
-
-	// set up the Twitter Engine
-	
-	twitterEngine = [[MGTwitterEngine alloc] initWithDelegate:self];
-	[twitterEngine setUsesSecureConnection:NO];
-	[twitterEngine setConsumerKey: kOAuthConsumerKey secret: kOAuthConsumerSecret];
-	[twitterEngine setAccessToken: accessToken];
-	
-	twitterIsAvailable = YES;
-			
-	// set up the menus properly
-	
-	[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
-	[enableTwitterMenuItem setEnabled: YES];
-	
-	if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweetsKey] boolValue])
-	{
-		[enableTwitterMenuItem setState: NSOnState];
-	}
-	else
-	{
-		[enableTwitterMenuItem setState: NSOffState];
-	}
-	
-	// when we receive an access token we also get to know the username
-	NSString *username = [self usernameFromHTTPResponseBody:dataString];
-	[[NSUserDefaults standardUserDefaults] setValue: username forKey:@"TwitterUsername"];	
-
-	NSLog(@"StokerXTwitter setAccessToken: Obtained accessToken from OAuth process, username = %@", username);
-}
-
-- (void)failAccessToken:(OAServiceTicket *)ticket data:(NSData *)data
-{
-	NSLog(@"failAccessToken: '%@'", data);
-}
-
-
-- (NSString *) usernameFromHTTPResponseBody:(NSString *)body
-{
-	if (!body)
-		return nil;
-	
-	NSArray *tuples = [body componentsSeparatedByString:@"&"];
-	if ((!tuples) || (tuples.count < 1))
-		return nil;
-	
-	for (NSString *tuple in tuples) {
-		NSArray *keyValueArray = [tuple componentsSeparatedByString:@"="];
-		if ((keyValueArray) && (keyValueArray.count == 2)) {
-			NSString *key = [keyValueArray objectAtIndex:0];
-			NSString *value = [keyValueArray objectAtIndex:1];
-			if ([key isEqualToString:@"screen_name"]) {
-				return value;
-			}
-		}
 	}
 }
 
