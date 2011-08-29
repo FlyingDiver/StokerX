@@ -7,7 +7,6 @@
 //
 
 #import "SoundPicker.h"
-#import "SoundPickerDropView.h"
 
 
 @implementation SoundPicker
@@ -98,26 +97,7 @@ NSInteger nameSorter(NSString *s1, NSString *s2,void *context) {
 	NSString *currentPath = [[availableSoundsPopup selectedItem] representedObject];
 	
 	NSMenu *newMenu = [[NSMenu alloc] initWithTitle:@""];
-	
-	// StokerX added sounds
-	NSMutableArray *userAddedList = [[NSMutableArray alloc] initWithCapacity: 5];
-	[userAddedList addObjectsFromArray:[self findSoundsIn:[SoundPicker pathForUserAddedSounds]]];
-	[userAddedList sortUsingFunction:nameSorter context:nil];
-	
-	if ([userAddedList count] && [newMenu numberOfItems]) {
-		[newMenu addItem:[NSMenuItem separatorItem]];
-	}
-	
-	for (NSString *s in userAddedList) 
-	{
-		NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[[s lastPathComponent] stringByDeletingPathExtension]
-														  action:NULL
-												   keyEquivalent:@""] autorelease];
-		[newItem setRepresentedObject:s];
-		[newMenu addItem:newItem];
-	}
-	[userAddedList release];
-	
+		
 	// Home directory sounds
 	
 	NSString *homeSoundPath = [NSString stringWithFormat:@"%@/Library/Sounds",NSHomeDirectory()];
@@ -187,7 +167,6 @@ NSInteger nameSorter(NSString *s1, NSString *s2,void *context) {
 	[newSound setVolume:[sound volume]];
 	[sound stop];
 	sound = newSound;
-	[dropView setPath:newPath];	
 	[self rebuildSoundPopup];
 	for (NSMenuItem *item in [[availableSoundsPopup menu] itemArray]) {
 		if ([newPath isEqual:[item representedObject]]) {

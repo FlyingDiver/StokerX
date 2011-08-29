@@ -13,7 +13,6 @@
 
 	IBOutlet NSPopUpButton *availableSoundsPopup;
 	IBOutlet NSSlider *volumeControl;
-	IBOutlet SoundPickerDropView *dropView;
 }
 
 @property (nonatomic, retain) NSString *prefsPrefix;
