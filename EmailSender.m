@@ -20,9 +20,6 @@
     return nil;
 }
 
-
-
-
 - (void)sendEmailMessage: (NSString *) messageBody 
 {
 

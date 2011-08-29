@@ -13,7 +13,6 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		C90C709912861E5E005D55B2 /* SendExpect.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C709712861E5E005D55B2 /* SendExpect.m */; };
 		C917FC381310C6A300B6063E /* nsColorSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = C917FC371310C6A300B6063E /* nsColorSupport.m */; };
-		C91ADC1C1402A72800A6472E /* MGTwitterFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */; };
 		C91ADC601402ABD900A6472E /* NotificationRule.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC5F1402ABD900A6472E /* NotificationRule.m */; };
 		C91ADC631402ACF600A6472E /* NotificationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC621402ACF600A6472E /* NotificationTest.m */; };
 		C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C91ADC651402B1D700A6472E /* NotificationAction.m */; };
@@ -33,27 +32,35 @@
 		C98BDAFB140A62EC00D1424F /* SoundPickerBackground.psd in Resources */ = {isa = PBXBuildFile; fileRef = C98BDAF8140A62EC00D1424F /* SoundPickerBackground.psd */; };
 		C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = C99B857113FFD61700E27494 /* dsa_pub.pem */; };
 		C99B85C014002FB000E27494 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C99B85BF14002FB000E27494 /* Credits.rtf */; };
+		C99F90B414074B8200083B27 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99F90B314074B8200083B27 /* WebKit.framework */; };
 		C9A3616813FCB87500D98912 /* Notifications.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9A3616613FCB87400D98912 /* Notifications.xib */; };
 		C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9B1CF63123352B200648DF4 /* Preferences.xib */; };
 		C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */; };
 		C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
-		C9CC35161402A34500A6227A /* OAuthConsumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35151402A34500A6227A /* OAuthConsumer.framework */; };
 		C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
 		C9CC351A1402A3F800A6227A /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */; };
 		C9CC351B1402A41300A6227A /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
-		C9CC351C1402A41600A6227A /* OAuthConsumer.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35151402A34500A6227A /* OAuthConsumer.framework */; };
 		C9CC351D1402A41800A6227A /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
 		C9CC351E1402A42800A6227A /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */; };
 		C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */ = {isa = PBXBuildFile; fileRef = C9D5550813FEDCBE0066BB27 /* Mail.app */; };
 		C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */; };
 		C9D7D85513FB4D8200E5BA00 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7D85413FB4D8200E5BA00 /* NotificationController.m */; };
-		C9D86CC01402A703002EDF13 /* MGTwitterFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */; };
 		C9EB1D231226FF930067E58E /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */; };
 		C9EB1D241226FF930067E58E /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1C1226FF930067E58E /* NSString+SBJSON.m */; };
 		C9EB1D251226FF930067E58E /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1E1226FF930067E58E /* SBJsonBase.m */; };
 		C9EB1D261226FF930067E58E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D201226FF930067E58E /* SBJsonParser.m */; };
 		C9EB1D271226FF930067E58E /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D221226FF930067E58E /* SBJsonWriter.m */; };
 		C9EC2EEA1278F6DA00289387 /* Stoker.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC2EE91278F6DA00289387 /* Stoker.m */; };
+		C9FAC94F140838E900162542 /* GTMGatherInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC929140838E900162542 /* GTMGatherInputStream.m */; };
+		C9FAC950140838E900162542 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC92B140838E900162542 /* GTMHTTPFetcher.m */; };
+		C9FAC951140838E900162542 /* GTMHTTPFetcherLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC930140838E900162542 /* GTMHTTPFetcherLogging.m */; };
+		C9FAC952140838E900162542 /* GTMHTTPFetcherService.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC932140838E900162542 /* GTMHTTPFetcherService.m */; };
+		C9FAC953140838E900162542 /* GTMHTTPFetchHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC934140838E900162542 /* GTMHTTPFetchHistory.m */; };
+		C9FAC954140838E900162542 /* GTMHTTPUploadFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC936140838E900162542 /* GTMHTTPUploadFetcher.m */; };
+		C9FAC955140838E900162542 /* GTMMIMEDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC938140838E900162542 /* GTMMIMEDocument.m */; };
+		C9FAC956140838E900162542 /* GTMReadMonitorInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAC93A140838E900162542 /* GTMReadMonitorInputStream.m */; };
+		C9FAC96E140845AE00162542 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FAC96D140845AE00162542 /* SystemConfiguration.framework */; };
+		C9FAC970140845F300162542 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FAC96F140845F200162542 /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -78,10 +85,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C9CC351B1402A41300A6227A /* Sparkle.framework in CopyFiles */,
-				C9D86CC01402A703002EDF13 /* MGTwitterFramework.framework in CopyFiles */,
 				C9CC351E1402A42800A6227A /* Growl-WithInstaller.framework in CopyFiles */,
 				C9CC351D1402A41800A6227A /* CorePlot.framework in CopyFiles */,
-				C9CC351C1402A41600A6227A /* OAuthConsumer.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,19 +144,18 @@
 		C98BDAF8140A62EC00D1424F /* SoundPickerBackground.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = SoundPickerBackground.psd; sourceTree = "<group>"; };
 		C99B857113FFD61700E27494 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		C99B85BF14002FB000E27494 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		C99F90B314074B8200083B27 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		C9A3616713FCB87400D98912 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Notifications.xib; sourceTree = "<group>"; };
 		C9B1CF64123352B200648DF4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LVColorWellCell.h; sourceTree = "<group>"; };
 		C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LVColorWellCell.m; sourceTree = "<group>"; };
 		C9CC35131402A33900A6227A /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = ../Frameworks/CorePlot.framework; sourceTree = "<group>"; };
-		C9CC35151402A34500A6227A /* OAuthConsumer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OAuthConsumer.framework; path = ../Frameworks/OAuthConsumer.framework; sourceTree = "<group>"; };
 		C9CC35171402A34C00A6227A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Growl-WithInstaller.framework"; path = "../Frameworks/Growl-WithInstaller.framework"; sourceTree = "<group>"; };
 		C9D5550813FEDCBE0066BB27 /* Mail.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = Mail.app; path = /Users/jkeenan/Projects/StokerX/../../../../Applications/Mail.app; sourceTree = "<absolute>"; };
 		C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		C9D7D85313FB4D8200E5BA00 /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
 		C9D7D85413FB4D8200E5BA00 /* NotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationController.m; sourceTree = "<group>"; };
-		C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MGTwitterFramework.framework; path = ../Frameworks/MGTwitterFramework.framework; sourceTree = "<group>"; };
 		C9EB1D181226FF930067E58E /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		C9EB1D191226FF930067E58E /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -165,6 +169,24 @@
 		C9EB1D221226FF930067E58E /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		C9EC2EE81278F6DA00289387 /* Stoker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stoker.h; sourceTree = "<group>"; };
 		C9EC2EE91278F6DA00289387 /* Stoker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stoker.m; sourceTree = "<group>"; };
+		C9FAC928140838E900162542 /* GTMGatherInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMGatherInputStream.h; sourceTree = "<group>"; };
+		C9FAC929140838E900162542 /* GTMGatherInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMGatherInputStream.m; sourceTree = "<group>"; };
+		C9FAC92A140838E900162542 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcher.h; sourceTree = "<group>"; };
+		C9FAC92B140838E900162542 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcher.m; sourceTree = "<group>"; };
+		C9FAC92F140838E900162542 /* GTMHTTPFetcherLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherLogging.h; sourceTree = "<group>"; };
+		C9FAC930140838E900162542 /* GTMHTTPFetcherLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherLogging.m; sourceTree = "<group>"; };
+		C9FAC931140838E900162542 /* GTMHTTPFetcherService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherService.h; sourceTree = "<group>"; };
+		C9FAC932140838E900162542 /* GTMHTTPFetcherService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherService.m; sourceTree = "<group>"; };
+		C9FAC933140838E900162542 /* GTMHTTPFetchHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetchHistory.h; sourceTree = "<group>"; };
+		C9FAC934140838E900162542 /* GTMHTTPFetchHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetchHistory.m; sourceTree = "<group>"; };
+		C9FAC935140838E900162542 /* GTMHTTPUploadFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPUploadFetcher.h; sourceTree = "<group>"; };
+		C9FAC936140838E900162542 /* GTMHTTPUploadFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPUploadFetcher.m; sourceTree = "<group>"; };
+		C9FAC937140838E900162542 /* GTMMIMEDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMMIMEDocument.h; sourceTree = "<group>"; };
+		C9FAC938140838E900162542 /* GTMMIMEDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMMIMEDocument.m; sourceTree = "<group>"; };
+		C9FAC939140838E900162542 /* GTMReadMonitorInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMReadMonitorInputStream.h; sourceTree = "<group>"; };
+		C9FAC93A140838E900162542 /* GTMReadMonitorInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMReadMonitorInputStream.m; sourceTree = "<group>"; };
+		C9FAC96D140845AE00162542 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		C9FAC96F140845F200162542 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,12 +194,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9FAC970140845F300162542 /* Security.framework in Frameworks */,
+				C9FAC96E140845AE00162542 /* SystemConfiguration.framework in Frameworks */,
+				C99F90B414074B8200083B27 /* WebKit.framework in Frameworks */,
 				C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */,
 				C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */,
-				C9CC35161402A34500A6227A /* OAuthConsumer.framework in Frameworks */,
-				C91ADC1C1402A72800A6472E /* MGTwitterFramework.framework in Frameworks */,
 				C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */,
 				C9CC351A1402A3F800A6227A /* Growl-WithInstaller.framework in Frameworks */,
 			);
@@ -194,6 +217,8 @@
 				C9EB1D171226FF930067E58E /* JSON */,
 				C9213669131607D000CFB978 /* Socket Classes */,
 				C95D195514017D76000EF515 /* Notifications */,
+				C9FAC927140838E900162542 /* HTTPFetcher */,
+				C99A114E140899C60004E35E /* GTMOAuth */,
 				C9503CE013FED6F8008B794F /* EmailSender.h */,
 				C9503CE113FED6F8008B794F /* EmailSender.m */,
 				256AC3D80F4B6AC300CF3369 /* StokerXAppDelegate.h */,
@@ -211,14 +236,9 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C9D86CBE1402A6F4002EDF13 /* MGTwitterFramework.framework */,
 				C9CC35191402A3F800A6227A /* Growl-WithInstaller.framework */,
 				C9CC35171402A34C00A6227A /* Sparkle.framework */,
-				C9CC35151402A34500A6227A /* OAuthConsumer.framework */,
 				C9CC35131402A33900A6227A /* CorePlot.framework */,
-				C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */,
-				C9867AF9123319D500023BC8 /* QuartzCore.framework */,
-				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -226,6 +246,12 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C9867AF9123319D500023BC8 /* QuartzCore.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */,
+				C99F90B314074B8200083B27 /* WebKit.framework */,
+				C9FAC96F140845F200162542 /* Security.framework */,
+				C9FAC96D140845AE00162542 /* SystemConfiguration.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 			);
@@ -362,6 +388,29 @@
 				C9EB1D221226FF930067E58E /* SBJsonWriter.m */,
 			);
 			path = JSON;
+			sourceTree = "<group>";
+		};
+		C9FAC927140838E900162542 /* HTTPFetcher */ = {
+			isa = PBXGroup;
+			children = (
+				C9FAC928140838E900162542 /* GTMGatherInputStream.h */,
+				C9FAC929140838E900162542 /* GTMGatherInputStream.m */,
+				C9FAC92A140838E900162542 /* GTMHTTPFetcher.h */,
+				C9FAC92B140838E900162542 /* GTMHTTPFetcher.m */,
+				C9FAC92F140838E900162542 /* GTMHTTPFetcherLogging.h */,
+				C9FAC930140838E900162542 /* GTMHTTPFetcherLogging.m */,
+				C9FAC931140838E900162542 /* GTMHTTPFetcherService.h */,
+				C9FAC932140838E900162542 /* GTMHTTPFetcherService.m */,
+				C9FAC933140838E900162542 /* GTMHTTPFetchHistory.h */,
+				C9FAC934140838E900162542 /* GTMHTTPFetchHistory.m */,
+				C9FAC935140838E900162542 /* GTMHTTPUploadFetcher.h */,
+				C9FAC936140838E900162542 /* GTMHTTPUploadFetcher.m */,
+				C9FAC937140838E900162542 /* GTMMIMEDocument.h */,
+				C9FAC938140838E900162542 /* GTMMIMEDocument.m */,
+				C9FAC939140838E900162542 /* GTMReadMonitorInputStream.h */,
+				C9FAC93A140838E900162542 /* GTMReadMonitorInputStream.m */,
+			);
+			path = HTTPFetcher;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -550,6 +599,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -573,6 +623,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;

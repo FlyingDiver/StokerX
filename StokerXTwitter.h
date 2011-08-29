@@ -8,55 +8,45 @@
 
 #import <Foundation/Foundation.h>
 #import "PreferencesController.h"
-#import "MGTwitterFramework/MGTwitterEngine.h"
-#import "OAuthConsumer/OAuthConsumer.h"
+#import "GTMOAuthWindowController.h"
+#import "JSON.h"
 
-// These two strings identify the application (StokerX) sending the tweet
+// These are the keys for the OOB version (beta 0.5)
 
-#define	kOAuthConsumerKey		@"UjMLz291haVFTs1cRdVA"
-#define	kOAuthConsumerSecret	@"H9dgyFaEZhbFK45lZs7CdCACKnBAM1Jnj7rLmw5SJk"
+// #define	kOAuthConsumerKey		@"UjMLz291haVFTs1cRdVA"
+// #define	kOAuthConsumerSecret	@"H9dgyFaEZhbFK45lZs7CdCACKnBAM1Jnj7rLmw5SJk"
 
-// URLs for obtaining an authorization token from Twitter
+// These are the keys for the callback version
 
-#define kOAuthTwitterRequestTokenURL	@"http://api.twitter.com/oauth/request_token"
-#define kOAuthTwitterAuthorizeURL		@"http://api.twitter.com/oauth/authorize"
-#define kOAuthTwitterAccessTokenURL		@"http://api.twitter.com/oauth/access_token"
+#define kOAuthConsumerKey		@"yF1oP08RQhPGrFvUbEkNQ"
+#define kOAuthConsumerSecret	@"tT2eVOidKDhwuP5RJoj5Rf9CQPHfyd2c9wAcAKOOE"
 
-#define kOAuthTwitterDefaultsDomain		@"api.twitter.com"
-#define kOAuthTwitterDefaultsPrefix		@"StokerX"
+#define MAX_MESSAGE_LENGTH		140		// twitter max
 
-
-
-@interface StokerXTwitter : NSObject <MGTwitterEngineDelegate> 
-{
-	MGTwitterEngine		*twitterEngine;	
-	OAToken				*requestToken;
-	OAToken				*accessToken;
-	OAConsumer			*consumer;
-	
-	Boolean				twitterIsAvailable;
-	
+@interface StokerXTwitter : NSObject
+{	
 	IBOutlet NSMenuItem	*authorizeTwitterMenuItem;
 	IBOutlet NSMenuItem	*enableTwitterMenuItem;
 }
 
-- (IBAction) authorizeTwitter: (id) sender;
+- (IBAction) signInOutClicked: (id) sender;
 - (IBAction) enableTwitter: (id) sender;
-
 - (void) sendTweet: (NSString *) tweet;
 
-- (void) getRequestToken;
-- (void) setRequestToken:(OAServiceTicket *)ticket withData:(NSData *)data;
-- (void) failRequestToken:(OAServiceTicket *)ticket data:(NSData *)data;
 
-- (void) getAccessToken;
-- (void) setAccessToken:(OAServiceTicket *)ticket withData:(NSData *)data;
-- (void) failAccessToken:(OAServiceTicket *)ticket data:(NSData *)data;
+- (void)signInToTwitter;
+- (void)signOut;
+- (BOOL)isSignedIn;
 
-- (NSString *) usernameFromHTTPResponseBody:(NSString *)body;
+- (GTMOAuthAuthentication *) authForTwitter;
 
-@property (nonatomic, retain) OAConsumer	*consumer;
-@property (nonatomic, retain) OAToken		*requestToken;
-@property (nonatomic, retain) OAToken		*accessToken;
+- (void)windowController:(GTMOAuthWindowController *)windowController
+        finishedWithAuth:(GTMOAuthAuthentication *)auth
+                   error:(NSError *)error;
+
+- (void)updateUI;
+- (void)signInNetworkLost:(NSNotification *)note;
+
+@property (nonatomic, retain) GTMOAuthAuthentication *myAuth;
 
 @end

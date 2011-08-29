@@ -1956,14 +1956,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">authorizeTwitter:</string>
-						<reference key="source" ref="305954644"/>
-						<reference key="destination" ref="102151532"/>
-					</object>
-					<int key="connectionID">711</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">enableTwitter:</string>
 						<reference key="source" ref="305954644"/>
 						<reference key="destination" ref="237841660"/>
@@ -2041,6 +2033,14 @@
 						<reference key="destination" ref="1049446194"/>
 					</object>
 					<int key="connectionID">788</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">signInOutClicked:</string>
+						<reference key="source" ref="305954644"/>
+						<reference key="destination" ref="102151532"/>
+					</object>
+					<int key="connectionID">805</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">

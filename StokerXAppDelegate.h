@@ -32,7 +32,7 @@
     IBOutlet CPTLayerHostingView	*graphView;
 	
 	IBOutlet PreferencesController	*preferencesController;
-	IBOutlet StokerXTwitter			*tweetController;
+	IBOutlet StokerXTwitter			*doAnAuthenticatedAPIFetch;
 	IBOutlet NotificationController	*notificationController;
 
 	Stoker							*theStoker;
