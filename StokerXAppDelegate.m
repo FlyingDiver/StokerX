@@ -675,5 +675,42 @@
 	NSLog(@"appcast: %@ failedToLoadWithError: %@", appcast, error);
 }
 
+// Implement this if you want to do some special handling with the appcast once it finishes loading.
+- (void)updater:(SUUpdater *)updater didFinishLoadingAppcast:(SUAppcast *)appcast
+{
+	NSLog(@"Updater didFinishLoadingAppcast:");
+	for (SUAppcastItem *item in [appcast items])
+	{
+		NSLog(@"\t%@ - %@ (%@)", [item title], [item displayVersionString], [item versionString]);
+	}
+}
+
+// Sent when a valid update is found by the update driver.
+- (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)update
+{
+	NSLog(@"Updater:didFindValidUpdate: %@ - %@ (%@)", [update title], [update displayVersionString], [update versionString]);
+
+}
+
+// Sent when a valid update is not found.
+- (void)updaterDidNotFindUpdate:(SUUpdater *)update
+{
+	NSLog(@"updaterDidNotFindUpdate");
+
+}
+
+// Sent immediately before installing the specified update.
+- (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update
+{
+	NSLog(@"Updater:willInstallUpdate: %@ - %@ (%@)", [update title], [update displayVersionString], [update versionString]);
+}
+
+// Called immediately before relaunching.
+- (void)updaterWillRelaunchApplication:(SUUpdater *)updater
+{
+	NSLog(@"updaterWillRelaunchApplication");
+
+}
+
 @end
 

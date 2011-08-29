@@ -22,6 +22,7 @@
 		C94149B814059CDF006BDCE0 /* ReadMe.html in Resources */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
 		C94149BA1405A0C0006BDCE0 /* ReadMe.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
 		C9503CE213FED6F8008B794F /* EmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C9503CE113FED6F8008B794F /* EmailSender.m */; };
+		C958DE13140B0EA2009E8AB6 /* StokerX.icns in Resources */ = {isa = PBXBuildFile; fileRef = C958DE12140B0EA2009E8AB6 /* StokerX.icns */; };
 		C967349013E46DD70042841B /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C967348F13E46DD70042841B /* PreferencesController.m */; };
 		C9867AE712330DB900023BC8 /* StokerXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */; };
 		C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9867AF9123319D500023BC8 /* QuartzCore.framework */; };
@@ -124,6 +125,7 @@
 		C94149B714059CDF006BDCE0 /* ReadMe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ReadMe.html; sourceTree = "<group>"; };
 		C9503CE013FED6F8008B794F /* EmailSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailSender.h; sourceTree = "<group>"; };
 		C9503CE113FED6F8008B794F /* EmailSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailSender.m; sourceTree = "<group>"; };
+		C958DE12140B0EA2009E8AB6 /* StokerX.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = StokerX.icns; sourceTree = "<group>"; };
 		C967348E13E46DD10042841B /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = StokerX.xcodeproj/../PreferencesController.h; sourceTree = SOURCE_ROOT; };
 		C967348F13E46DD70042841B /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = StokerX.xcodeproj/../PreferencesController.m; sourceTree = SOURCE_ROOT; };
 		C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerXAppDelegate.m; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				C9B1CF63123352B200648DF4 /* Preferences.xib */,
 				C9A3616613FCB87400D98912 /* Notifications.xib */,
 				C99B85BF14002FB000E27494 /* Credits.rtf */,
+				C958DE12140B0EA2009E8AB6 /* StokerX.icns */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				C98BDAF9140A62EC00D1424F /* loud.psd in Resources */,
 				C98BDAFA140A62EC00D1424F /* quiet.psd in Resources */,
 				C98BDAFB140A62EC00D1424F /* SoundPickerBackground.psd in Resources */,
+				C958DE13140B0EA2009E8AB6 /* StokerX.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
