@@ -56,8 +56,10 @@
 - (IBAction)showPreferencePanel:(id)sender;
 - (IBAction)showNotificationsWindow:(id)sender;
 - (IBAction) startLogging: (id) sender;
+- (IBAction) savePlotData:(id)sender;
 
 - (void) setStatusText: (NSString *) status;
+
 - (void) plotSetup;
 
 @property (nonatomic, assign) NSTimeInterval			startTime;

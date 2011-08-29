@@ -87,74 +87,59 @@
 
 - (void) getStokerJSON:(NSTimer *) theTimer
 {	
-//	NSLog(@"Stoker: getStokerJSON:");
-    
-	jsonConnection = [[NSURLConnection alloc] initWithRequest:jsonRequest delegate:self];
+	NSString *requestString =  [NSString stringWithFormat: @"http://%@:%@/stoker.json?version=true", ipAddress, httpPort];
+	
+	NSURL *url = [NSURL URLWithString: requestString];		
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+	GTMHTTPFetcher* jsonFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
+	[jsonFetcher beginFetchWithDelegate:self didFinishSelector:@selector(jsonFetcher:finishedWithData:error:)];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data 
-{	
-//	NSLog(@"Stoker: connection: didReceiveData:");
-
-	if (connection == postConnection)   // don't do anything if this was from a POST request to update Stoker settings (unlikely)
+- (void)jsonFetcher:(GTMHTTPFetcher *)fetcher finishedWithData:(NSData *)retrievedData error:(NSError *)error;
+{
+	if (error != nil) 
+	{
+		NSLog(@"getStokerJSON GTMHTTPFetcher error: %@", error);
 		return;
-
+	} 
+	
 	if (!stokerAvailable)       // don't know if we have a connection yet
     {
         stokerAvailable = TRUE;		// worked!
         [self sendStatusUpdate: @"HTTP Connection successful"];
     }
-	if (nil == jsonData)
-		jsonData = [[NSMutableData alloc] init];
 	
-	[jsonData appendData: data];    // save the data provided, might be appended to existing data 
-}
+	NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-//	NSLog(@"Stoker: connectionDidFinishLoading:");
-
-	if (connection == postConnection)   // nothing to do when it's a POST completing
+	if (!results)
 	{
-		[connection release];
-		postConnection = nil;
-		return;
+		NSLog(@"getStokerJSON JSON Parse error");
+		return;		// bad JSON parse, skip this one
 	}
 	
-	NSDictionary *results = [[[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
-	
-	[connection release];
-	[jsonData release];
-	jsonData = nil;
-	
-	if (!results)
-		return;		// bad JSON parse, skip this one
-	
 	// now that we have at least set of data from the Stoker, get the data structures set up
-	
+
 	if (nil == sensorDict)
-	{
-//		NSLog(@"%@", results);
-		
+	{		
 		self.stokerVersion = [[results objectForKey:@"stoker"] objectForKey:@"version"];
 		[self sensorSetup: results];
 	}
-	
-    // If logging active, read the sensor values from the response and send to the Delegate
-    
+
+	// If logging active, read the sensor values from the response and send to the Delegate
+
 	if (!logging)
 		return;
-		
- 	NSArray *sensors = [[results objectForKey:@"stoker"] objectForKey:@"sensors"];
+
+	NSArray *sensors = [[results objectForKey:@"stoker"] objectForKey:@"sensors"];
 	if (sensors != (NSArray *) [NSNull null])
 	{
 		for (NSDictionary *sensor in sensors)
 		{
-            if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:updateSensorTemp:forSensor:)]) {
-                [[self delegate] stoker: self updateSensorTemp: [sensor objectForKey:@"tc"] forSensor: [sensor objectForKey:@"id"]];
-            }
+			if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:updateSensorTemp:forSensor:)]) {
+				[[self delegate] stoker: self updateSensorTemp: [sensor objectForKey:@"tc"] forSensor: [sensor objectForKey:@"id"]];
+			}
 			
- 			if ([sensor objectForKey:@"blower"] != [NSNull null])		// only check for lid off on control blower
+			if ([sensor objectForKey:@"blower"] != [NSNull null])		// only check for lid off on control blower
 			{
 				[self checkLidOffSensor: [sensor objectForKey:@"id"] withTemp: [sensor objectForKey:@"tc"]];
 			}
@@ -166,28 +151,16 @@
 	{
 		for (NSDictionary *blower in blowers)
 		{
-            if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:updateBlowerState:forBlower:)]) {
-                [[self delegate] stoker: self updateBlowerState: [[blower objectForKey:@"on"] intValue] forBlower: [blower objectForKey:@"id"]];
-            }
+			if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:updateBlowerState:forBlower:)]) {
+				[[self delegate] stoker: self updateBlowerState: [[blower objectForKey:@"on"] intValue] forBlower: [blower objectForKey:@"id"]];
+			}
 		}
 	}
-	
+
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(stokerHasUpdatedSensorData:)]) {
 		[[self delegate] stokerHasUpdatedSensorData: self];
 	}   
 }
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-	if (connection == jsonConnection)
-	{
-		NSLog(@"Stoker: JSON NSURLConnection didFailWithError: %@", error);
-		stokerAvailable = FALSE;
-	}
-    else
-		NSLog(@"Stoker: Unknown NSURLConnection didFailWithError: %@", error);
-}
-
 
 - (void)sensorSetup: (NSDictionary *) jsonResults
 {		    

@@ -13,6 +13,7 @@
 #import "AsyncSocket.h"
 #import "JSON.h"
 #import "SendExpect.h"
+#import "GTMHTTPFetcher.h"
 
 #define STOKER_QUERY_INTERVAL	10.0
 #define BLOWER_STEP				60.0
@@ -61,6 +62,8 @@
 - (void) startTelnetCapture;
 - (void) stopTelnetCapture;
 - (void) parseTelnetOutput: (NSString *) stokerOutput;
+
+- (void)jsonFetcher:(GTMHTTPFetcher *)fetcher finishedWithData:(NSData *)retrievedData error:(NSError *)error;
 
 - (void) sensorSetup: (NSDictionary *) results;
 

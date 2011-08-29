@@ -31,22 +31,24 @@
 
 - (IBAction) signInOutClicked: (id) sender;
 - (IBAction) enableTwitter: (id) sender;
+
 - (void) sendTweet: (NSString *) tweet;
-
-
-- (void)signInToTwitter;
-- (void)signOut;
-- (BOOL)isSignedIn;
+- (void) signInToTwitter;
+- (void) signOut;
+- (BOOL) isSignedIn;
+- (void) getTwitterInfo;
 
 - (GTMOAuthAuthentication *) authForTwitter;
 
-- (void)windowController:(GTMOAuthWindowController *)windowController
-        finishedWithAuth:(GTMOAuthAuthentication *)auth
-                   error:(NSError *)error;
+- (void) windowController:(GTMOAuthWindowController *)windowController
+         finishedWithAuth:(GTMOAuthAuthentication *)auth
+                    error:(NSError *)error;
 
-- (void)updateUI;
-- (void)signInNetworkLost:(NSNotification *)note;
+- (void) updateUI;
+- (void) signInNetworkLost:(NSNotification *)note;
 
 @property (nonatomic, retain) GTMOAuthAuthentication *myAuth;
+@property (nonatomic, retain) NSString *twitterHandle;
+@property (nonatomic, retain) NSString *twitterUserName;
 
 @end

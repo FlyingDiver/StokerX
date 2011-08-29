@@ -5,7 +5,20 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
-	<array/>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>StokerX</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>StokerX</string>
+			<key>CFBundleTypeName</key>
+			<string>com.flyingdiver.StokerX.plist</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -43,7 +56,35 @@
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
 	<key>UTExportedTypeDeclarations</key>
-	<array/>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>StokerX Data File</string>
+			<key>UTTypeIconFile</key>
+			<string>StokerX</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.flyingdiver.StokerX.plist</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<array>
+					<string>SDBX</string>
+				</array>
+				<key>public.filename-extension</key>
+				<array>
+					<string>StokerX</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/octet-stream</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 	<key>UTImportedTypeDeclarations</key>
 	<array/>
 </dict>

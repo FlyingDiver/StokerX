@@ -13,25 +13,9 @@
 
 @synthesize sound, prefsPrefix;
 
-- (id) init
-{
-	NSLog(@"SoundPicker init");
-	
-	if (!(self = [super init]))
-		return nil;
-	
-	return self;
-}
-
-- (void)windowDidLoad
-{
-	NSLog(@"SoundPicker windowDidLoad");	
-}
-
 + (NSArray *)allowedSoundExtensions;
 {
-	return [NSArray arrayWithObjects:@"caf",@"aiff", @"aif", @"aifc",@"wav",@"wave",@"snd",@"au",@"mp3",@"ulw",@"m4p",@"m4a",nil];
-	
+	return [NSArray arrayWithObjects:@"caf",@"aiff", @"aif", @"aifc",@"wav",@"wave",@"snd",@"au",@"mp3",@"ulw",@"m4p",@"m4a",nil];	
 }
 
 + (NSString *)pathForUserAddedSounds;
@@ -42,10 +26,9 @@
 	return [supportDir stringByAppendingPathComponent: @"Sounds"];
 }
 
-
 - (IBAction)volumeChanged:(id)anObject;
 {
-	NSLog(@"SoundPicker volumeChanged:");
+//	NSLog(@"SoundPicker volumeChanged:");
 
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setFloat:[volumeControl floatValue] forKey:[NSString stringWithFormat:@"%@_Volume",prefsPrefix]];
@@ -56,7 +39,7 @@
 
 - (IBAction)increaseVolume:(id)sender;
 {
-	NSLog(@"SoundPicker increaseVolume:");
+//	NSLog(@"SoundPicker increaseVolume:");
 
 	float newVolume = [sound volume] + 0.1;
 	if (newVolume > 1.0 ) newVolume = 1.0;
@@ -66,7 +49,7 @@
 
 - (IBAction)decreaseVolume:(id)sender;
 {
-	NSLog(@"SoundPicker decreaseVolume:");
+//	NSLog(@"SoundPicker decreaseVolume:");
 
 	float newVolume = [sound volume] - 0.1;
 	if (newVolume < 0.0 ) newVolume = 0.0;
@@ -157,7 +140,7 @@ NSInteger nameSorter(NSString *s1, NSString *s2,void *context) {
 
 - (void)setSoundPath:(NSString *)newPath;
 {
-	NSLog(@"SoundPicker setSoundPath: %@", newPath);
+//	NSLog(@"SoundPicker setSoundPath: %@", newPath);
 
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setObject:newPath forKey:[NSString stringWithFormat:@"%@_Path",prefsPrefix]];
@@ -185,39 +168,25 @@ NSInteger nameSorter(NSString *s1, NSString *s2,void *context) {
 	[sound play];
 }
 
-- (void)refreshPopup:(NSNotification *)aNotice;
-{
-	NSLog(@"SoundPicker refreshPopup:");
-	
-	[self rebuildSoundPopup];
-}
-
 - (void)setDefaultSoundPath:(NSString *)defaultPath;
 {
-	NSLog(@"SoundPicker setDefaultSoundPath: %@, prefsPrefix = %@", defaultPath, prefsPrefix);
-
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSString *savedPath = [defaults stringForKey:[NSString stringWithFormat:@"%@_Path",prefsPrefix]];
 	NSString *savedVolume = [defaults stringForKey:[NSString stringWithFormat:@"%@_Volume",prefsPrefix]];
 	if (!savedVolume) savedVolume = @"0.8";
 
-	if (savedPath) {
-		NSLog(@"SoundPicker savedPath is %@",savedPath);
+	if (savedPath) 
+	{
 		[self setSoundPath:savedPath];
 		[volumeControl setFloatValue:[savedVolume floatValue]];
 		[sound setVolume:[savedVolume floatValue]];
-	} else {
+	} 
+	else 
+	{
 		[self setSoundPath:defaultPath];
 		[volumeControl setFloatValue:[savedVolume floatValue]];
 		[sound setVolume:[savedVolume floatValue]];
 	}
 }
-
-
-- (void)awakeFromNib;
-{
-	NSLog(@"SoundPicker awakeFromNib");
-}
- 
 
 @end

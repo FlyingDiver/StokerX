@@ -224,9 +224,8 @@
 				C9BE1F1E12E4C355007FAEC5 /* Color */,
 				C9EB1D171226FF930067E58E /* JSON */,
 				C9213669131607D000CFB978 /* Socket Classes */,
+				C922C669140BD3E800A40435 /* EmailSender */,
 				C95D195514017D76000EF515 /* Notifications */,
-				C9503CE013FED6F8008B794F /* EmailSender.h */,
-				C9503CE113FED6F8008B794F /* EmailSender.m */,
 				256AC3D80F4B6AC300CF3369 /* StokerXAppDelegate.h */,
 				C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */,
 				C929300213F810C2007F685C /* StokerXTwitter.h */,
@@ -329,6 +328,15 @@
 				C9366AAF127F882700D79303 /* AsyncSocket.m */,
 			);
 			name = "Socket Classes";
+			sourceTree = "<group>";
+		};
+		C922C669140BD3E800A40435 /* EmailSender */ = {
+			isa = PBXGroup;
+			children = (
+				C9503CE013FED6F8008B794F /* EmailSender.h */,
+				C9503CE113FED6F8008B794F /* EmailSender.m */,
+			);
+			name = EmailSender;
 			sourceTree = "<group>";
 		};
 		C927001C140B283800C5EE8B /* HTTPFetcher */ = {

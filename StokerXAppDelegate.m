@@ -8,7 +8,6 @@
 
 #import "StokerXAppDelegate.h"
 
-
 @implementation StokerXAppDelegate
 
 @synthesize startTime, graph, tweetController, preferencesController;
@@ -98,7 +97,10 @@
 
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notes
-{	    
+{	
+//	Enabling this causes Fetcher logs to be written to the desktop!
+//	[GTMHTTPFetcher setLoggingEnabled:YES];
+
 	// Use saved position of main window, and show it.
 	
 	[mainWindow setFrameAutosaveName:@"Main Window"];
@@ -157,103 +159,12 @@
 	return NSTerminateNow;	
 }
 
-// Configure the plots and data structures based on the sensors and blowers found
 
-- (void) plotSetup
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filepath
 {
-    // set up the plots based on the Stoker info
+	NSLog(@"NSApp application:openFile: %@", filepath);
 	
-    CPTScatterPlot *linePlot;
-    CPTMutableLineStyle *lineStyle;
-    int sensorCount = 0;
-    NSArray *sensorColors =  [NSArray arrayWithObjects: [NSColor redColor], [NSColor blueColor], [NSColor greenColor], [NSColor cyanColor], nil];
-    NSColor *plotColor = nil;
-	
-	stokerData = [[NSMutableDictionary alloc] initWithCapacity:4];
-	
-    for (int i = 0; i < [theStoker numberOfBlowers]; i++)
-    {        
-		// First, create an entry in the stokerData dictionary for this blower
-		
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [theStoker nameForBlower: i], @"name", 
-								 [NSNumber numberWithInt: 0],  @"count",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [theStoker idForBlower: i]];
-		
-        linePlot = [[CPTScatterPlot alloc] init];
-        linePlot.identifier = [theStoker idForBlower: i];
-        linePlot.interpolation = CPTScatterPlotInterpolationStepped;
-        linePlot.dataSource = self;
-        
-        lineStyle = [CPTMutableLineStyle lineStyle];
-        lineStyle.lineWidth = 1.0f;
-        lineStyle.lineColor = [CPTColor blackColor];
-        linePlot.dataLineStyle = lineStyle;
-        
-        [graph addPlot:linePlot];
-        [linePlot release];
-    }
-	
-	// get info on the sensors from the Stoker
-	
-    for (int i = 0; i < [theStoker numberOfSensors]; i++)
-    {		
-		// First, create an entry in the stokerData dictionary for this sensor
-		
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [theStoker nameForSensor: i], @"name", 
-								 [theStoker typeForSensor: i], @"type", 
-								 [theStoker tempForSensor: i], @"temp",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [theStoker idForSensor: i]];
-				
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [theStoker nameForSensor: i], @"name", 
-								 [theStoker targetForSensor: i], @"target",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [NSString stringWithFormat: @"%@ Target", [theStoker idForSensor: i]]];
-		
-        plotColor = [[NSUserDefaults standardUserDefaults]  colorForKey: [NSString stringWithFormat: @"PlotColor %@", [theStoker idForSensor: i]]];
-        if (!plotColor)
-        {
-            plotColor = [sensorColors objectAtIndex: sensorCount];
-            sensorCount++;
-            [[NSUserDefaults standardUserDefaults] setColor: plotColor forKey: [NSString stringWithFormat: @"PlotColor %@", [theStoker idForSensor: i]]];
-        }
-        [self colorCell: nil setColor: plotColor forRow: i];
-        
-        // Create a plot for the sensor data
-        linePlot = [[CPTScatterPlot alloc] init];
-        linePlot.identifier = [theStoker idForSensor: i];
-        linePlot.dataSource = self;			
-        
-        lineStyle = [CPTMutableLineStyle lineStyle];
-        lineStyle.lineWidth = 1.5f;
-        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(plotColor)];
-        linePlot.dataLineStyle = lineStyle;
-        
-        [graph addPlot:linePlot];
-        [linePlot release];
-        
-        // Create a plot for the sensor target
-        linePlot = [[CPTScatterPlot alloc] init];
-        linePlot.identifier = [NSString stringWithFormat:@"%@ Target", [theStoker idForSensor: i]];
-        linePlot.dataSource = self;
-        linePlot.interpolation = CPTScatterPlotInterpolationStepped;
-        
-        lineStyle = [CPTMutableLineStyle lineStyle];
-        lineStyle.lineWidth = 2.0f;
-        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(plotColor)];
-        lineStyle.dashPattern = [NSArray arrayWithObjects:[NSNumber numberWithFloat:5.0f], [NSNumber numberWithFloat:5.0f], nil];
-        linePlot.dataLineStyle = lineStyle;
-		        
-        [graph addPlot:linePlot];
-        [linePlot release];
-    }	
+	return NO;
 }
 
 
@@ -321,7 +232,20 @@
 	[notificationController showWindow: self];
 }
 
-
+- (IBAction) savePlotData:(id)sender
+{
+	NSSavePanel * savePanel = [NSSavePanel savePanel];
+	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"StokerX"]];
+	
+    [savePanel beginSheetModalForWindow:[NSApp mainWindow] completionHandler:^(NSInteger result)
+	{
+        if (result == NSFileHandlingPanelOKButton) 
+		{
+            [savePanel orderOut:self];
+			[stokerData writeToFile: [[savePanel URL] path] atomically: NO];
+		}
+    }];
+}
 
 #pragma mark -
 #pragma mark Plot Data Source Methods
@@ -449,6 +373,106 @@
 	
 	[self setStatusText: @"Stoker Setup Complete"];
 }
+
+// Configure the plots and data structures based on the sensors and blowers found
+
+- (void) plotSetup
+{
+    // set up the plots based on the Stoker info
+	
+    CPTScatterPlot *linePlot;
+    CPTMutableLineStyle *lineStyle;
+    int sensorCount = 0;
+    NSArray *sensorColors =  [NSArray arrayWithObjects: [NSColor redColor], [NSColor blueColor], [NSColor greenColor], [NSColor cyanColor], nil];
+    NSColor *plotColor = nil;
+	
+	stokerData = [[NSMutableDictionary alloc] initWithCapacity:4];
+	
+    for (int i = 0; i < [theStoker numberOfBlowers]; i++)
+    {        
+		// First, create an entry in the stokerData dictionary for this blower
+		
+		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
+								 [theStoker nameForBlower: i], @"name", 
+								 [NSNumber numberWithInt: 0],  @"count",
+								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
+								 nil]
+					   forKey: [theStoker idForBlower: i]];
+		
+        linePlot = [[CPTScatterPlot alloc] init];
+        linePlot.identifier = [theStoker idForBlower: i];
+        linePlot.interpolation = CPTScatterPlotInterpolationStepped;
+        linePlot.dataSource = self;
+        
+        lineStyle = [CPTMutableLineStyle lineStyle];
+        lineStyle.lineWidth = 1.0f;
+        lineStyle.lineColor = [CPTColor blackColor];
+        linePlot.dataLineStyle = lineStyle;
+        
+        [graph addPlot:linePlot];
+        [linePlot release];
+    }
+	
+	// get info on the sensors from the Stoker
+	
+    for (int i = 0; i < [theStoker numberOfSensors]; i++)
+    {		
+		// First, create an entry in the stokerData dictionary for this sensor
+		
+		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
+								 [theStoker nameForSensor: i], @"name", 
+								 [theStoker typeForSensor: i], @"type", 
+								 [theStoker tempForSensor: i], @"temp",
+								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
+								 nil]
+					   forKey: [theStoker idForSensor: i]];
+		
+		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
+								 [theStoker nameForSensor: i], @"name", 
+								 [theStoker targetForSensor: i], @"target",
+								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
+								 nil]
+					   forKey: [NSString stringWithFormat: @"%@ Target", [theStoker idForSensor: i]]];
+		
+        plotColor = [[NSUserDefaults standardUserDefaults]  colorForKey: [NSString stringWithFormat: @"PlotColor %@", [theStoker idForSensor: i]]];
+        if (!plotColor)
+        {
+            plotColor = [sensorColors objectAtIndex: sensorCount];
+            sensorCount++;
+            [[NSUserDefaults standardUserDefaults] setColor: plotColor forKey: [NSString stringWithFormat: @"PlotColor %@", [theStoker idForSensor: i]]];
+        }
+        [self colorCell: nil setColor: plotColor forRow: i];
+        
+        // Create a plot for the sensor data
+        linePlot = [[CPTScatterPlot alloc] init];
+        linePlot.identifier = [theStoker idForSensor: i];
+        linePlot.dataSource = self;			
+        
+        lineStyle = [CPTMutableLineStyle lineStyle];
+        lineStyle.lineWidth = 1.5f;
+        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(plotColor)];
+        linePlot.dataLineStyle = lineStyle;
+        
+        [graph addPlot:linePlot];
+        [linePlot release];
+        
+        // Create a plot for the sensor target
+        linePlot = [[CPTScatterPlot alloc] init];
+        linePlot.identifier = [NSString stringWithFormat:@"%@ Target", [theStoker idForSensor: i]];
+        linePlot.dataSource = self;
+        linePlot.interpolation = CPTScatterPlotInterpolationStepped;
+        
+        lineStyle = [CPTMutableLineStyle lineStyle];
+        lineStyle.lineWidth = 2.0f;
+        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(plotColor)];
+        lineStyle.dashPattern = [NSArray arrayWithObjects:[NSNumber numberWithFloat:5.0f], [NSNumber numberWithFloat:5.0f], nil];
+        linePlot.dataLineStyle = lineStyle;
+		
+        [graph addPlot:linePlot];
+        [linePlot release];
+    }	
+}
+
 
 // Sent when the HTTP/JSON connection has an error
 - (void) stoker: (Stoker *) stk httpError: (NSString *) theError
@@ -689,14 +713,12 @@
 - (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)update
 {
 	NSLog(@"Updater:didFindValidUpdate: %@ - %@ (%@)", [update title], [update displayVersionString], [update versionString]);
-
 }
 
 // Sent when a valid update is not found.
 - (void)updaterDidNotFindUpdate:(SUUpdater *)update
 {
 	NSLog(@"updaterDidNotFindUpdate");
-
 }
 
 // Sent immediately before installing the specified update.

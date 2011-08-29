@@ -13,7 +13,7 @@
 static NSString *const kTwitterKeychainItemName = @"StokerX: Twitter";
 static NSString *const kTwitterServiceName = @"Twitter";
 
-@synthesize myAuth;
+@synthesize myAuth, twitterHandle, twitterUserName;
 
 - (void)dealloc 
 {
@@ -23,9 +23,6 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 - (void) awakeFromNib
 {	
-//	Enabling this causes Fetcher logs to be written to the desktop!
-//	[GTMHTTPFetcher setLoggingEnabled:YES];
-
 	// Just in case the authentication background processes fail
 	
 	[[NSNotificationCenter defaultCenter] addObserver: self
@@ -40,13 +37,15 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	
 	[GTMOAuthWindowController authorizeFromKeychainForName: kTwitterKeychainItemName
 											authentication: auth];
+	
+	if (self.isSignedIn)
+		[self getTwitterInfo];
+	
 	[self updateUI];
 }
 
 - (GTMOAuthAuthentication *) authForTwitter 
 {
-//	NSLog(@"StokerXTwitter authForTwitter");
-
 	NSString *myConsumerKey = kOAuthConsumerKey;
 	NSString *myConsumerSecret = kOAuthConsumerSecret;
 	
@@ -70,9 +69,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 - (void) signInToTwitter 
 {	
-	NSLog(@"StokerXTwitter signInToTwitter");
-
-	[self signOut];
+	[self signOut];			// make sure we're not already signed in
 	
 	NSURL *requestURL =   [NSURL URLWithString: @"http://twitter.com/oauth/request_token"];
 	NSURL *accessURL =    [NSURL URLWithString: @"http://twitter.com/oauth/access_token"];
@@ -132,27 +129,33 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		// Authentication successful.  Do another Twitter request to confirm and get the user info (not really needed at this time)
 		
 		self.myAuth = auth;
-				
-		NSURL *url = [NSURL URLWithString: @"http://api.twitter.com/1/account/verify_credentials.json"];		
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-		[myAuth authorizeRequest: request];
-		GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
-		[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
-		 {
-			 if (error != nil) 
-			 {
-				 NSLog(@"StokerXTwitter Verification error: %@", error);
-			 } 
-			 else 
-			 {
-				 NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
-				 NSLog(@"StokerXTwitter Verification Successful for %@ (@%@)", [results objectForKey: @"name"], [results objectForKey: @"screen_name"]);
-			 }
-		 }];
-
+		[self getTwitterInfo];
 	}
 	
 	[self updateUI];
+}
+
+- (void) getTwitterInfo
+{
+	NSURL *url = [NSURL URLWithString: @"http://api.twitter.com/1/account/verify_credentials.json"];		
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+	[myAuth authorizeRequest: request];
+	GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
+	[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
+	 {
+		 if (error != nil) 
+		 {
+			 NSLog(@"StokerXTwitter Verification error: %@", error);
+		 } 
+		 else 
+		 {
+			 NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
+			 self.twitterUserName = [results objectForKey: @"name"];
+			 self.twitterHandle   = [results objectForKey: @"screen_name"];
+			 NSLog(@"StokerXTwitter Verification Successful for %@ (@%@)", twitterUserName, twitterHandle);
+		 }
+		 [self updateUI];
+	 }];
 }
 
 - (void)updateUI 
@@ -161,7 +164,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	
 	if ([self isSignedIn]) 
 	{				
-		[authorizeTwitterMenuItem setTitle: @"Deauthorize Twitter"];
+		[authorizeTwitterMenuItem setTitle: [NSString stringWithFormat: @"Logout @%@ from Twitter", twitterHandle]];
 		[enableTwitterMenuItem setEnabled: YES];
 		
 		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kSendTweetsKey] boolValue])
@@ -175,7 +178,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	} 
 	else 
 	{				
-		[authorizeTwitterMenuItem setTitle: @"Authorize Twitter"];
+		[authorizeTwitterMenuItem setTitle: @"Login to Twitter"];
 		[enableTwitterMenuItem setEnabled: NO];
 		[enableTwitterMenuItem setState: NSOffState];
 	}
@@ -189,8 +192,6 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 - (void)signOut 
 {	
-	NSLog(@"StokerXTwitter signOut");
-
 	// remove the stored Twitter authentication from the keychain
 	[GTMOAuthWindowController removeParamsFromKeychainForName:kTwitterKeychainItemName];
 	
