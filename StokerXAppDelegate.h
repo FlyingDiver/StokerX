@@ -16,8 +16,9 @@
 #import "StokerXTwitter.h"
 #import "CorePlot/CorePlot.h"
 #import "Sparkle/Sparkle.h"
+#import "FeedbackReporter/FRFeedbackReporter.h"
 
-@interface StokerXAppDelegate : NSObject <NSApplicationDelegate, CPTPlotDataSource, NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> {
+@interface StokerXAppDelegate : NSObject <NSApplicationDelegate, CPTPlotDataSource, NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate, FRFeedbackReporterDelegate> {
 
     IBOutlet NSButton				*startStopButton;
 	IBOutlet NSTextField			*statusField;
@@ -53,6 +54,7 @@
 	IBOutlet SUUpdater				*SparkleUpdater;
 }
 
+- (IBAction)showFeedbackForm:(id)sender;
 - (IBAction)showPreferencePanel:(id)sender;
 - (IBAction)showNotificationsWindow:(id)sender;
 - (IBAction) startLogging: (id) sender;

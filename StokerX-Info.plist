@@ -32,13 +32,17 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6.1</string>
+	<string>6.2.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array/>
 	<key>CFBundleVersion</key>
-	<string>61</string>
+	<string>6.2.0</string>
+	<key>FRFeedbackReporter.addressbookEmail </key>
+	<string>YES</string>
+	<key>FRFeedbackReporter.sendDetailsIsOptional</key>
+	<string>YES</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.lifestyle</string>
 	<key>LSMinimumSystemVersion</key>
@@ -48,7 +52,7 @@
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
+	<string>FRExceptionReportingApplication</string>
 	<key>NSServices</key>
 	<array/>
 	<key>SUFeedURL</key>
