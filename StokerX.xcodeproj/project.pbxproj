@@ -451,7 +451,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "StokerX" */;
 			buildPhases = (
-				C9B84476140C2D8D005E4407 /* Update Version Number */,
+				C9DF300A140E881100B2853D /* Update CFBundleVersion and CFBuildDate */,
+				C9B84476140C2D8D005E4407 /* Update CFBundleShortVersionString */,
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
@@ -548,19 +549,33 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		C9B84476140C2D8D005E4407 /* Update Version Number */ = {
+		C9B84476140C2D8D005E4407 /* Update CFBundleShortVersionString */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Update Version Number";
+			name = "Update CFBundleShortVersionString";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/usr/bin/env ruby";
-			shellScript = "# add git tag + version number to Info.plist\nversion = `/usr/bin/env git describe`.chomp\n\nputs \"raw version \"+version\nversion_fancy_re = /(\\d*\\.\\d*)-?(\\d*)-?/\nversion =~ version_fancy_re\ncommit_num = $2\nif ( $2.empty? )\ncommit_num = \"0\"\nend\nfancy_version = \"\"+$1+\".\"+commit_num\nputs \"compatible: \"+fancy_version\n\n# backup\nsource_plist_path = File.join(ENV['PROJECT_DIR'], ENV['INFOPLIST_FILE'])\norig_plist = File.open( source_plist_path, \"r\").read;\nFile.open( source_plist_path+\".bak\", \"w\") { |file| file.write(orig_plist) }\n\n# put in CFBundleVersion key\n#version_re = /([\\t ]+<key>CFBundleVersion<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/\n#orig_plist =~ version_re\n#bundle_version_string = $1 + fancy_version + $2\n#orig_plist.gsub!(version_re, bundle_version_string)\n\n# put in CFBundleShortVersionString key\nversion_re = /([\\t ]+<key>CFBundleShortVersionString<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/\norig_plist =~ version_re\nbundle_version_string = $1 + fancy_version + $2\norig_plist.gsub!(version_re, bundle_version_string)\n\n# write\nFile.open(source_plist_path, \"w\") { |file| file.write(orig_plist) }\nputs \"Set version string to '#{fancy_version}'\"";
+			shellScript = "# add git tag + version number to Info.plist\nversion = `/usr/bin/env git describe`.chomp\n\nputs \"raw version \"+version\nversion_fancy_re = /(\\d*\\.\\d*)-?(\\d*)-?/\nversion =~ version_fancy_re\ncommit_num = $2\nif ( $2.empty? )\ncommit_num = \"0\"\nend\nfancy_version = \"\"+$1+\".\"+commit_num\nputs \"compatible: \"+fancy_version\n\n# backup\nsource_plist_path = File.join(ENV['PROJECT_DIR'], ENV['INFOPLIST_FILE'])\norig_plist = File.open( source_plist_path, \"r\").read;\nFile.open( source_plist_path+\".bak\", \"w\") { |file| file.write(orig_plist) }\n\n# put in CFBundleShortVersionString key\nversion_re = /([\\t ]+<key>CFBundleShortVersionString<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/\norig_plist =~ version_re\nbundle_version_string = $1 + fancy_version + $2\norig_plist.gsub!(version_re, bundle_version_string)\n\n# write\nFile.open(source_plist_path, \"w\") { |file| file.write(orig_plist) }\nputs \"Set version string to '#{fancy_version}'\"";
+		};
+		C9DF300A140E881100B2853D /* Update CFBundleVersion and CFBuildDate */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Update CFBundleVersion and CFBuildDate";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\n# Auto Increment Version Script\nbuildPlist=\"${PROJECT_NAME}-Info.plist\"\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" $buildPlist)\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" $buildPlist\nCFBuildDate=$(date)\n/usr/libexec/PlistBuddy -c \"Set :CFBuildDate $CFBuildDate\" $buildPlist";
 		};
 /* End PBXShellScriptBuildPhase section */
 
