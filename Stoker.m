@@ -139,7 +139,7 @@
 				[[self delegate] stoker: self updateSensorTemp: [sensor objectForKey:@"tc"] forSensor: [sensor objectForKey:@"id"]];
 			}
 			
-			if ([sensor objectForKey:@"blower"] != [NSNull null])		// only check for lid off on control blower
+			if (([sensor objectForKey:@"blower"] != [NSNull null]) && lidDetectionEnabled)		// only check for lid off on control blower
 			{
 				[self checkLidOffSensor: [sensor objectForKey:@"id"] withTemp: [sensor objectForKey:@"tc"]];
 			}
@@ -376,7 +376,10 @@
                     [[self delegate] stoker: self updateBlowerState: theBlower.state forBlower: theBlower.deviceID];
                 }           
 
-				[self checkLidOffSensor: theSensor.deviceID withTemp: theSensor.tempCurrent];		// this sensor has the blower, so it's the right one for lid detection
+				if (lidDetectionEnabled)
+				{
+					[self checkLidOffSensor: theSensor.deviceID withTemp: theSensor.tempCurrent];		// this sensor has the blower, so it's the right one for lid detection	
+				}
 				
 			}
 		}

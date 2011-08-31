@@ -17,6 +17,18 @@
 #pragma mark -
 #pragma mark Application startup and Delegate Methods
 
++(void) initialize
+{	
+	// set up the "Factory" defaults
+	
+	NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
+	
+	[defaultValues setObject:[NSNumber numberWithInt: 50] forKey:kMinGraphTempKey];
+	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kMaxGraphTempKey];
+	
+	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
+}
+
 -(void)awakeFromNib
 {	    
 	// Set up support for the color well in the sensor table
@@ -727,11 +739,6 @@
 #pragma mark -
 #pragma mark Sparkle Updater Delegate Methods
 
-- (void)appcastDidFinishLoading:(SUAppcast *)appcast
-{
-	NSLog(@"appcastDidFinishLoading: %@", appcast);
-}
-
 - (void)appcast:(SUAppcast *)appcast failedToLoadWithError:(NSError *)error
 {
 	NSLog(@"appcast: %@ failedToLoadWithError: %@", appcast, error);
@@ -740,17 +747,12 @@
 // Implement this if you want to do some special handling with the appcast once it finishes loading.
 - (void)updater:(SUUpdater *)updater didFinishLoadingAppcast:(SUAppcast *)appcast
 {
-	NSLog(@"Updater didFinishLoadingAppcast:");
-	for (SUAppcastItem *item in [appcast items])
-	{
-		NSLog(@"\t%@ - %@ (%@)", [item title], [item displayVersionString], [item versionString]);
-	}
 }
 
 // Sent when a valid update is found by the update driver.
 - (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)update
 {
-	NSLog(@"Updater:didFindValidUpdate: %@ - %@ (%@)", [update title], [update displayVersionString], [update versionString]);
+	NSLog(@"Updater:didFindValidUpdate: %@ (%@)", [update title], [update versionString]);
 }
 
 // Sent when a valid update is not found.
@@ -762,7 +764,7 @@
 // Sent immediately before installing the specified update.
 - (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update
 {
-	NSLog(@"Updater:willInstallUpdate: %@ - %@ (%@)", [update title], [update displayVersionString], [update versionString]);
+	NSLog(@"Updater:willInstallUpdate: %@ (%@)", [update title], [update versionString]);
 }
 
 // Called immediately before relaunching.
