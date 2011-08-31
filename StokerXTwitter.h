@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GTMOAuth/GTMOAuthWindowController.h"
 #import "PreferencesController.h"
-#import "GTMOAuthWindowController.h"
 #import "JSON.h"
 
 // These are the keys for the OOB version (beta 0.5)

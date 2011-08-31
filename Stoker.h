@@ -10,10 +10,10 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#import "GTMOAuth/GTMHTTPFetcher.h"
 #import "AsyncSocket.h"
 #import "JSON.h"
 #import "SendExpect.h"
-#import "GTMHTTPFetcher.h"
 
 #define STOKER_QUERY_INTERVAL	10.0
 #define BLOWER_STEP				60.0
