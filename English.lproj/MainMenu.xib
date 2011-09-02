@@ -950,7 +950,7 @@
 											<string key="NSFrameSize">{538, 102}</string>
 											<reference key="NSSuperview" ref="945905527"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="471139104"/>
+											<reference key="NSNextKeyView" ref="118181364"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTableHeaderView" key="NSHeaderView" id="151038935">
 												<reference key="NSNextResponder" ref="471139104"/>
@@ -1338,7 +1338,7 @@
 							<string key="NSFrame">{{20, 506}, {540, 120}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="945905527"/>
+							<reference key="NSNextKeyView" ref="471139104"/>
 							<int key="NSsFlags">133170</int>
 							<reference key="NSVScroller" ref="267492990"/>
 							<reference key="NSHScroller" ref="118181364"/>
@@ -1352,12 +1352,13 @@
 							<string key="NSFrame">{{1, 0}, {1018, 484}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSClassName">CPTLayerHostingView</string>
 						</object>
 						<object class="NSTextField" id="161041701">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">265</int>
-							<string key="NSFrame">{{602, 556}, {101, 17}}</string>
+							<string key="NSFrame">{{695, 556}, {101, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="674470957"/>
@@ -1375,7 +1376,7 @@
 						<object class="NSTextField" id="103456588">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">265</int>
-							<string key="NSFrame">{{911, 556}, {75, 17}}</string>
+							<string key="NSFrame">{{954, 556}, {47, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="735712557"/>
@@ -1383,7 +1384,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="957135178">
 								<int key="NSCellFlags">68288064</int>
 								<int key="NSCellFlags2">272630784</int>
-								<string key="NSContents">0%</string>
+								<string key="NSContents">100%</string>
 								<reference key="NSSupport" ref="744434284"/>
 								<reference key="NSControlView" ref="103456588"/>
 								<reference key="NSBackgroundColor" ref="204726747"/>
@@ -1393,7 +1394,7 @@
 						<object class="NSTextField" id="674470957">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">265</int>
-							<string key="NSFrame">{{705, 556}, {75, 17}}</string>
+							<string key="NSFrame">{{798, 556}, {44, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="746293604"/>
@@ -1401,7 +1402,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="682665803">
 								<int key="NSCellFlags">68288064</int>
 								<int key="NSCellFlags2">272630784</int>
-								<string key="NSContents">0%</string>
+								<string key="NSContents">100%</string>
 								<reference key="NSSupport" ref="744434284"/>
 								<reference key="NSControlView" ref="674470957"/>
 								<reference key="NSBackgroundColor" ref="204726747"/>
@@ -1411,7 +1412,7 @@
 						<object class="NSPopUpButton" id="746293604">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">265</int>
-							<string key="NSFrame">{{812, 549}, {88, 26}}</string>
+							<string key="NSFrame">{{855, 549}, {88, 26}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="103456588"/>
@@ -2607,14 +2608,14 @@
 						<int key="objectID">372</int>
 						<reference key="object" ref="439893737"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="735712557"/>
 							<reference ref="1148"/>
 							<reference ref="574129424"/>
-							<reference ref="674470957"/>
-							<reference ref="103456588"/>
-							<reference ref="161041701"/>
-							<reference ref="746293604"/>
 							<reference ref="776074590"/>
+							<reference ref="735712557"/>
+							<reference ref="103456588"/>
+							<reference ref="746293604"/>
+							<reference ref="161041701"/>
+							<reference ref="674470957"/>
 						</array>
 						<reference key="parent" ref="972006081"/>
 					</object>
@@ -3291,9 +3292,7 @@
 					<string key="superclassName">NSWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="changeEmailAddressField:">id</string>
-						<string key="changeLidOffDrop:">id</string>
 						<string key="changeLidOffEnabled:">id</string>
-						<string key="changeLidOffWait:">id</string>
 						<string key="changeMaxGraphTempField:">id</string>
 						<string key="changeMinGraphTempField:">id</string>
 						<string key="changeStokerhttpPortField:">id</string>
@@ -3305,16 +3304,8 @@
 							<string key="name">changeEmailAddressField:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="changeLidOffDrop:">
-							<string key="name">changeLidOffDrop:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="changeLidOffEnabled:">
 							<string key="name">changeLidOffEnabled:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="changeLidOffWait:">
-							<string key="name">changeLidOffWait:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="changeMaxGraphTempField:">
@@ -3344,8 +3335,6 @@
 						<string key="httpPort">NSTextField</string>
 						<string key="ipAddress">NSTextField</string>
 						<string key="lidOffCheckBox">NSButton</string>
-						<string key="lidOffDrop">NSTextField</string>
-						<string key="lidOffWait">NSTextField</string>
 						<string key="maxGraphTemp">NSTextField</string>
 						<string key="minGraphTemp">NSTextField</string>
 						<string key="telnetCheckBox">NSButton</string>
@@ -3370,14 +3359,6 @@
 						<object class="IBToOneOutletInfo" key="lidOffCheckBox">
 							<string key="name">lidOffCheckBox</string>
 							<string key="candidateClassName">NSButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="lidOffDrop">
-							<string key="name">lidOffDrop</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="lidOffWait">
-							<string key="name">lidOffWait</string>
-							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="maxGraphTemp">
 							<string key="name">maxGraphTemp</string>

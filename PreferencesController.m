@@ -37,26 +37,21 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 
 - (IBAction)changeStokeripAddressField:(id)sender
 {
-//	NSLog(@"in changeStokeripAddressField: %@", [ipAddress stringValue]);
 	[[NSUserDefaults standardUserDefaults] setObject:[ipAddress stringValue] forKey: kStokeripAddressKey];
 }
 
 - (IBAction)changeStokerhttpPortField:(id)sender
 {
-//	NSLog(@"in changeStokerhttpPortField: %@", [httpPort stringValue]);
 	[[NSUserDefaults standardUserDefaults] setObject:[httpPort stringValue] forKey: kStokerhttpPortKey];
 }
 
 - (IBAction)changeTelnetMode:(id)sender
 {
-//	NSLog(@"in changeTelnetMode: %d", [telnetCheckBox state]);
 	[[NSUserDefaults standardUserDefaults] setBool:[telnetCheckBox state] forKey: kTelnetKey];
 }
 
 - (IBAction)changeMinGraphTempField:(id)sender
-{
-//	NSLog(@"in changeMinGraphTempField: %@", [minGraphTemp stringValue]);
- 
+{ 
     if ([minGraphTemp doubleValue] < MIN_TEMP_AXIS)
     {
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f", MIN_TEMP_AXIS] forKey: kMinGraphTempKey];
@@ -68,9 +63,7 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 }
 
 - (IBAction)changeMaxGraphTempField:(id)sender
-{
-//	NSLog(@"in changeMaxGraphTempField: %@", [maxGraphTemp stringValue]);
-    
+{    
     if ([maxGraphTemp doubleValue] > MAX_TEMP_AXIS)
     {
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f", MAX_TEMP_AXIS] forKey: kMaxGraphTempKey];
@@ -84,26 +77,12 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 
 - (IBAction)changeEmailAddressField:(id)sender
 {
-//	NSLog(@"in changeEmailAddressField: %@", [emailAddress stringValue]);
 	[[NSUserDefaults standardUserDefaults] setObject:[emailAddress stringValue] forKey: kEmailAddressKey];
 }
 
 - (IBAction)changeLidOffEnabled:(id)sender
 {
-//	NSLog(@"in changeLidOffEnabled: %d", [lidOffCheckBox state]);
 	[[NSUserDefaults standardUserDefaults] setBool:[lidOffCheckBox state] forKey: kLidOffEnabledKey];	
-}
-
-- (IBAction)changeLidOffDrop:(id)sender
-{
-//	NSLog(@"in changeLidOffDrop: %@", [lidOffDrop stringValue]);
-	[[NSUserDefaults standardUserDefaults] setObject:[lidOffDrop stringValue] forKey: kLidOffDropKey];
-}
-
-- (IBAction)changeLidOffWait:(id)sender
-{
-	//	NSLog(@"in changeLidOffWait: %@", [lidOffWait stringValue]);
-	[[NSUserDefaults standardUserDefaults] setObject:[lidOffWait stringValue] forKey: kLidOffWaitKey];
 }
 
 - (void)windowDidLoad
@@ -126,12 +105,6 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 		[emailAddress setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey]];
 	
 	[lidOffCheckBox setState:[[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffEnabledKey] boolValue]];
-
-	if ([[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey])
-		[lidOffDrop setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey]];
-	
-	if ([[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey])
-		[lidOffWait setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey]];
 
 	[alarmPicker setPrefsPrefix: kAlarmSoundKey];			
 	[alarmPicker setDefaultSoundPath: @"/System/Library/Sounds/Glass.aiff"];

@@ -156,10 +156,6 @@
 			}
 		}
 	}
-
-	if([self delegate] && [[self delegate] respondsToSelector:@selector(stokerHasUpdatedSensorData:)]) {
-		[[self delegate] stokerHasUpdatedSensorData: self];
-	}   
 }
 
 - (void)sensorSetup: (NSDictionary *) jsonResults
@@ -384,10 +380,6 @@
 			}
 		}
 	}
-	
-	if([self delegate] && [[self delegate] respondsToSelector:@selector(stokerHasUpdatedSensorData:)]) {
-		[[self delegate] stokerHasUpdatedSensorData: self];
-	}           
 }
 
 
@@ -618,7 +610,7 @@
 	
 		if (tempDrop > lidOffDrop)
 		{
-			NSLog(@"checkLidOffSensor:withTemp: holding - change = %f, interval = %f ", tempDrop, interval);
+ 			NSLog(@"checkLidOffSensor:withTemp: holding - change = %f, interval = %f ", tempDrop, interval);
 			[self sendStatusUpdate: @"Holding Stoker (Lid Off)"];
 			lidOffHold = TRUE;
 			
@@ -656,13 +648,12 @@
 
 - (void) sendExpectStarted: (SendExpect *) sequence
 {
-	NSLog(@"sendExpectStarted: %@", sequence.name);
-
+//	NSLog(@"sendExpectStarted: %@", sequence.name);
 }
 
 - (void) sendExpectCompleted: (SendExpect *) sequence
 {
-	NSLog(@"sendExpectCompleted: %@", sequence.name);
+//	NSLog(@"sendExpectCompleted: %@", sequence.name);
 }
 
 - (void) sendExpectFailed: (SendExpect *) sequence withError: (NSString *) error

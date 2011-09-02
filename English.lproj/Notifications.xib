@@ -72,7 +72,6 @@
 							<string key="NSFrame">{{0, -1}, {109, 23}}</string>
 							<reference key="NSSuperview" ref="1036681831"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:1766</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSegmentedCell" key="NSCell" id="305640912">
@@ -131,10 +130,10 @@
 										<object class="NSTableView" id="292649258">
 											<reference key="NSNextResponder" ref="584484739"/>
 											<int key="NSvFlags">256</int>
-											<string key="NSFrameSize">{774, 513}</string>
+											<string key="NSFrameSize">{774, 515}</string>
 											<reference key="NSSuperview" ref="584484739"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="459056383"/>
+											<reference key="NSNextKeyView" ref="273615941"/>
 											<string key="NSReuseIdentifierKey">_NS:1197</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTableHeaderView" key="NSHeaderView" id="608805403">
@@ -359,7 +358,7 @@
 											<int key="NSTableViewGroupRowStyle">1</int>
 										</object>
 									</object>
-									<string key="NSFrame">{{1, 17}, {774, 513}}</string>
+									<string key="NSFrame">{{1, 17}, {774, 515}}</string>
 									<reference key="NSSuperview" ref="691950171"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="292649258"/>
@@ -411,10 +410,10 @@
 									<int key="NScvFlags">4</int>
 								</object>
 							</object>
-							<string key="NSFrame">{{0, 22}, {776, 531}}</string>
+							<string key="NSFrame">{{0, 20}, {776, 533}}</string>
 							<reference key="NSSuperview" ref="1036681831"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="273615941"/>
+							<reference key="NSNextKeyView" ref="584484739"/>
 							<string key="NSReuseIdentifierKey">_NS:1193</string>
 							<int key="NSsFlags">133682</int>
 							<reference key="NSVScroller" ref="459056383"/>

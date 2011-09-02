@@ -52,6 +52,8 @@
 	Boolean							exitWaiting;
 	
 	IBOutlet SUUpdater				*SparkleUpdater;
+	Boolean							updateWaiting;
+	NSInvocation					*updateInvocation;
 }
 
 - (IBAction)showFeedbackForm:(id)sender;
@@ -63,7 +65,9 @@
 - (void) setStatusText: (NSString *) status;
 
 - (void) plotSetup;
+- (void) updateGraph: (NSTimer *) timer;
 
+@property (nonatomic, retain) NSTimer					*updateTimer;
 @property (nonatomic, assign) NSTimeInterval			startTime;
 @property (nonatomic, retain) CPTXYGraph				*graph;
 @property (nonatomic, retain) StokerXTwitter			*tweetController;

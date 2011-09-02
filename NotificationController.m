@@ -69,8 +69,6 @@
 
 - (void)windowDidLoad
 {
-	NSLog(@"NotificationController windowDidLoad");
-
 	[[self window] setFrameAutosaveName:@"Rules Window"];
 	[[self window] makeKeyAndOrderFront: self];
 		
@@ -253,9 +251,7 @@
 			
 			NSString *newSoundFile = [[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Path", kAlarmSoundKey]];
 			if (newSoundFile && [newSoundFile isNotEqualTo: alertSoundFile])
-			{
-				NSLog(@"doNotification: kAudibleAlarm with new sound file: %@", newSoundFile);
-				
+			{				
 				self.alertSound = [[[NSSound alloc] initWithContentsOfFile: newSoundFile byReference: YES] autorelease];
 				self.alertSoundFile = newSoundFile;
 				
@@ -271,10 +267,10 @@
 		}
 			
 		case kVisualAlarm:
-		{
+		{			
 			[GrowlApplicationBridge notifyWithTitle: @"StokerX"				
 										description: message	
-								   notificationName: @"VisualAlarm"		
+								   notificationName: [[[NotificationTest testList] objectAtIndex: [rule test]] name]		
 										   iconData: nil				
 										   priority: 0		
 										   isSticky: NO		
@@ -319,31 +315,42 @@
 	switch ([sender selectedSegment]) 
 	{
 		case 0:											// Add
+		{
 			[sensorPopup selectItemAtIndex: 0];
 			[testPopup selectItemAtIndex: 0];
 			[actionPopup selectItemAtIndex: 0];
 			[valueTextField setStringValue: @""];
-						
+				
+			NSLog(@"editRuleList: adding new rule");
+			
 			[NSApp beginSheet: ruleEditPanel 
 			   modalForWindow: [self window] 
 				modalDelegate: self 
 			   didEndSelector: @selector(ruleEditDidEnd:returnCode:contextInfo:) 	
 				  contextInfo: nil];
 			break;
+		}	
 			
 		case 1:											// Delete
+		{
 			if ([ruleTable selectedRow] < 0)
 				break;
 			
+			NSLog(@"editRuleList: deleting rule %ld", [ruleTable selectedRow]);
+
 			[ruleList removeObjectAtIndex: [ruleTable selectedRow]];
 			[ruleTable reloadData];
 			[NotificationRule saveRules: ruleList];
 			break;
+		}	
 			
 		case 2:
+		{
 			if ([ruleTable selectedRow] < 0)			// Edit
 				break;
 		
+			NSLog(@"editRuleList: editing rule %ld", [ruleTable selectedRow]);
+
 			// populate the pop-ups on the panel
 			
 			NotificationRule *theRule = [ruleList objectAtIndex: [ruleTable selectedRow]];
@@ -363,6 +370,7 @@
 			   didEndSelector: @selector(ruleEditDidEnd:returnCode:contextInfo:) 
 				  contextInfo: (void *) theRule];
 			break;
+		}
 			
 		default:
 			break;
@@ -382,16 +390,19 @@
 	if (returnCode == NSCancelButton) 
 		return;
 		
+	NotificationRule *theRule;
+	
 	// get the current values from the panel and put them in the record
 	
-	NotificationRule *theRule = (NotificationRule *) contextInfo; 
-	NSLog(@"Notifications ruleEditDidEnd: theRule = %@", theRule);
-
-	if (!theRule)		// no record, so this is an add
+	if (!contextInfo)		// no record, so this is an add
 	{
-		theRule = [[[NotificationRule alloc] init] autorelease];
-		[ruleList addObject: theRule];
+		theRule = [[NotificationRule alloc] init];
 		[theRule setEnabled: TRUE];
+		[[NotificationRule ruleList] addObject: theRule];
+	}
+	else
+	{
+		theRule = [(NotificationRule *) contextInfo retain]; 
 	}
 
 	NSMutableDictionary *sensor = [sensorList objectAtIndex: [[sensorPopup selectedItem] tag]];
@@ -402,8 +413,11 @@
 	[theRule setAction: [[actionPopup selectedItem] tag]];
 	[theRule setValue:	[NSNumber numberWithDouble: [valueTextField doubleValue]]];
 	[theRule setLastNotified: [NSNumber numberWithDouble: 0.0]];					// reset last on any edit
+	NSLog(@"Notifications ruleEditDidEnd: new rule = %@", theRule);
 
 	[NotificationRule saveRules: ruleList];
+	[theRule release];
+	
 	[ruleTable reloadData];
 }
 
@@ -425,7 +439,6 @@
 - (IBAction) changeRuleValue:(id)sender
 {
 	NSLog(@"Notifications changeRuleValue: new value = %@", [sender stringValue]);
-
 }
 
 - (IBAction) changeRuleAction:(id)sender
@@ -498,7 +511,13 @@
 
 - (NSDictionary *) registrationDictionaryForGrowl
 {
-	NSArray *notifications = [NSArray arrayWithObject: @"VisualAlarm"];
+	NSMutableArray *notifications = [[[NSMutableArray alloc] initWithCapacity: 10] autorelease];
+		
+	for (NotificationTest *test in  [NotificationTest testList])
+	{
+		[notifications addObject: [test name]];
+	}
+	
 	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
 						  notifications, GROWL_NOTIFICATIONS_ALL,
 						  notifications, GROWL_NOTIFICATIONS_DEFAULT, nil];

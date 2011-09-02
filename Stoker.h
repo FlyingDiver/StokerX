@@ -97,9 +97,6 @@
 //	Sent when the Stoker has completed it's setup (connected to Stoker and read sensor info)
 - (void) stokerHasCompletedSetup: (Stoker *) stk;
 
-//	Sent when the Stoker has new logging data to display
-- (void) stokerHasUpdatedSensorData: (Stoker *) stk;
-
 // Sent when there is some status change worthy of display :)
 - (void) stoker: (Stoker *) stk statusUpdate: (NSString *) theStatus;
 

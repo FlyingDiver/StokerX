@@ -10,9 +10,10 @@
 
 @implementation StokerXAppDelegate
 
-@synthesize startTime, graph, tweetController, preferencesController;
+@synthesize updateTimer, startTime, graph, tweetController, preferencesController;
 
 #define TIME_RANGE_START		10*60.0         // 10 minutes
+#define GRAPH_UPDATE_INTERVAL	5.0
 
 #pragma mark -
 #pragma mark Application startup and Delegate Methods
@@ -23,9 +24,18 @@
 	
 	NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
 	
-	[defaultValues setObject:[NSNumber numberWithInt: 50] forKey:kMinGraphTempKey];
+	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kMinGraphTempKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kMaxGraphTempKey];
-	
+	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kLidOffDropKey];
+	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kLidOffWaitKey];
+	[defaultValues setObject:[NSNumber numberWithInt: 80]  forKey:kStokerhttpPortKey];
+	[defaultValues setObject:[NSNumber numberWithInt: 1]   forKey:kTelnetKey];
+	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kLidOffEnabledKey];
+
+	[defaultValues setObject:[NSNumber numberWithInt: 86400] forKey:@"SUScheduledCheckInterval"];
+	[defaultValues setObject:[NSNumber numberWithInt: 1]     forKey:@"SUEnableAutomaticChecks"];
+	[defaultValues setObject:[NSNumber numberWithInt: 1]     forKey:@"SUSendProfileInfo"];
+
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -157,6 +167,8 @@
 		
 	}
 
+	self.updateTimer = [NSTimer scheduledTimerWithTimeInterval: GRAPH_UPDATE_INTERVAL target:self selector:@selector(updateGraph:) userInfo: nil repeats:YES];
+	[self updateGraph: nil];		// do it once now to get things started
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
@@ -380,6 +392,50 @@
 
 }
 
+// Called via timer to update the UI
+
+- (void) updateGraph: (NSTimer *) theTimer
+{	
+	if ([sensorTable currentEditor] != nil)		// don't update - table is being edited
+		return;
+	
+	// could check for minimum time since last update here, if we're chewing up too much CPU redisplaying the graphs...
+	
+	
+	CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
+	CPTXYAxisSet   *axisSet   = (CPTXYAxisSet *)graph.axisSet;
+	
+	// First, check to see if the horizontal axis needs to be re-scaled
+	
+	if (([[NSDate date] timeIntervalSinceReferenceDate] - startTime) > plotRange)
+	{
+		plotRange = plotRange * 2.0;				// double previous range
+		
+		plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
+		
+		axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(plotRange/5.0);
+	}
+	
+	// Check to see if the temperature range has changed from Preferences
+	
+	double minTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
+	double maxTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey] doubleValue];
+	
+	if ((minTemp != plotMinTemp) || (maxTemp != plotMaxTemp))
+	{
+		plotMaxTemp = maxTemp;
+		plotMinTemp = minTemp;
+		
+		plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(minTemp) length:CPTDecimalFromDouble(maxTemp - minTemp)];
+		
+		axisSet.yAxis.majorIntervalLength = CPTDecimalFromDouble((maxTemp - minTemp)/5);;
+		
+		axisSet.xAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(minTemp);
+	}
+	
+	[graph reloadData];
+	[sensorTable reloadData];	
+}        
 
 #pragma mark -
 #pragma mark Plot Data Source Methods
@@ -497,8 +553,7 @@
 	NSLog(@"Stoker is running version %@", [stk stokerVersion]);
 	
 	[self plotSetup];
-	[sensorTable reloadData];	
-			
+	
     for (int i = 0; i < [theStoker numberOfSensors]; i++)
     {		
 		[notificationController addSensor: [theStoker idForSensor: i] name: [theStoker nameForSensor: i]];
@@ -514,52 +569,6 @@
 	NSLog(@"stoker:httpError: %@", theError);
 }
 
-//	Sent when the Stoker has new sensor data
-
-- (void) stokerHasUpdatedSensorData: (Stoker *) stk
-{
-//	NSLog(@"stokerHasUpdatedSensorData:");
-	
-	if ([sensorTable currentEditor] != nil)		// don't update - table is being edited
-		return;
-	
-	// could check for minimum time since last update here, if we're chewing up too much CPU redisplaying the graphs...
-	
-	
-	CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
-	CPTXYAxisSet   *axisSet   = (CPTXYAxisSet *)graph.axisSet;
-	
-	// First, check to see if the horizontal axis needs to be re-scaled
-	
-	if (([[NSDate date] timeIntervalSinceReferenceDate] - startTime) > plotRange)
-	{
-		plotRange = plotRange * 2.0;				// double previous range
-		
-		plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
-		
-		axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(plotRange/5.0);
-	}
-	
-	// Check to see if the temperature range has changed from Preferences
-	
-	double minTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
-	double maxTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey] doubleValue];
-	
-	if ((minTemp != plotMinTemp) || (maxTemp != plotMaxTemp))
-	{
-		plotMaxTemp = maxTemp;
-		plotMinTemp = minTemp;
-		
-		plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(minTemp) length:CPTDecimalFromDouble(maxTemp - minTemp)];
-		
-		axisSet.yAxis.majorIntervalLength = CPTDecimalFromDouble((maxTemp - minTemp)/5);;
-		
-		axisSet.xAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(minTemp);
-	}
-
-	[graph reloadData];
-	[sensorTable reloadData];	
-}        
 
 // Sent when there is some status change worthy of display :)
 
@@ -579,6 +588,12 @@
 	else
 	{
 		[self setStatusText: @"Telnet connection inactive"];
+		
+		if (updateWaiting)
+		{
+			[updateInvocation invoke];
+		}
+		
 		if (exitWaiting)
 		{			
 			[[NSRunningApplication currentApplication] terminate];
@@ -765,6 +780,23 @@
 - (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update
 {
 	NSLog(@"Updater:willInstallUpdate: %@ (%@)", [update title], [update versionString]);
+}
+
+// Return YES to delay the relaunch until you do some processing; invoke the given NSInvocation to continue.
+- (BOOL)updater:(SUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)update untilInvoking:(NSInvocation *)invocation
+{
+	NSLog(@"updater:shouldPostponeRelaunchForUpdate:untilInvoking:");
+
+	if (theStoker.telnetActive)		// don't quit with the Stoker in telnet mode
+	{
+		updateWaiting = TRUE;
+		[theStoker stopLogging];
+		[self setStatusText: @"Waiting for Stoker to exit telnet mode"];
+		updateInvocation = [invocation retain];
+		return YES;	
+	}
+	
+	return NO;
 }
 
 // Called immediately before relaunching.
