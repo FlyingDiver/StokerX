@@ -21,7 +21,6 @@ static NSMutableArray *_RuleList = nil;
 
 	if (_RuleList) 
 	{
-//		NSLog(@"NotificationRule existing ruleList =\r%@", _RuleList);
 		return _RuleList;
 	}
 		
@@ -40,12 +39,12 @@ static NSMutableArray *_RuleList = nil;
 		[unarchiver release];
 		if ([_RuleList count] > 0)
 		{
-			NSLog(@"NotificationRule ruleList from disk =\r%@", _RuleList);
 			return _RuleList;
 		}
+		else
+			[_RuleList release];
 	}
 	
-	NSLog(@"NotificationRule created empty ruleList");
 	_RuleList = [[NSMutableArray alloc] initWithCapacity: 10];
 
 	return _RuleList;
@@ -56,9 +55,7 @@ static NSMutableArray *_RuleList = nil;
 	NSMutableData *data;
 	NSKeyedArchiver *archiver;
 	BOOL result;
-	
-	NSLog(@"NotificationRule saveRules:\r%@", theRules);
-	
+		
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: @"StokerX"];
 	

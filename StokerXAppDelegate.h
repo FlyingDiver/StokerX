@@ -50,8 +50,6 @@
 	NSMutableDictionary				*stokerData;
     
 	Boolean							exitWaiting;
-	
-	IBOutlet SUUpdater				*SparkleUpdater;
 	Boolean							updateWaiting;
 	NSInvocation					*updateInvocation;
 }

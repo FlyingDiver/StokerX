@@ -22,6 +22,7 @@
 			<string>NSTextFieldCell</string>
 			<string>NSButtonCell</string>
 			<string>NSMenu</string>
+			<string>NSUserDefaultsController</string>
 			<string>NSTableView</string>
 			<string>NSCustomObject</string>
 			<string>NSSegmentedCell</string>
@@ -72,6 +73,7 @@
 							<string key="NSFrame">{{0, -1}, {109, 23}}</string>
 							<reference key="NSSuperview" ref="1036681831"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:1766</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSegmentedCell" key="NSCell" id="305640912">
@@ -133,7 +135,7 @@
 											<string key="NSFrameSize">{774, 515}</string>
 											<reference key="NSSuperview" ref="584484739"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="273615941"/>
+											<reference key="NSNextKeyView" ref="459056383"/>
 											<string key="NSReuseIdentifierKey">_NS:1197</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTableHeaderView" key="NSHeaderView" id="608805403">
@@ -413,7 +415,7 @@
 							<string key="NSFrame">{{0, 20}, {776, 533}}</string>
 							<reference key="NSSuperview" ref="1036681831"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="584484739"/>
+							<reference key="NSNextKeyView" ref="273615941"/>
 							<string key="NSReuseIdentifierKey">_NS:1193</string>
 							<int key="NSsFlags">133682</int>
 							<reference key="NSVScroller" ref="459056383"/>
@@ -720,6 +722,9 @@
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">NO</bool>
+			</object>
+			<object class="NSUserDefaultsController" id="491503418">
+				<bool key="NSSharedInstance">YES</bool>
 			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
@@ -1247,6 +1252,11 @@
 						</object>
 						<reference key="parent" ref="928843178"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">174</int>
+						<reference key="object" ref="491503418"/>
+						<reference key="parent" ref="0"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1279,6 +1289,7 @@
 					<string>15.IBPluginDependency</string>
 					<string>16.IBPluginDependency</string>
 					<string>17.IBPluginDependency</string>
+					<string>174.IBPluginDependency</string>
 					<string>18.IBPluginDependency</string>
 					<string>21.IBPluginDependency</string>
 					<string>22.IBPluginDependency</string>
@@ -1341,6 +1352,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{357, 418}, {480, 270}}</string>
 					<boolean value="NO"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1374,7 +1386,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">171</int>
+			<int key="maxID">181</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

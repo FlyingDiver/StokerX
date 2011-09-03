@@ -950,7 +950,7 @@
 											<string key="NSFrameSize">{538, 102}</string>
 											<reference key="NSSuperview" ref="945905527"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="118181364"/>
+											<reference key="NSNextKeyView" ref="471139104"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTableHeaderView" key="NSHeaderView" id="151038935">
 												<reference key="NSNextResponder" ref="471139104"/>
@@ -1338,7 +1338,7 @@
 							<string key="NSFrame">{{20, 506}, {540, 120}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="471139104"/>
+							<reference key="NSNextKeyView" ref="945905527"/>
 							<int key="NSsFlags">133170</int>
 							<reference key="NSVScroller" ref="267492990"/>
 							<reference key="NSHScroller" ref="118181364"/>
@@ -1352,7 +1352,6 @@
 							<string key="NSFrame">{{1, 0}, {1018, 484}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSClassName">CPTLayerHostingView</string>
 						</object>
 						<object class="NSTextField" id="161041701">
@@ -2048,14 +2047,6 @@
 						<reference key="destination" ref="574129424"/>
 					</object>
 					<int key="connectionID">787</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">SparkleUpdater</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="1049446194"/>
-					</object>
-					<int key="connectionID">788</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -3487,7 +3478,6 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="SparkleUpdater">SUUpdater</string>
 						<string key="blowerActivityDurationPopup">NSPopUpButton</string>
 						<string key="doAnAuthenticatedAPIFetch">StokerXTwitter</string>
 						<string key="graphView">CPTLayerHostingView</string>
@@ -3503,10 +3493,6 @@
 						<string key="totalBlowerActivityField">NSTextField</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="SparkleUpdater">
-							<string key="name">SparkleUpdater</string>
-							<string key="candidateClassName">SUUpdater</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="blowerActivityDurationPopup">
 							<string key="name">blowerActivityDurationPopup</string>
 							<string key="candidateClassName">NSPopUpButton</string>

@@ -23,7 +23,6 @@ static NSArray *_TestList = nil;
 						[[[NotificationTest alloc] initWithName: @"Sensor Over Temp"	andTest: kSensorOverTemp] autorelease],
 						[[[NotificationTest alloc] initWithName: @"Sensor at Target"	andTest: kSensorTargetTemp] autorelease],
 						[[[NotificationTest alloc] initWithName: @"Periodic Report"		andTest: kPeriodic] autorelease],
-						[[[NotificationTest alloc] initWithName: @"StokerX Error"		andTest: kAppError] autorelease],
 					   nil];
 		
 	}

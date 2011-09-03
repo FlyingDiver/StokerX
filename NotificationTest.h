@@ -13,7 +13,6 @@ typedef enum {
 	kSensorOverTemp,
 	kSensorTargetTemp,
 	kPeriodic,
-	kAppError
 } TestTypes;
 
 @interface NotificationTest : NSObject

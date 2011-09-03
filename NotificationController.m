@@ -71,6 +71,9 @@
 {
 	[[self window] setFrameAutosaveName:@"Rules Window"];
 	[[self window] makeKeyAndOrderFront: self];
+	
+	[ruleTable setTarget: self];
+	[ruleTable setDoubleAction: @selector(editRow)];
 		
 	// Before we can display anything, we need to build the popups
 	
@@ -179,7 +182,7 @@
 {	
 	for (NotificationRule *rule in ruleList)
 	{
-		if ([rule  enabled])				// skip rules not enabled
+		if ([rule enabled])				// skip rules not enabled
 		{
 			if ([sensorID isEqualToString: [rule sensorID]])		// look for matching sensor
 			{				
@@ -189,7 +192,7 @@
 						if ([sensorTemp compare: [rule value]] == NSOrderedAscending)
 						{
 							[self doNotification: rule withMessage: 
-							 [NSString stringWithFormat: @"StokerX Under Temperature Alarm (%3.1f) for sensor \"%@\"", [sensorTemp floatValue], [rule sensorName]]];
+							 [NSString stringWithFormat: @"StokerX Under Temperature Alarm (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [rule sensorName]]];
 						}
 						break;
 						
@@ -197,7 +200,7 @@
 						if ([sensorTemp compare: [rule value]] == NSOrderedDescending)
 						{
 							[self doNotification: rule withMessage: 
-							 [NSString stringWithFormat: @"StokerX Over Temperature Alarm (%3.1f) for sensor \"%@\"", [sensorTemp floatValue], [rule sensorName]]];
+							 [NSString stringWithFormat: @"StokerX Over Temperature Alarm (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [rule sensorName]]];
 						}
 						break;
 						
@@ -205,7 +208,7 @@
 						if ([sensorTemp compare: [rule value]] == NSOrderedDescending)
 						{
 							[self doNotification: rule withMessage: 
-							 [NSString stringWithFormat: @"StokerX Target Temperature (%3.1f) for sensor \"%@\"", [sensorTemp floatValue], [rule sensorName]]];
+							 [NSString stringWithFormat: @"StokerX Target Temperature (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [rule sensorName]]];
 						}
 						break;
 						
@@ -213,15 +216,12 @@
 						if (!([rule lastNotified] && (([[NSDate date] timeIntervalSinceReferenceDate] - [[rule lastNotified] doubleValue]) < [[rule value] doubleValue])))
 						{
 							[self doNotification: rule withMessage: 
-									[NSString stringWithFormat: @"StokerX Periodic Notification for sensor \"%@\", current temperature is %3.1f", 
+									[NSString stringWithFormat: @"StokerX Periodic Notification for sensor \"%@\", current temperature is %3.1f.", 
 										[rule sensorName], [sensorTemp floatValue]]];
 							[rule setLastNotified: [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]]];
 						}
 						break;
-						
-					case kAppError:
-						break;
-						
+												
 					default:
 						NSLog(@"Unknown condition for notification criteria:\r%@", rule);
 						break;
@@ -292,12 +292,6 @@
 			break;
 		}
 			
-		case kAppError:
-		{
-			NSLog(@"Notification kAppError, message = \"%@\"\r%@", message, rule);						
-			break;
-		}	
-			
 		default:
 		{
 			NSLog(@"Unknown condition for notification, message = \"%@\"\r%@", message, rule);
@@ -310,6 +304,30 @@
 #pragma mark -
 #pragma mark Rule Table Editing Methods
 
+- (IBAction) editRow;
+{		
+	// populate the pop-ups on the panel
+	
+	NotificationRule *theRule = [ruleList objectAtIndex: [ruleTable selectedRow]];
+	NSDictionary *sensor = [sensorDict objectForKey: [theRule sensorID]];
+	NSInteger index = [[sensor objectForKey: @"index"] intValue];
+	
+	[sensorPopup selectItemAtIndex: index];
+	[testPopup selectItemAtIndex:   [theRule test]];
+	[actionPopup selectItemAtIndex: [theRule action]];
+	[valueTextField setStringValue: [[theRule value] stringValue]];
+	
+	// show as a sheet
+	
+	[NSApp beginSheet: ruleEditPanel 
+	   modalForWindow: [self window] 
+		modalDelegate: self 
+	   didEndSelector: @selector(ruleEditDidEnd:returnCode:contextInfo:) 
+		  contextInfo: (void *) theRule];
+
+}
+
+
 - (IBAction) editRuleList: (NSSegmentedControl *) sender;
 {
 	switch ([sender selectedSegment]) 
@@ -320,9 +338,7 @@
 			[testPopup selectItemAtIndex: 0];
 			[actionPopup selectItemAtIndex: 0];
 			[valueTextField setStringValue: @""];
-				
-			NSLog(@"editRuleList: adding new rule");
-			
+							
 			[NSApp beginSheet: ruleEditPanel 
 			   modalForWindow: [self window] 
 				modalDelegate: self 
@@ -336,8 +352,6 @@
 			if ([ruleTable selectedRow] < 0)
 				break;
 			
-			NSLog(@"editRuleList: deleting rule %ld", [ruleTable selectedRow]);
-
 			[ruleList removeObjectAtIndex: [ruleTable selectedRow]];
 			[ruleTable reloadData];
 			[NotificationRule saveRules: ruleList];
@@ -349,26 +363,7 @@
 			if ([ruleTable selectedRow] < 0)			// Edit
 				break;
 		
-			NSLog(@"editRuleList: editing rule %ld", [ruleTable selectedRow]);
-
-			// populate the pop-ups on the panel
-			
-			NotificationRule *theRule = [ruleList objectAtIndex: [ruleTable selectedRow]];
-			NSDictionary *sensor = [sensorDict objectForKey: [theRule sensorID]];
-			NSInteger index = [[sensor objectForKey: @"index"] intValue];
-			
-			[sensorPopup selectItemAtIndex: index];
-			[testPopup selectItemAtIndex:   [theRule test]];
-			[actionPopup selectItemAtIndex: [theRule action]];
-			[valueTextField setStringValue: [[theRule value] stringValue]];
-			
-			// show as a sheet
-			
-			[NSApp beginSheet: ruleEditPanel 
-			   modalForWindow: [self window] 
-				modalDelegate: self 
-			   didEndSelector: @selector(ruleEditDidEnd:returnCode:contextInfo:) 
-				  contextInfo: (void *) theRule];
+			[self editRow];
 			break;
 		}
 			
@@ -424,28 +419,27 @@
 
 - (IBAction) changeRuleSensor:(id)sender
 {	
-	NSInteger tag = [[sender selectedItem] tag];
-	NSLog(@"Notifications changeRuleSensor: new sensor = %@ (%ld)", [sensorList objectAtIndex: tag], tag);
+//	NSInteger tag = [[sender selectedItem] tag];
+//	NSLog(@"Notifications changeRuleSensor: new sensor = %@ (%ld)", [sensorList objectAtIndex: tag], tag);
 	
 }
 
 - (IBAction) changeRuleTest:(id)sender
 {	
-	NSInteger tag = [[sender selectedItem] tag];
-	NSLog(@"Notifications changeRuleTest: new test = %@ (%ld)", [[NotificationTest testList] objectAtIndex: tag], tag);
+//	NSInteger tag = [[sender selectedItem] tag];
+//	NSLog(@"Notifications changeRuleTest: new test = %@ (%ld)", [[NotificationTest testList] objectAtIndex: tag], tag);
 	
 }
 
 - (IBAction) changeRuleValue:(id)sender
 {
-	NSLog(@"Notifications changeRuleValue: new value = %@", [sender stringValue]);
+//	NSLog(@"Notifications changeRuleValue: new value = %@", [sender stringValue]);
 }
 
 - (IBAction) changeRuleAction:(id)sender
 {
-	NSInteger tag = [[sender selectedItem] tag];
-	NSLog(@"Notifications changeRuleAction: new action = %@ (%ld)", [[NotificationAction actionList] objectAtIndex: tag], tag);
-
+//	NSInteger tag = [[sender selectedItem] tag];
+//	NSLog(@"Notifications changeRuleAction: new action = %@ (%ld)", [[NotificationAction actionList] objectAtIndex: tag], tag);
 }
 
 #pragma mark -
