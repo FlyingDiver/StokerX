@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBuildDate</key>
-	<string>Sun Sep  4 11:09:27 EDT 2011</string>
+	<string>Sun Sep  4 17:43:37 EDT 2011</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
@@ -34,11 +34,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6.8</string>
+	<string>0.6.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>74</string>
+	<string>85</string>
 	<key>FRFeedbackReporter.addressbookEmail </key>
 	<string>YES</string>
 	<key>FRFeedbackReporter.sendDetailsIsOptional</key>

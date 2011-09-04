@@ -24,6 +24,8 @@
 	IBOutlet NSTextField			*statusField;
 	IBOutlet NSTextField			*totalBlowerActivityField;
 	IBOutlet NSTextField			*recentBlowerActivityField;
+	IBOutlet NSTextField			*startTimeField;
+	IBOutlet NSTextField			*elapsedTimeField;
 	IBOutlet NSPopUpButton			*blowerActivityDurationPopup;
 	IBOutlet NSMenuItem				*notificationListMenuItem;
 	
@@ -33,7 +35,7 @@
     IBOutlet CPTLayerHostingView	*graphView;
 	
 	IBOutlet PreferencesController	*preferencesController;
-	IBOutlet StokerXTwitter			*doAnAuthenticatedAPIFetch;
+	IBOutlet StokerXTwitter			*tweetController;
 	IBOutlet NotificationController	*notificationController;
 
 	Stoker							*theStoker;

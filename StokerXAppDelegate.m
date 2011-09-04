@@ -41,6 +41,8 @@
 
 -(void)awakeFromNib
 {	    
+	NSDateFormatter *dateFormatter;
+	
 	// Set up support for the color well in the sensor table
 	
 	NSUInteger index = [sensorTable columnWithIdentifier:@"color"];  
@@ -72,8 +74,13 @@
 	
 	plotRange = TIME_RANGE_START;
 	startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
+	dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    dateFormatter.timeStyle = NSDateFormatterShortStyle;
+	dateFormatter.locale = [NSLocale currentLocale];
+	[startTimeField setStringValue: [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startTime]]];
 	
-    // Setup scatter plot space
+    // Setup scatter plot space 
 
 	double minTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
 	double maxTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey] doubleValue];
@@ -82,16 +89,21 @@
 	plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
     plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(minTemp) length:CPTDecimalFromDouble(maxTemp - minTemp)];
 	
+	// line styles
+    CPTMutableLineStyle *gridLineStyle = [CPTMutableLineStyle lineStyle];
+    gridLineStyle.lineWidth = 0.75;
+    gridLineStyle.lineColor = [[CPTColor colorWithGenericGray:0.2] colorWithAlphaComponent:0.75];
+    
+	CPTMutableLineStyle *tickLineStyle = [CPTMutableLineStyle lineStyle];
+	tickLineStyle.lineColor = [CPTColor blackColor];
+	tickLineStyle.lineWidth = 2.0f;
+	
     // Axes
 	CPTXYAxisSet *axisSet = (CPTXYAxisSet *)graph.axisSet;
 	CPTXYAxis *x = axisSet.xAxis;
     CPTXYAxis *y = axisSet.yAxis;
     
-	CPTMutableLineStyle *lineStyle = [CPTMutableLineStyle lineStyle];
-	lineStyle.lineColor = [CPTColor blackColor];
-	lineStyle.lineWidth = 2.0f;
-	
-	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+	dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     dateFormatter.dateStyle = NSDateFormatterNoStyle;
     dateFormatter.timeStyle = NSDateFormatterShortStyle;
     CPTTimeFormatter *timeFormatter = [[[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter] autorelease];
@@ -99,20 +111,17 @@
 	x.majorIntervalLength = CPTDecimalFromDouble(plotRange/5.0);
     x.minorTicksPerInterval = 0;
     x.labelFormatter = timeFormatter;
-	x.majorTickLineStyle = lineStyle;
-	x.minorTickLineStyle = lineStyle;
-	x.axisLineStyle = lineStyle;
+	x.majorTickLineStyle = tickLineStyle;
+	x.axisLineStyle = tickLineStyle;
 	x.majorTickLength = 7.0f;
 	x.labelOffset = 3.0f;
 	x.orthogonalCoordinateDecimal = CPTDecimalFromDouble(minTemp);
 	
-    y.majorIntervalLength = CPTDecimalFromDouble((maxTemp - minTemp)/5);;
+    y.majorIntervalLength = CPTDecimalFromDouble(50.0);;
 	y.minorTicksPerInterval = 0;
-	y.majorTickLineStyle = lineStyle;
-	y.minorTickLineStyle = lineStyle;
-	y.axisLineStyle = lineStyle;
-	y.minorTickLength = 5.0f;
-	y.majorTickLength = 7.0f;
+	y.majorGridLineStyle = gridLineStyle;
+	y.axisLineStyle = tickLineStyle;
+	y.majorTickLength = 0.0f;
 	y.labelOffset = 3.0f;
 	y.orthogonalCoordinateDecimal = CPTDecimalFromDouble(startTime);
 }	
@@ -401,9 +410,6 @@
 	if ([sensorTable currentEditor] != nil)		// don't update - table is being edited
 		return;
 	
-	// could check for minimum time since last update here, if we're chewing up too much CPU redisplaying the graphs...
-	
-	
 	CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
 	CPTXYAxisSet   *axisSet   = (CPTXYAxisSet *)graph.axisSet;
 	
@@ -429,11 +435,22 @@
 		plotMinTemp = minTemp;
 		
 		plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(minTemp) length:CPTDecimalFromDouble(maxTemp - minTemp)];
-		
-		axisSet.yAxis.majorIntervalLength = CPTDecimalFromDouble((maxTemp - minTemp)/5);;
-		
+				
 		axisSet.xAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(minTemp);
 	}
+	
+	// update elapsed time
+	
+	NSTimeInterval elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
+	
+	NSInteger seconds = fmod(elapsedTime , 60);	
+	NSInteger minutes = fmod(elapsedTime / 60, 60);
+	NSInteger hours =   elapsedTime /60 / 60;
+	
+	NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
+	[elapsedTimeField setStringValue: elapsedTimeString];
+	
+	// update the UI
 	
 	[graph reloadData];
 	[sensorTable reloadData];	
