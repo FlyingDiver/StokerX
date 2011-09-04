@@ -119,7 +119,9 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notes
 {	
-//	Enabling this causes Fetcher logs to be written to the desktop!
+	[self setStatusText: @"Starting StokerX"];
+
+	//	Enabling this causes Fetcher logs to be written to the desktop!
 //	[GTMHTTPFetcher setLoggingEnabled:YES];
 
     [[FRFeedbackReporter sharedReporter] setDelegate:self];

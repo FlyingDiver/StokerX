@@ -37,6 +37,7 @@
 		C9AF1F18140D2DC2002AEEFE /* FRFeedbackReporter.sh in Resources */ = {isa = PBXBuildFile; fileRef = C9AF1F17140D2DC2002AEEFE /* FRFeedbackReporter.sh */; };
 		C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9B1CF63123352B200648DF4 /* Preferences.xib */; };
 		C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */; };
+		C9C83DE51412B2C300AB8261 /* To-Do.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C9C83DE41412B2C300AB8261 /* To-Do.rtf */; };
 		C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
 		C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
 		C9CC351B1402A41300A6227A /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
@@ -144,6 +145,7 @@
 		C9B1CF64123352B200648DF4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LVColorWellCell.h; sourceTree = "<group>"; };
 		C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LVColorWellCell.m; sourceTree = "<group>"; };
+		C9C83DE41412B2C300AB8261 /* To-Do.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "To-Do.rtf"; sourceTree = "<group>"; };
 		C9CC35131402A33900A6227A /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = ../Frameworks/CorePlot.framework; sourceTree = "<group>"; };
 		C9CC35171402A34C00A6227A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		C9D5550813FEDCBE0066BB27 /* Mail.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = Mail.app; path = /Users/jkeenan/Projects/StokerX/../../../../Applications/Mail.app; sourceTree = "<absolute>"; };
@@ -252,6 +254,7 @@
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				C94149B714059CDF006BDCE0 /* ReadMe.html */,
+				C9C83DE41412B2C300AB8261 /* To-Do.rtf */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -474,6 +477,7 @@
 				C98BDAFA140A62EC00D1424F /* quiet.psd in Resources */,
 				C946B0F7140B35AD00EA46D6 /* StokerX.icns in Resources */,
 				C9AF1F18140D2DC2002AEEFE /* FRFeedbackReporter.sh in Resources */,
+				C9C83DE51412B2C300AB8261 /* To-Do.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

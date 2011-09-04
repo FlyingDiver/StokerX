@@ -53,10 +53,14 @@
 	
 	if (useTelnet)
 	{
+		[self sendStatusUpdate: @"Telnet Logging started"];
+
 		[self startTelnetCapture];
 	}
 	else 				// for JSON mode, the timer requests the data, and graphs are updated when data is received
 	{
+		[self sendStatusUpdate: @"HTTP Logging started"];
+
 		self.jsonTimer = [NSTimer scheduledTimerWithTimeInterval: STOKER_QUERY_INTERVAL target:self selector:@selector(getStokerJSON:) userInfo: nil repeats:YES];
 		
 		[self getStokerJSON: nil];		// do it once now to get things started
@@ -69,6 +73,7 @@
 
 	if (useTelnet)
 	{
+		[self sendStatusUpdate: @"Telnet Logging stopped"];
 		[self stopTelnetCapture];
 	}
     else
