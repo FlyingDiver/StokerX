@@ -10,10 +10,10 @@
 
 @implementation StokerXAppDelegate
 
-@synthesize updateTimer, startTime, graph, tweetController, preferencesController;
+@synthesize updateTimer, startTime, graph, tweetController, preferencesController, loggingActive;
 
 #define MINUTES	60.0
-#define TIME_RANGE_START		25 * MINUTES    
+#define TIME_RANGE_START		20 * MINUTES    
 #define PLOT_INTERVAL_START		5 * MINUTES    
 #define GRAPH_UPDATE_INTERVAL	5.0
 
@@ -77,11 +77,6 @@
 	
 	plotRange = TIME_RANGE_START;
 	startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
-	dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    dateFormatter.timeStyle = NSDateFormatterShortStyle;
-	dateFormatter.locale = [NSLocale currentLocale];
-	[startTimeField setStringValue: [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startTime]]];
 	
     // Setup scatter plot space 
 
@@ -241,6 +236,14 @@
 								  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
 		} else
 			[theStoker enableLidDetection: FALSE withDrop:0 andWait:0.0];
+
+		
+		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];					// reset on actual start of logging
+		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+		dateFormatter.dateStyle = NSDateFormatterShortStyle;
+		dateFormatter.timeStyle = NSDateFormatterShortStyle;
+		dateFormatter.locale = [NSLocale currentLocale];
+		[startTimeField setStringValue: [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startTime]]];
 
 		[theStoker startLogging];
 		
@@ -421,43 +424,72 @@
 
 - (void) updateGraph: (NSTimer *) theTimer
 {	
+	NSTimeInterval elapsedTime;
+	
 	if ([sensorTable currentEditor] != nil)		// don't update - table is being edited
 		return;
 	
 	CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
 	CPTXYAxisSet   *axisSet   = (CPTXYAxisSet *)graph.axisSet;
 	
+	// update elapsed time
+	
+	if (loggingActive) 
+	{
+		elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
+	}
+	else
+	{
+		elapsedTime = 0.0;
+		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
+	}
+	
+	NSInteger seconds = fmod(elapsedTime , 60);	
+	NSInteger minutes = fmod(elapsedTime / 60, 60);
+	NSInteger hours =   elapsedTime /60 / 60;
+	NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
+	[elapsedTimeField setStringValue: elapsedTimeString];
+	
 	// First, check to see if the horizontal axis needs to be re-scaled
 	
-	if (([[NSDate date] timeIntervalSinceReferenceDate] - startTime) > (plotRange * 0.95))	// 95% max
+	if (elapsedTime > (plotRange * 0.95))	// 95% max
 	{
-		plotRange = plotRange * 1.5;				// increase range
-		
-		plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
+		if (plotRange < (90.0 * MINUTES))
+		{
+			plotRange = plotRange + (15.0 * MINUTES);
+		}
+		else if (plotRange < (180.0 * MINUTES))
+		{
+			plotRange = plotRange + (30.0 * MINUTES);
+		}
+		else
+		{
+			plotRange = plotRange + (60.0 * MINUTES);
+		}
 		
 		// adjust the axis ticks to something that looks nice
 		
-		if (plotRange < 25.0 * MINUTES)
+		if (plotRange < 40.0 * MINUTES)
 		{
 			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(5.0 * MINUTES);			
 		}
-		else if (plotRange < 50.0 * MINUTES)
+		else if (plotRange < 80.0 * MINUTES)
 		{
 			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(10.0 * MINUTES);			
 		}
-		else if (plotRange < 75.0 * MINUTES)
+		else if (plotRange < 120.0 * MINUTES)
 		{
 			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(15.0 * MINUTES);			
 		}
-		else if (plotRange < 150.0 * MINUTES)
+		else if (plotRange < 240.0 * MINUTES)
 		{
 			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(30.0 * MINUTES);			
 		}
-		else if (plotRange < 300.0 * MINUTES)
+		else if (plotRange < 480.0 * MINUTES)
 		{
 			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(60.0 * MINUTES);			
 		}
-		else if (plotRange < 600.0 * MINUTES)
+		else if (plotRange < 960.0 * MINUTES)
 		{
 			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(120.0 * MINUTES);			
 		}
@@ -465,8 +497,11 @@
 		{
 			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(240.0 * MINUTES);			
 		}
-}
+	}
 	
+	plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
+	axisSet.yAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(startTime);
+
 	// Check to see if the temperature range has changed from Preferences
 	
 	double minTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
@@ -481,17 +516,6 @@
 				
 		axisSet.xAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(minTemp);
 	}
-	
-	// update elapsed time
-	
-	NSTimeInterval elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
-	
-	NSInteger seconds = fmod(elapsedTime , 60);	
-	NSInteger minutes = fmod(elapsedTime / 60, 60);
-	NSInteger hours =   elapsedTime /60 / 60;
-	
-	NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
-	[elapsedTimeField setStringValue: elapsedTimeString];
 	
 	// update the UI
 	
@@ -660,6 +684,23 @@
 		{			
 			[[NSRunningApplication currentApplication] terminate];
 		}
+	}
+}
+
+
+// Sent when the telnet connection changes status
+
+- (void) stoker: (Stoker *) stk isLogging: (Boolean) active
+{
+	self.loggingActive = active;
+	
+	if (active)
+	{
+		[self setStatusText: @"Logging Stoker data"];
+	}
+	else
+	{
+		[self setStatusText: @"Logging stopped"];
 	}
 }
 

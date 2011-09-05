@@ -65,6 +65,9 @@
 		
 		[self getStokerJSON: nil];		// do it once now to get things started
 	}
+	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:isLogging:)]) {
+		[[self delegate] stoker: self isLogging: self.logging];
+	}
 }		
 	
 - (void) stopLogging
@@ -82,6 +85,9 @@
         jsonTimer = nil;
 		[self sendStatusUpdate: @"HTTP Logging stopped"];
     }
+	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:isLogging:)]) {
+		[[self delegate] stoker: self isLogging: self.logging];
+	}
 }
 
 
@@ -557,7 +563,7 @@
 
 	theSensor.tempTarget = target;
 			
-	NSLog(@"Stoker: setTarget: %@ forSensor: %@ (%@)", target, theSensor.deviceID, [theSensor sensorName]);
+//	NSLog(@"Stoker: setTarget: %@ forSensor: %@ (%@)", target, theSensor.deviceID, [theSensor sensorName]);
 
 	NSString *post = [NSString stringWithFormat:@"ta%@=%@", theSensor.deviceID, [self urlEncodeValue: [target stringValue]]];
 	

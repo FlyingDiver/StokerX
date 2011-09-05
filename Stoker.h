@@ -103,6 +103,9 @@
 // Sent when the telnet connection changes status
 - (void) stoker: (Stoker *) stk telnetActive: (Boolean) active;
 
+// Sent when logging starts/stops
+- (void) stoker: (Stoker *) stk isLogging: (Boolean) active;
+
 // Sent when the HTTP/JSON connection has an error
 - (void) stoker: (Stoker *) stk httpError: (NSString *) theError;
 

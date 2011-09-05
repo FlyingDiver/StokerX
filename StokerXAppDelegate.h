@@ -20,6 +20,7 @@
 
 @interface StokerXAppDelegate : NSObject <NSApplicationDelegate, CPTPlotDataSource, NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate, FRFeedbackReporterDelegate> {
 
+	IBOutlet NSWindow				*stokerWindow;
     IBOutlet NSButton				*startStopButton;
 	IBOutlet NSTextField			*statusField;
 	IBOutlet NSTextField			*totalBlowerActivityField;
@@ -39,13 +40,8 @@
 	IBOutlet NotificationController	*notificationController;
 
 	Stoker							*theStoker;
-
-	NSTimeInterval					startTime;
-	
-	CPTXYGraph						*graph;
-	
+		
 	NSTimeInterval					plotRange;
-	NSTimeInterval					plotMaxTime;
 	double							plotMinTemp;
     double							plotMaxTemp;
 	
@@ -56,18 +52,18 @@
 	NSInvocation					*updateInvocation;
 }
 
-- (IBAction)showFeedbackForm:(id)sender;
-- (IBAction)showPreferencePanel:(id)sender;
-- (IBAction)showNotificationsWindow:(id)sender;
+- (IBAction) showFeedbackForm:(id)sender;
+- (IBAction) showPreferencePanel:(id)sender;
+- (IBAction) showNotificationsWindow:(id)sender;
 - (IBAction) startLogging: (id) sender;
 - (IBAction) savePlotData:(id)sender;
-- (IBAction)lidDetectOnOff:(id)sender;
+- (IBAction) lidDetectOnOff:(id)sender;
 
 - (void) setStatusText: (NSString *) status;
-
 - (void) plotSetup;
 - (void) updateGraph: (NSTimer *) timer;
 
+@property (assign)			  Boolean					loggingActive;
 @property (nonatomic, retain) NSTimer					*updateTimer;
 @property (nonatomic, assign) NSTimeInterval			startTime;
 @property (nonatomic, retain) CPTXYGraph				*graph;
