@@ -882,7 +882,7 @@
 							<string key="NSFrame">{{908, 597}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="161041701"/>
+							<reference key="NSNextKeyView" ref="671567187"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="528897533">
 								<int key="NSCellFlags">67239424</int>
@@ -947,7 +947,7 @@
 										<object class="NSTableView" id="617562499">
 											<reference key="NSNextResponder" ref="945905527"/>
 											<int key="NSvFlags">8452</int>
-											<string key="NSFrameSize">{538, 101}</string>
+											<string key="NSFrameSize">{538, 116}</string>
 											<reference key="NSSuperview" ref="945905527"/>
 											<reference key="NSWindow"/>
 											<reference key="NSNextKeyView" ref="267492990"/>
@@ -1291,7 +1291,7 @@
 											<int key="NSTableViewGroupRowStyle">1</int>
 										</object>
 									</array>
-									<string key="NSFrame">{{1, 17}, {538, 101}}</string>
+									<string key="NSFrame">{{1, 17}, {538, 116}}</string>
 									<reference key="NSSuperview" ref="776074590"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="617562499"/>
@@ -1302,21 +1302,21 @@
 								<object class="NSScroller" id="267492990">
 									<reference key="NSNextResponder" ref="776074590"/>
 									<int key="NSvFlags">256</int>
-									<string key="NSFrame">{{539, 17}, {15, 101}}</string>
+									<string key="NSFrame">{{539, 17}, {15, 116}}</string>
 									<reference key="NSSuperview" ref="776074590"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView" ref="118181364"/>
+									<reference key="NSNextKeyView" ref="911233943"/>
 									<reference key="NSTarget" ref="776074590"/>
 									<string key="NSAction">_doScroller:</string>
 									<double key="NSPercent">0.8529411764705882</double>
 								</object>
 								<object class="NSScroller" id="118181364">
 									<reference key="NSNextResponder" ref="776074590"/>
-									<int key="NSvFlags">256</int>
-									<string key="NSFrame">{{1, 118}, {538, 15}}</string>
+									<int key="NSvFlags">-2147483392</int>
+									<string key="NSFrame">{{-100, -100}, {538, 15}}</string>
 									<reference key="NSSuperview" ref="776074590"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView" ref="911233943"/>
+									<reference key="NSNextKeyView" ref="471139104"/>
 									<int key="NSsFlags">1</int>
 									<reference key="NSTarget" ref="776074590"/>
 									<string key="NSAction">_doScroller:</string>
@@ -1341,8 +1341,8 @@
 							<string key="NSFrame">{{20, 492}, {555, 134}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="471139104"/>
-							<int key="NSsFlags">133170</int>
+							<reference key="NSNextKeyView" ref="118181364"/>
+							<int key="NSsFlags">133138</int>
 							<reference key="NSVScroller" ref="267492990"/>
 							<reference key="NSHScroller" ref="118181364"/>
 							<reference key="NSContentView" ref="945905527"/>
@@ -1388,7 +1388,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="957135178">
 								<int key="NSCellFlags">68288064</int>
 								<int key="NSCellFlags2">272630784</int>
-								<string key="NSContents">100%</string>
+								<string key="NSContents">0%</string>
 								<reference key="NSSupport" ref="744434284"/>
 								<reference key="NSControlView" ref="103456588"/>
 								<reference key="NSBackgroundColor" ref="204726747"/>
@@ -1406,7 +1406,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="682665803">
 								<int key="NSCellFlags">68288064</int>
 								<int key="NSCellFlags2">272630784</int>
-								<string key="NSContents">100%</string>
+								<string key="NSContents">0%</string>
 								<reference key="NSSupport" ref="744434284"/>
 								<reference key="NSControlView" ref="674470957"/>
 								<reference key="NSBackgroundColor" ref="204726747"/>
@@ -1553,6 +1553,37 @@
 								<bool key="NSUsesItemFromMenu">YES</bool>
 								<bool key="NSAltersState">YES</bool>
 								<int key="NSArrowPosition">2</int>
+							</object>
+						</object>
+						<object class="NSButton" id="671567187">
+							<reference key="NSNextResponder" ref="439893737"/>
+							<int key="NSvFlags">268</int>
+							<string key="NSFrame">{{912, 559}, {86, 18}}</string>
+							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="161041701"/>
+							<string key="NSReuseIdentifierKey">_NS:239</string>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSButtonCell" key="NSCell" id="9722707">
+								<int key="NSCellFlags">67239424</int>
+								<int key="NSCellFlags2">0</int>
+								<string key="NSContents">Lid Detect</string>
+								<reference key="NSSupport" ref="744434284"/>
+								<string key="NSCellIdentifier">_NS:239</string>
+								<reference key="NSControlView" ref="671567187"/>
+								<int key="NSButtonFlags">1211912703</int>
+								<int key="NSButtonFlags2">2</int>
+								<object class="NSCustomResource" key="NSNormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">NSSwitch</string>
+								</object>
+								<object class="NSButtonImageSource" key="NSAlternateImage">
+									<string key="NSImageName">NSSwitch</string>
+								</object>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">200</int>
+								<int key="NSPeriodicInterval">25</int>
 							</object>
 						</object>
 					</array>
@@ -2165,6 +2196,22 @@
 					</object>
 					<int key="connectionID">805</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">lidDetectOnOff:</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="9722707"/>
+					</object>
+					<int key="connectionID">808</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">lidOffDetectionCheckBox</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="9722707"/>
+					</object>
+					<int key="connectionID">809</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -2704,6 +2751,7 @@
 							<reference ref="323114705"/>
 							<reference ref="577442911"/>
 							<reference ref="1022307338"/>
+							<reference ref="671567187"/>
 						</array>
 						<reference key="parent" ref="972006081"/>
 					</object>
@@ -3155,6 +3203,19 @@
 						<reference key="object" ref="856801533"/>
 						<reference key="parent" ref="577442911"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">806</int>
+						<reference key="object" ref="671567187"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="9722707"/>
+						</array>
+						<reference key="parent" ref="439893737"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">807</int>
+						<reference key="object" ref="9722707"/>
+						<reference key="parent" ref="671567187"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -3308,6 +3369,8 @@
 				<string key="798.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="799.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="80.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="806.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="807.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="81.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="82.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="83.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3316,7 +3379,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">801</int>
+			<int key="maxID">809</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3440,7 +3503,6 @@
 					<string key="superclassName">NSWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="changeEmailAddressField:">id</string>
-						<string key="changeLidOffEnabled:">id</string>
 						<string key="changeMaxGraphTempField:">id</string>
 						<string key="changeMinGraphTempField:">id</string>
 						<string key="changeStokerhttpPortField:">id</string>
@@ -3450,10 +3512,6 @@
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="changeEmailAddressField:">
 							<string key="name">changeEmailAddressField:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="changeLidOffEnabled:">
-							<string key="name">changeLidOffEnabled:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="changeMaxGraphTempField:">
@@ -3482,7 +3540,6 @@
 						<string key="emailAddress">NSTextField</string>
 						<string key="httpPort">NSTextField</string>
 						<string key="ipAddress">NSTextField</string>
-						<string key="lidOffCheckBox">NSButton</string>
 						<string key="maxGraphTemp">NSTextField</string>
 						<string key="minGraphTemp">NSTextField</string>
 						<string key="telnetCheckBox">NSButton</string>
@@ -3503,10 +3560,6 @@
 						<object class="IBToOneOutletInfo" key="ipAddress">
 							<string key="name">ipAddress</string>
 							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="lidOffCheckBox">
-							<string key="name">lidOffCheckBox</string>
-							<string key="candidateClassName">NSButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="maxGraphTemp">
 							<string key="name">maxGraphTemp</string>
@@ -3606,6 +3659,7 @@
 					<string key="className">StokerXAppDelegate</string>
 					<string key="superclassName">NSObject</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="lidDetectOnOff:">id</string>
 						<string key="savePlotData:">id</string>
 						<string key="showFeedbackForm:">id</string>
 						<string key="showNotificationsWindow:">id</string>
@@ -3613,6 +3667,10 @@
 						<string key="startLogging:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="lidDetectOnOff:">
+							<string key="name">lidDetectOnOff:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="savePlotData:">
 							<string key="name">savePlotData:</string>
 							<string key="candidateClassName">id</string>
@@ -3638,6 +3696,7 @@
 						<string key="blowerActivityDurationPopup">NSPopUpButton</string>
 						<string key="elapsedTimeField">NSTextField</string>
 						<string key="graphView">CPTLayerHostingView</string>
+						<string key="lidOffDetectionCheckBox">NSButtonCell</string>
 						<string key="mainWindow">NSWindow</string>
 						<string key="notificationController">NotificationController</string>
 						<string key="notificationListMenuItem">NSMenuItem</string>
@@ -3663,6 +3722,10 @@
 						<object class="IBToOneOutletInfo" key="graphView">
 							<string key="name">graphView</string>
 							<string key="candidateClassName">CPTLayerHostingView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="lidOffDetectionCheckBox">
+							<string key="name">lidOffDetectionCheckBox</string>
+							<string key="candidateClassName">NSButtonCell</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="mainWindow">
 							<string key="name">mainWindow</string>
@@ -3771,6 +3834,7 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="NSMenuCheckmark">{9, 8}</string>
 			<string key="NSMenuMixedState">{7, 2}</string>
+			<string key="NSSwitch">{15, 15}</string>
 		</dictionary>
 	</data>
 </archive>

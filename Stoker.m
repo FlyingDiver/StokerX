@@ -586,6 +586,8 @@
 
 - (void) enableLidDetection: (Boolean) enabled withDrop: (double) drop andWait: (double) wait
 {	
+	NSLog(@"Stoker enableLidDetection: %@ withDrop: %lf andWait: %lf", enabled ? @"On" : @"Off", drop, wait);
+
 	if (enabled)
 	{
 		lidDetectionEnabled = TRUE;

@@ -28,7 +28,7 @@
 	IBOutlet NSTextField			*elapsedTimeField;
 	IBOutlet NSPopUpButton			*blowerActivityDurationPopup;
 	IBOutlet NSMenuItem				*notificationListMenuItem;
-	
+	IBOutlet NSButtonCell			*lidOffDetectionCheckBox;
     IBOutlet NSWindow				*mainWindow;
     IBOutlet NSWindow				*notificationsWindow;
 	IBOutlet NSTableView			*sensorTable;
@@ -61,6 +61,7 @@
 - (IBAction)showNotificationsWindow:(id)sender;
 - (IBAction) startLogging: (id) sender;
 - (IBAction) savePlotData:(id)sender;
+- (IBAction)lidDetectOnOff:(id)sender;
 
 - (void) setStatusText: (NSString *) status;
 

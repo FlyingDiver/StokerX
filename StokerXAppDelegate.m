@@ -12,7 +12,9 @@
 
 @synthesize updateTimer, startTime, graph, tweetController, preferencesController;
 
-#define TIME_RANGE_START		10*60.0         // 10 minutes
+#define MINUTES	60.0
+#define TIME_RANGE_START		25 * MINUTES    
+#define PLOT_INTERVAL_START		5 * MINUTES    
 #define GRAPH_UPDATE_INTERVAL	5.0
 
 #pragma mark -
@@ -41,6 +43,7 @@
 
 -(void)awakeFromNib
 {	    
+
 	NSDateFormatter *dateFormatter;
 	
 	// Set up support for the color well in the sensor table
@@ -108,7 +111,7 @@
     dateFormatter.timeStyle = NSDateFormatterShortStyle;
     CPTTimeFormatter *timeFormatter = [[[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter] autorelease];
     
-	x.majorIntervalLength = CPTDecimalFromDouble(plotRange/5.0);
+	x.majorIntervalLength = CPTDecimalFromDouble(PLOT_INTERVAL_START);
     x.minorTicksPerInterval = 0;
     x.labelFormatter = timeFormatter;
 	x.majorTickLineStyle = tickLineStyle;
@@ -130,7 +133,7 @@
 {	
 	[self setStatusText: @"Starting StokerX"];
 
-	//	Enabling this causes Fetcher logs to be written to the desktop!
+//	Enabling this causes Fetcher logs to be written to the desktop!
 //	[GTMHTTPFetcher setLoggingEnabled:YES];
 
     [[FRFeedbackReporter sharedReporter] setDelegate:self];
@@ -268,6 +271,17 @@
 {	
 	[notificationController showWindow: self];
 }
+
+
+- (IBAction)lidDetectOnOff:(id)sender 
+{
+	[[NSUserDefaults standardUserDefaults] setBool:[lidOffDetectionCheckBox state] forKey: kLidOffEnabledKey];
+	[theStoker enableLidDetection: [lidOffDetectionCheckBox state] 
+						 withDrop: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey] doubleValue]
+						  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
+
+}
+
 
 - (IBAction)showFeedbackForm:(id)sender
 {
@@ -415,14 +429,43 @@
 	
 	// First, check to see if the horizontal axis needs to be re-scaled
 	
-	if (([[NSDate date] timeIntervalSinceReferenceDate] - startTime) > plotRange)
+	if (([[NSDate date] timeIntervalSinceReferenceDate] - startTime) > (plotRange * 0.95))	// 95% max
 	{
-		plotRange = plotRange * 2.0;				// double previous range
+		plotRange = plotRange * 1.5;				// increase range
 		
 		plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
 		
-		axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(plotRange/5.0);
-	}
+		// adjust the axis ticks to something that looks nice
+		
+		if (plotRange < 25.0 * MINUTES)
+		{
+			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(5.0 * MINUTES);			
+		}
+		else if (plotRange < 50.0 * MINUTES)
+		{
+			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(10.0 * MINUTES);			
+		}
+		else if (plotRange < 75.0 * MINUTES)
+		{
+			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(15.0 * MINUTES);			
+		}
+		else if (plotRange < 150.0 * MINUTES)
+		{
+			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(30.0 * MINUTES);			
+		}
+		else if (plotRange < 300.0 * MINUTES)
+		{
+			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(60.0 * MINUTES);			
+		}
+		else if (plotRange < 600.0 * MINUTES)
+		{
+			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(120.0 * MINUTES);			
+		}
+		else
+		{
+			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(240.0 * MINUTES);			
+		}
+}
 	
 	// Check to see if the temperature range has changed from Preferences
 	
@@ -649,13 +692,13 @@
    	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
 	NSMutableDictionary *theBlower = [stokerData objectForKey: blowerID]; 
 	NSMutableArray	*blowerPlotData = [theBlower objectForKey:@"plotData"];
-	int activeCount = 0;
 							   
 	[blowerPlotData addObject: [NSArray arrayWithObjects: currentTime, [NSNumber numberWithDouble: ((double) active * BLOWER_STEP)], nil]];
 		
+	NSInteger activeCount = [[theBlower objectForKey: @"count"] intValue];
+
 	if (active)
 	{
-		activeCount = [[theBlower objectForKey: @"count"] intValue];
 		activeCount++;
 		[theBlower setObject:[NSNumber numberWithInt: activeCount] forKey: @"count"];
 	}
@@ -669,7 +712,7 @@
 	int onCount = 0, totalCount = 0;
 	NSArray *record;
 	
-	int index = [[theBlower  objectForKey: @"count"] intValue] - 1;
+	int index = [blowerPlotData count] - 1;
 	
 	double interval = (double) [[blowerActivityDurationPopup selectedItem] tag] * 60.0;		// in seconds 
 	double current = [[NSDate date] timeIntervalSinceReferenceDate];
@@ -694,15 +737,16 @@
 				
 		index--;
 	}
-	
-	double recentCycleRatio = 0.0;
-	
+		
 	if (totalCount > 0)
 	{
-		recentCycleRatio = (((float) onCount / (float) totalCount) * 100.0);
+		[recentBlowerActivityField setStringValue: [NSString stringWithFormat:@"%3.0f%%", (((float) onCount / (float) totalCount) * 100.0)]];
 	}
-	
-	[recentBlowerActivityField setStringValue: [NSString stringWithFormat:@"%3.0f%%", recentCycleRatio]];
+	else
+	{
+		[recentBlowerActivityField setStringValue: @"0%"];
+		
+	}
 }
 
 #pragma mark -

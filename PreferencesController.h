@@ -30,7 +30,6 @@ extern NSString * const kAlarmSoundKey;
 	IBOutlet NSTextField *minGraphTemp;
 	IBOutlet NSTextField *maxGraphTemp;
 	IBOutlet NSTextField *emailAddress;
-	IBOutlet NSButton    *lidOffCheckBox;
 	IBOutlet SoundPicker *alarmPicker;
 }
 
@@ -40,6 +39,5 @@ extern NSString * const kAlarmSoundKey;
 - (IBAction)changeMinGraphTempField:(id)sender;
 - (IBAction)changeMaxGraphTempField:(id)sender;
 - (IBAction)changeEmailAddressField:(id)sender;
-- (IBAction)changeLidOffEnabled:(id)sender;
 
 @end

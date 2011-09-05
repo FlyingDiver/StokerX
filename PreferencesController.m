@@ -80,11 +80,6 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 	[[NSUserDefaults standardUserDefaults] setObject:[emailAddress stringValue] forKey: kEmailAddressKey];
 }
 
-- (IBAction)changeLidOffEnabled:(id)sender
-{
-	[[NSUserDefaults standardUserDefaults] setBool:[lidOffCheckBox state] forKey: kLidOffEnabledKey];	
-}
-
 - (void)windowDidLoad
 {
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
@@ -104,8 +99,6 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey])
 		[emailAddress setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey]];
 	
-	[lidOffCheckBox setState:[[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffEnabledKey] boolValue]];
-
 	[alarmPicker setPrefsPrefix: kAlarmSoundKey];			
 	[alarmPicker setDefaultSoundPath: @"/System/Library/Sounds/Glass.aiff"];
 	
