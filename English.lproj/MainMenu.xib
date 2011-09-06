@@ -881,6 +881,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{908, 597}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="671567187"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="528897533">
@@ -906,6 +907,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{595, 492}, {406, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="1148"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="122557693">
@@ -947,13 +949,15 @@
 											<int key="NSvFlags">8452</int>
 											<string key="NSFrameSize">{538, 116}</string>
 											<reference key="NSSuperview" ref="945905527"/>
-											<reference key="NSNextKeyView" ref="118181364"/>
+											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="267492990"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTableHeaderView" key="NSHeaderView" id="151038935">
 												<reference key="NSNextResponder" ref="471139104"/>
 												<int key="NSvFlags">256</int>
 												<string key="NSFrameSize">{538, 17}</string>
 												<reference key="NSSuperview" ref="471139104"/>
+												<reference key="NSWindow"/>
 												<reference key="NSNextKeyView" ref="352551405"/>
 												<reference key="NSTableView" ref="617562499"/>
 											</object>
@@ -962,6 +966,7 @@
 												<int key="NSvFlags">256</int>
 												<string key="NSFrame">{{539, 0}, {16, 17}}</string>
 												<reference key="NSSuperview" ref="776074590"/>
+												<reference key="NSWindow"/>
 												<reference key="NSNextKeyView" ref="945905527"/>
 											</object>
 											<array class="NSMutableArray" key="NSTableColumns">
@@ -1288,6 +1293,7 @@
 									</array>
 									<string key="NSFrame">{{1, 17}, {538, 116}}</string>
 									<reference key="NSSuperview" ref="776074590"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="617562499"/>
 									<reference key="NSDocView" ref="617562499"/>
 									<reference key="NSBGColor" ref="877970230"/>
@@ -1298,6 +1304,7 @@
 									<int key="NSvFlags">256</int>
 									<string key="NSFrame">{{539, 17}, {15, 116}}</string>
 									<reference key="NSSuperview" ref="776074590"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="911233943"/>
 									<reference key="NSTarget" ref="776074590"/>
 									<string key="NSAction">_doScroller:</string>
@@ -1308,6 +1315,7 @@
 									<int key="NSvFlags">-2147483392</int>
 									<string key="NSFrame">{{-100, -100}, {538, 15}}</string>
 									<reference key="NSSuperview" ref="776074590"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="471139104"/>
 									<int key="NSsFlags">1</int>
 									<reference key="NSTarget" ref="776074590"/>
@@ -1322,6 +1330,7 @@
 									</array>
 									<string key="NSFrame">{{1, 0}, {538, 17}}</string>
 									<reference key="NSSuperview" ref="776074590"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="151038935"/>
 									<reference key="NSDocView" ref="151038935"/>
 									<reference key="NSBGColor" ref="877970230"/>
@@ -1331,7 +1340,8 @@
 							</array>
 							<string key="NSFrame">{{20, 492}, {555, 134}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
-							<reference key="NSNextKeyView" ref="945905527"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="118181364"/>
 							<int key="NSsFlags">133138</int>
 							<reference key="NSVScroller" ref="267492990"/>
 							<reference key="NSHScroller" ref="118181364"/>
@@ -1345,6 +1355,8 @@
 							<int key="NSvFlags">306</int>
 							<string key="NSFrame">{{1, 0}, {1018, 484}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSClassName">CPTLayerHostingView</string>
 						</object>
 						<object class="NSTextField" id="161041701">
@@ -1352,6 +1364,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{695, 520}, {101, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="674470957"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="771097665">
@@ -1369,6 +1382,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{954, 520}, {47, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="735712557"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="957135178">
@@ -1386,6 +1400,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{798, 520}, {44, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="746293604"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="682665803">
@@ -1403,6 +1418,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{607, 609}, {53, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="323114705"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="281996155">
@@ -1420,6 +1436,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{688, 609}, {145, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="577442911"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="717608274">
@@ -1437,6 +1454,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{607, 584}, {57, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="1022307338"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="856801533">
@@ -1454,6 +1472,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{688, 584}, {145, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="574129424"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="60797858">
@@ -1471,6 +1490,7 @@
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{855, 513}, {88, 26}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="103456588"/>
 							<string key="NSReuseIdentifierKey">_NS:179</string>
 							<bool key="NSEnabled">YES</bool>
@@ -1540,6 +1560,7 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{912, 559}, {86, 18}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="161041701"/>
 							<string key="NSReuseIdentifierKey">_NS:239</string>
 							<bool key="NSEnabled">YES</bool>
@@ -1568,6 +1589,7 @@
 					</array>
 					<string key="NSFrameSize">{1018, 646}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="776074590"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
@@ -1951,14 +1973,6 @@
 					<int key="connectionID">489</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showHelp:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="105068016"/>
-					</object>
-					<int key="connectionID">493</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="1021"/>
@@ -2197,6 +2211,14 @@
 						<reference key="destination" ref="972006081"/>
 					</object>
 					<int key="connectionID">810</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">showHelpWindow:</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="105068016"/>
+					</object>
+					<int key="connectionID">811</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3365,9 +3387,466 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">810</int>
+			<int key="maxID">819</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">CPTLayerHostingView</string>
+					<string key="superclassName">NSView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/CPTLayerHostingView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSDocument</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="printDocument:">id</string>
+						<string key="revertDocumentToSaved:">id</string>
+						<string key="runPageLayout:">id</string>
+						<string key="saveDocument:">id</string>
+						<string key="saveDocumentAs:">id</string>
+						<string key="saveDocumentTo:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="printDocument:">
+							<string key="name">printDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="revertDocumentToSaved:">
+							<string key="name">revertDocumentToSaved:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="runPageLayout:">
+							<string key="name">runPageLayout:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocument:">
+							<string key="name">saveDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocumentAs:">
+							<string key="name">saveDocumentAs:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocumentTo:">
+							<string key="name">saveDocumentTo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/NSDocument.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NotificationController</string>
+					<string key="superclassName">NSWindowController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="changeRuleAction:">id</string>
+						<string key="changeRuleTest:">id</string>
+						<string key="changeRuleValue:">id</string>
+						<string key="editRuleList:">NSSegmentedControl</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="changeRuleAction:">
+							<string key="name">changeRuleAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeRuleTest:">
+							<string key="name">changeRuleTest:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeRuleValue:">
+							<string key="name">changeRuleValue:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="editRuleList:">
+							<string key="name">editRuleList:</string>
+							<string key="candidateClassName">NSSegmentedControl</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="actionPopup">NSPopUpButton</string>
+						<string key="ruleEditPanel">NSWindow</string>
+						<string key="ruleTable">NSTableView</string>
+						<string key="sensorPopup">NSPopUpButton</string>
+						<string key="testPopup">NSPopUpButton</string>
+						<string key="valueTextField">NSTextField</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="actionPopup">
+							<string key="name">actionPopup</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="ruleEditPanel">
+							<string key="name">ruleEditPanel</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="ruleTable">
+							<string key="name">ruleTable</string>
+							<string key="candidateClassName">NSTableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sensorPopup">
+							<string key="name">sensorPopup</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="testPopup">
+							<string key="name">testPopup</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="valueTextField">
+							<string key="name">valueTextField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/NotificationController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">PreferencesController</string>
+					<string key="superclassName">NSWindowController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="changeEmailAddressField:">id</string>
+						<string key="changeMaxGraphTempField:">id</string>
+						<string key="changeMinGraphTempField:">id</string>
+						<string key="changeStokerhttpPortField:">id</string>
+						<string key="changeStokeripAddressField:">id</string>
+						<string key="changeTelnetMode:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="changeEmailAddressField:">
+							<string key="name">changeEmailAddressField:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeMaxGraphTempField:">
+							<string key="name">changeMaxGraphTempField:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeMinGraphTempField:">
+							<string key="name">changeMinGraphTempField:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeStokerhttpPortField:">
+							<string key="name">changeStokerhttpPortField:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeStokeripAddressField:">
+							<string key="name">changeStokeripAddressField:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeTelnetMode:">
+							<string key="name">changeTelnetMode:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="alarmPicker">SoundPicker</string>
+						<string key="emailAddress">NSTextField</string>
+						<string key="httpPort">NSTextField</string>
+						<string key="ipAddress">NSTextField</string>
+						<string key="maxGraphTemp">NSTextField</string>
+						<string key="minGraphTemp">NSTextField</string>
+						<string key="telnetCheckBox">NSButton</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="alarmPicker">
+							<string key="name">alarmPicker</string>
+							<string key="candidateClassName">SoundPicker</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="emailAddress">
+							<string key="name">emailAddress</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="httpPort">
+							<string key="name">httpPort</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="ipAddress">
+							<string key="name">ipAddress</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="maxGraphTemp">
+							<string key="name">maxGraphTemp</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="minGraphTemp">
+							<string key="name">minGraphTemp</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="telnetCheckBox">
+							<string key="name">telnetCheckBox</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/PreferencesController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SUUpdater</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">checkForUpdates:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">checkForUpdates:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">checkForUpdates:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">delegate</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">delegate</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">delegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SUUpdater.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SoundPicker</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="decreaseVolume:">id</string>
+						<string key="increaseVolume:">id</string>
+						<string key="soundPicked:">id</string>
+						<string key="volumeChanged:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="decreaseVolume:">
+							<string key="name">decreaseVolume:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="increaseVolume:">
+							<string key="name">increaseVolume:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="soundPicked:">
+							<string key="name">soundPicked:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="volumeChanged:">
+							<string key="name">volumeChanged:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="availableSoundsPopup">NSPopUpButton</string>
+						<string key="volumeControl">NSSlider</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="availableSoundsPopup">
+							<string key="name">availableSoundsPopup</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="volumeControl">
+							<string key="name">volumeControl</string>
+							<string key="candidateClassName">NSSlider</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SoundPicker.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">StokerXAppDelegate</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="lidDetectOnOff:">id</string>
+						<string key="savePlotData:">id</string>
+						<string key="showFeedbackForm:">id</string>
+						<string key="showHelpWindow:">id</string>
+						<string key="showNotificationsWindow:">id</string>
+						<string key="showPreferencePanel:">id</string>
+						<string key="startLogging:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="lidDetectOnOff:">
+							<string key="name">lidDetectOnOff:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="savePlotData:">
+							<string key="name">savePlotData:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showFeedbackForm:">
+							<string key="name">showFeedbackForm:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showHelpWindow:">
+							<string key="name">showHelpWindow:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showNotificationsWindow:">
+							<string key="name">showNotificationsWindow:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showPreferencePanel:">
+							<string key="name">showPreferencePanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="startLogging:">
+							<string key="name">startLogging:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="blowerActivityDurationPopup">NSPopUpButton</string>
+						<string key="elapsedTimeField">NSTextField</string>
+						<string key="graphView">CPTLayerHostingView</string>
+						<string key="helpTextView">NSTextView</string>
+						<string key="helpWindow">NSWindow</string>
+						<string key="lidOffDetectionCheckBox">NSButtonCell</string>
+						<string key="mainWindow">NSWindow</string>
+						<string key="notificationController">NotificationController</string>
+						<string key="notificationListMenuItem">NSMenuItem</string>
+						<string key="notificationsWindow">NSWindow</string>
+						<string key="preferencesController">PreferencesController</string>
+						<string key="recentBlowerActivityField">NSTextField</string>
+						<string key="sensorTable">NSTableView</string>
+						<string key="startStopButton">NSButton</string>
+						<string key="startTimeField">NSTextField</string>
+						<string key="statusField">NSTextField</string>
+						<string key="stokerWindow">NSWindow</string>
+						<string key="totalBlowerActivityField">NSTextField</string>
+						<string key="tweetController">StokerXTwitter</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="blowerActivityDurationPopup">
+							<string key="name">blowerActivityDurationPopup</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="elapsedTimeField">
+							<string key="name">elapsedTimeField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="graphView">
+							<string key="name">graphView</string>
+							<string key="candidateClassName">CPTLayerHostingView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="helpTextView">
+							<string key="name">helpTextView</string>
+							<string key="candidateClassName">NSTextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="helpWindow">
+							<string key="name">helpWindow</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="lidOffDetectionCheckBox">
+							<string key="name">lidOffDetectionCheckBox</string>
+							<string key="candidateClassName">NSButtonCell</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mainWindow">
+							<string key="name">mainWindow</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="notificationController">
+							<string key="name">notificationController</string>
+							<string key="candidateClassName">NotificationController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="notificationListMenuItem">
+							<string key="name">notificationListMenuItem</string>
+							<string key="candidateClassName">NSMenuItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="notificationsWindow">
+							<string key="name">notificationsWindow</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="preferencesController">
+							<string key="name">preferencesController</string>
+							<string key="candidateClassName">PreferencesController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="recentBlowerActivityField">
+							<string key="name">recentBlowerActivityField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sensorTable">
+							<string key="name">sensorTable</string>
+							<string key="candidateClassName">NSTableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="startStopButton">
+							<string key="name">startStopButton</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="startTimeField">
+							<string key="name">startTimeField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="statusField">
+							<string key="name">statusField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="stokerWindow">
+							<string key="name">stokerWindow</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="totalBlowerActivityField">
+							<string key="name">totalBlowerActivityField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tweetController">
+							<string key="name">tweetController</string>
+							<string key="candidateClassName">StokerXTwitter</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/StokerXAppDelegate.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">StokerXTwitter</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="enableTwitter:">id</string>
+						<string key="signInOutClicked:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="enableTwitter:">
+							<string key="name">enableTwitter:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="signInOutClicked:">
+							<string key="name">signInOutClicked:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="authorizeTwitterMenuItem">NSMenuItem</string>
+						<string key="enableTwitterMenuItem">NSMenuItem</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="authorizeTwitterMenuItem">
+							<string key="name">authorizeTwitterMenuItem</string>
+							<string key="candidateClassName">NSMenuItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="enableTwitterMenuItem">
+							<string key="name">enableTwitterMenuItem</string>
+							<string key="candidateClassName">NSMenuItem</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/StokerXTwitter.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">

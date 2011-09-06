@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "JSON.h"
 #import "Stoker.h"
+#import "HelpController.h"
 #import "PreferencesController.h"
 #import "NotificationController.h"
 #import "LVColorWellCell.h"
@@ -36,6 +37,7 @@
     IBOutlet CPTLayerHostingView	*graphView;
 	
 	IBOutlet PreferencesController	*preferencesController;
+	IBOutlet HelpController			*helpController;
 	IBOutlet StokerXTwitter			*tweetController;
 	IBOutlet NotificationController	*notificationController;
 
@@ -50,8 +52,11 @@
 	Boolean							exitWaiting;
 	Boolean							updateWaiting;
 	NSInvocation					*updateInvocation;
+	
+
 }
 
+- (IBAction) showHelpWindow:(id)sender;
 - (IBAction) showFeedbackForm:(id)sender;
 - (IBAction) showPreferencePanel:(id)sender;
 - (IBAction) showNotificationsWindow:(id)sender;

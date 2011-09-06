@@ -105,7 +105,6 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 	[[self window] setFrameAutosaveName:@"Prefs Window"];
 	[[self window] makeKeyAndOrderFront: self];
 	
-
 }
 
 @end

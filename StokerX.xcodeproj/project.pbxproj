@@ -35,6 +35,9 @@
 		C99B85C014002FB000E27494 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C99B85BF14002FB000E27494 /* Credits.rtf */; };
 		C9A3616813FCB87500D98912 /* Notifications.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9A3616613FCB87400D98912 /* Notifications.xib */; };
 		C9AF1F18140D2DC2002AEEFE /* FRFeedbackReporter.sh in Resources */ = {isa = PBXBuildFile; fileRef = C9AF1F17140D2DC2002AEEFE /* FRFeedbackReporter.sh */; };
+		C9B084971416B4B800F1C567 /* Help.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C9B084961416B4B800F1C567 /* Help.rtf */; };
+		C9B0849A1416BB6100F1C567 /* HelpController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B084991416BB6100F1C567 /* HelpController.m */; };
+		C9B0849C1416BB8B00F1C567 /* Help.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9B0849B1416BB8B00F1C567 /* Help.xib */; };
 		C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9B1CF63123352B200648DF4 /* Preferences.xib */; };
 		C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */; };
 		C9C83DE51412B2C300AB8261 /* To-Do.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C9C83DE41412B2C300AB8261 /* To-Do.rtf */; };
@@ -142,6 +145,10 @@
 		C99B85BF14002FB000E27494 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		C9A3616713FCB87400D98912 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Notifications.xib; sourceTree = "<group>"; };
 		C9AF1F17140D2DC2002AEEFE /* FRFeedbackReporter.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = FRFeedbackReporter.sh; sourceTree = "<group>"; };
+		C9B084961416B4B800F1C567 /* Help.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Help.rtf; sourceTree = "<group>"; };
+		C9B084981416BB6100F1C567 /* HelpController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpController.h; sourceTree = "<group>"; };
+		C9B084991416BB6100F1C567 /* HelpController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpController.m; sourceTree = "<group>"; };
+		C9B0849B1416BB8B00F1C567 /* Help.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Help.xib; sourceTree = "<group>"; };
 		C9B1CF64123352B200648DF4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LVColorWellCell.h; sourceTree = "<group>"; };
 		C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LVColorWellCell.m; sourceTree = "<group>"; };
@@ -206,6 +213,8 @@
 				C929300313F810C2007F685C /* StokerXTwitter.m */,
 				C9EC2EE81278F6DA00289387 /* Stoker.h */,
 				C9EC2EE91278F6DA00289387 /* Stoker.m */,
+				C9B084981416BB6100F1C567 /* HelpController.h */,
+				C9B084991416BB6100F1C567 /* HelpController.m */,
 				C967348E13E46DD10042841B /* PreferencesController.h */,
 				C967348F13E46DD70042841B /* PreferencesController.m */,
 			);
@@ -278,11 +287,13 @@
 				8D1107310486CEB800E47090 /* StokerX-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+				C9B0849B1416BB8B00F1C567 /* Help.xib */,
 				C9B1CF63123352B200648DF4 /* Preferences.xib */,
 				C9A3616613FCB87400D98912 /* Notifications.xib */,
 				C9AF1F17140D2DC2002AEEFE /* FRFeedbackReporter.sh */,
 				C9F6710D140B2ADB0033F39C /* StokerX.png */,
 				C946B0F6140B35AD00EA46D6 /* StokerX.icns */,
+				C9B084961416B4B800F1C567 /* Help.rtf */,
 				C99B85BF14002FB000E27494 /* Credits.rtf */,
 			);
 			name = Resources;
@@ -478,6 +489,8 @@
 				C946B0F7140B35AD00EA46D6 /* StokerX.icns in Resources */,
 				C9AF1F18140D2DC2002AEEFE /* FRFeedbackReporter.sh in Resources */,
 				C9C83DE51412B2C300AB8261 /* To-Do.rtf in Resources */,
+				C9B084971416B4B800F1C567 /* Help.rtf in Resources */,
+				C9B0849C1416BB8B00F1C567 /* Help.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,6 +552,7 @@
 				C91ADC631402ACF600A6472E /* NotificationTest.m in Sources */,
 				C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */,
 				C98BDAF2140A61AE00D1424F /* SoundPicker.m in Sources */,
+				C9B0849A1416BB6100F1C567 /* HelpController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -149,17 +149,8 @@
 
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
 	{
-        if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokerhttpPortKey])
-        {
-            [theStoker connectToIPAddress: [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey] 
-                                  andPort: [[NSUserDefaults standardUserDefaults] stringForKey: kStokerhttpPortKey]];
-        }
-        else
-        {
-            [theStoker connectToIPAddress: [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey] 
-                                  andPort: @"80"];           
-            
-        }
+		[theStoker connectToIPAddress: [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey] 
+							  andPort: [[NSUserDefaults standardUserDefaults] stringForKey: kStokerhttpPortKey]];
 	}
 	else
 	{
@@ -270,6 +261,16 @@
 	[preferencesController showWindow:self];
 }
 
+
+- (IBAction)showHelpWindow:(id)sender 
+{
+	if (!helpController) 
+		helpController = [[HelpController alloc] init];
+	
+	[helpController showWindow:self];
+}
+
+
 - (IBAction)showNotificationsWindow:(id)sender
 {	
 	[notificationController showWindow: self];
@@ -284,7 +285,6 @@
 						  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
 
 }
-
 
 - (IBAction)showFeedbackForm:(id)sender
 {
