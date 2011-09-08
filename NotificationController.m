@@ -156,8 +156,8 @@
 					[text appendString: @"A"];
 					break;
 					
-				case kVisualAlarm:
-					[text appendString: @"V"];
+				case kGrowlAlert:
+					[text appendString: @"G"];
 					break;
 					
 				case kEmailNotification:
@@ -266,7 +266,7 @@
 			break;
 		}
 			
-		case kVisualAlarm:
+		case kGrowlAlert:
 		{			
 			[GrowlApplicationBridge notifyWithTitle: @"StokerX"				
 										description: message	

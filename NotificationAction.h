@@ -10,7 +10,7 @@
 
 typedef enum {
 	kAudibleAlarm = 0,
-	kVisualAlarm,
+	kGrowlAlert,
 	kEmailNotification,
 	kTwitterNotification
 } ActionTypes;
