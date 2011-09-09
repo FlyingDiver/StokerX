@@ -15,7 +15,7 @@
 
 @implementation NotificationController
 
-@synthesize ruleList, sensorList, sensorDict, alertSoundFile, alertSound;
+@synthesize ruleList, sensorList, sensorDict;
 
 #pragma mark -
 #pragma mark Constructor/Destructor Methods
@@ -35,24 +35,7 @@
 	self.ruleList =	[NotificationRule ruleList];
 	
 	[GrowlApplicationBridge setGrowlDelegate: self]; 
-	
-	// Setup the alert sound from defaults...
-	
-	NSString *soundFile = [[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Path", kAlarmSoundKey]];
-	if (soundFile)
-	{
-		self.alertSoundFile = soundFile;
-		self.alertSound = [[[NSSound alloc] initWithContentsOfFile: soundFile byReference: YES] autorelease];
 		
-		if ([[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Volume", kAlarmSoundKey]])
-			[self.alertSound setVolume:  [[[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Volume", kAlarmSoundKey]] floatValue]];
-	}
-	else
-	{
-		self.alertSoundFile = nil;
-		self.alertSound = [NSSound soundNamed:@"Glass"];
-	}
-	
 	return self;
 }
 
@@ -61,8 +44,6 @@
 	self.sensorDict = nil;
 	self.sensorList = nil;
 	self.ruleList = nil;
-	self.alertSoundFile = nil;
-	self.alertSound = nil;
 	
     [super dealloc];
 }
@@ -152,10 +133,6 @@
 		{
 			switch ([rule action]) 
 			{
-				case kAudibleAlarm:
-					[text appendString: @"A"];
-					break;
-					
 				case kGrowlAlert:
 					[text appendString: @"G"];
 					break;
@@ -244,28 +221,7 @@
 	[rule setLastNotified: [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]]];
 	
 	switch ([rule action])		// branch depending on notification to use
-	{				
-		case kAudibleAlarm:					
-		{		
-			// reload the alarm sound file just in case the user changed it since last audible alarm
-			
-			NSString *newSoundFile = [[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Path", kAlarmSoundKey]];
-			if (newSoundFile && [newSoundFile isNotEqualTo: alertSoundFile])
-			{				
-				self.alertSound = [[[NSSound alloc] initWithContentsOfFile: newSoundFile byReference: YES] autorelease];
-				self.alertSoundFile = newSoundFile;
-				
-				// check the volume while we're here
-				
-				if ([[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Volume", kAlarmSoundKey]])
-					[self.alertSound setVolume:  [[[NSUserDefaults standardUserDefaults] stringForKey: [NSString stringWithFormat: @"%@_Volume", kAlarmSoundKey]] floatValue]];
-			}
-			if (![self.alertSound play])
-				NSLog(@"Error playing alertSound");
-			
-			break;
-		}
-			
+	{							
 		case kGrowlAlert:
 		{			
 			[GrowlApplicationBridge notifyWithTitle: @"StokerX"				
@@ -496,8 +452,6 @@
 	return;
 
 }
-
-
 
 
 #pragma mark -

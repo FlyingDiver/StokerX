@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-	kAudibleAlarm = 0,
-	kGrowlAlert,
+	kGrowlAlert = 0,
 	kEmailNotification,
 	kTwitterNotification
 } ActionTypes;

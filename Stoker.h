@@ -42,7 +42,6 @@
 @property (nonatomic, retain) NSURLConnection	*postConnection;
 @property (nonatomic, retain) NSTimer       	*jsonTimer;
 @property (nonatomic, retain) NSString			*ipAddress;
-@property (nonatomic, retain) NSString			*httpPort;
 @property (nonatomic, assign) Boolean			logging;
 @property (nonatomic, assign) Boolean			useTelnet;
 @property (nonatomic, assign) Boolean			stokerAvailable;
@@ -54,7 +53,7 @@
 @property (nonatomic, assign) NSInteger			blowerControlSensor;		// the sensor that controls the blower, for lid-off control
 @property (nonatomic, retain) NSNumber			*lastTempTarget;			// the temp to restore after lid-off
 
-- (void)connectToIPAddress: (NSString *) ip andPort: (NSString *) port;
+- (void)connectToIPAddress: (NSString *) ip;
 - (void) getStokerJSON: (NSTimer *) theTimer;
 
 - (void) startLogging;

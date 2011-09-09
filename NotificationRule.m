@@ -39,6 +39,17 @@ static NSMutableArray *_RuleList = nil;
 		[unarchiver release];
 		if ([_RuleList count] > 0)
 		{
+			// make sure we don't crash because rules were removed.  Need to add a version to the saved rule list and do the fixups right
+			
+			for (NotificationRule *rule in _RuleList)
+			{
+				if (rule.test >= [[NotificationTest testList] count])
+					rule.test = 0;
+				
+				if (rule.action >= [[NotificationAction actionList] count])
+					rule.action = 0;
+			}
+
 			return _RuleList;
 		}
 		else

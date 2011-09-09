@@ -11,31 +11,26 @@
 #import "SoundPicker.h"
 
 extern NSString * const kStokeripAddressKey;
-extern NSString * const kStokerhttpPortKey;
 extern NSString * const kMinGraphTempKey;
 extern NSString * const kMaxGraphTempKey;
-extern NSString * const kTelnetKey;
+extern NSString * const kHTTPOnlyKey;
 extern NSString * const kEmailAddressKey;
 extern NSString * const kLidOffEnabledKey;
 extern NSString * const kLidOffDropKey;
 extern NSString * const kLidOffWaitKey;
 extern NSString * const kSendTweetsKey;
-extern NSString * const kAlarmSoundKey;
 
 @interface PreferencesController : NSWindowController
 {
 	IBOutlet NSTextField *ipAddress;
-	IBOutlet NSTextField *httpPort;
-	IBOutlet NSButton    *telnetCheckBox;
+	IBOutlet NSButton    *httpOnlyCheckBox;
 	IBOutlet NSTextField *minGraphTemp;
 	IBOutlet NSTextField *maxGraphTemp;
 	IBOutlet NSTextField *emailAddress;
-	IBOutlet SoundPicker *alarmPicker;
 }
 
 - (IBAction)changeStokeripAddressField:(id)sender;
-- (IBAction)changeStokerhttpPortField:(id)sender;
-- (IBAction)changeTelnetMode:(id)sender;
+- (IBAction)changeHTTPOnly:(id)sender;
 - (IBAction)changeMinGraphTempField:(id)sender;
 - (IBAction)changeMaxGraphTempField:(id)sender;
 - (IBAction)changeEmailAddressField:(id)sender;

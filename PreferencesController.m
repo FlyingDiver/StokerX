@@ -10,8 +10,7 @@
 #import "PreferencesController.h"
 
 NSString * const kStokeripAddressKey = @"StokeripAddress";
-NSString * const kStokerhttpPortKey  = @"StokerhttpPort";
-NSString * const kTelnetKey          = @"TelnetMode";
+NSString * const kHTTPOnlyKey        = @"kHTTPOnlyKey";
 NSString * const kMinGraphTempKey    = @"MinGraphTemp";
 NSString * const kMaxGraphTempKey    = @"MaxGraphTemp";
 NSString * const kEmailAddressKey    = @"EmailAddress";
@@ -19,7 +18,6 @@ NSString * const kLidOffEnabledKey   = @"LidOffEnabled";
 NSString * const kLidOffDropKey      = @"LidOffDrop";
 NSString * const kLidOffWaitKey      = @"LidOffWait";
 NSString * const kSendTweetsKey      = @"SendTweets";
-NSString * const kAlarmSoundKey      = @"AlarmSound";
 
 #define MIN_TEMP_AXIS			0.0
 #define MAX_TEMP_AXIS			500.0
@@ -40,14 +38,9 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 	[[NSUserDefaults standardUserDefaults] setObject:[ipAddress stringValue] forKey: kStokeripAddressKey];
 }
 
-- (IBAction)changeStokerhttpPortField:(id)sender
+- (IBAction)changeHTTPOnly:(id)sender
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[httpPort stringValue] forKey: kStokerhttpPortKey];
-}
-
-- (IBAction)changeTelnetMode:(id)sender
-{
-	[[NSUserDefaults standardUserDefaults] setBool:[telnetCheckBox state] forKey: kTelnetKey];
+	[[NSUserDefaults standardUserDefaults] setBool:[httpOnlyCheckBox state] forKey: kHTTPOnlyKey];
 }
 
 - (IBAction)changeMinGraphTempField:(id)sender
@@ -72,7 +65,6 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
     {
         [[NSUserDefaults standardUserDefaults] setObject:[maxGraphTemp stringValue] forKey: kMaxGraphTempKey];
     }
-   
 }
 
 - (IBAction)changeEmailAddressField:(id)sender
@@ -85,10 +77,7 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
 		[ipAddress setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey]];
 	
-	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokerhttpPortKey])
-		[httpPort setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kStokerhttpPortKey]];
-	
-	[telnetCheckBox setState:[[[NSUserDefaults standardUserDefaults] stringForKey: kTelnetKey] boolValue]];
+	[httpOnlyCheckBox setState:[[[NSUserDefaults standardUserDefaults] stringForKey: kHTTPOnlyKey] boolValue]];
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey])
 		[minGraphTemp setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey]];
@@ -98,10 +87,7 @@ NSString * const kAlarmSoundKey      = @"AlarmSound";
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey])
 		[emailAddress setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey]];
-	
-	[alarmPicker setPrefsPrefix: kAlarmSoundKey];			
-	[alarmPicker setDefaultSoundPath: @"/System/Library/Sounds/Glass.aiff"];
-	
+
 	[[self window] setFrameAutosaveName:@"Prefs Window"];
 	[[self window] makeKeyAndOrderFront: self];
 	

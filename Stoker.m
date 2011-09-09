@@ -11,7 +11,7 @@
 
 @implementation Stoker
 
-@synthesize delegate, stokerVersion, jsonTimer, jsonConnection, jsonRequest, jsonData, postConnection, ipAddress, httpPort, logging;
+@synthesize delegate, stokerVersion, jsonTimer, jsonConnection, jsonRequest, jsonData, postConnection, ipAddress, logging;
 @synthesize useTelnet, stokerAvailable, telnetActive, mySendExpect, lastTemp, lidOffHold, blowerControlSensor, lastTempTarget;
 
 - (void)dealloc
@@ -32,16 +32,15 @@
 	}
 }
 
-- (void)connectToIPAddress: (NSString *) ip andPort: (NSString *) port
+- (void)connectToIPAddress: (NSString *) ip
 {	    
 	self.ipAddress = ip;
-	self.httpPort = port;
 	
 	// build the JSON data request once, and save it
 	
-	self.jsonRequest = [[[NSURLRequest alloc] initWithURL: [NSURL URLWithString: [NSString stringWithFormat: @"http://%@:%@/stoker.json?version=true", ipAddress, httpPort]]] autorelease];
+	self.jsonRequest = [[[NSURLRequest alloc] initWithURL: [NSURL URLWithString: [NSString stringWithFormat: @"http://%@/stoker.json?version=true", ipAddress]]] autorelease];
 	
-	[self sendStatusUpdate: [NSString stringWithFormat: @"Attempting HTTP connection to %@:%@", ipAddress, httpPort]];
+	[self sendStatusUpdate: [NSString stringWithFormat: @"Attempting HTTP connection to %@", ipAddress]];
 
 	// try the JSON request
 	[self getStokerJSON: nil];
@@ -98,7 +97,7 @@
 
 - (void) getStokerJSON:(NSTimer *) theTimer
 {	
-	NSString *requestString =  [NSString stringWithFormat: @"http://%@:%@/stoker.json?version=true", ipAddress, httpPort];
+	NSString *requestString =  [NSString stringWithFormat: @"http://%@/stoker.json?version=true", ipAddress];
 	
 	NSURL *url = [NSURL URLWithString: requestString];		
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -261,6 +260,9 @@
 {		
 	NSLog(@"Stoker: startTelnetCapture");
 
+	NSString *telnetAddress;
+	int telnetPort = 23;
+
 	NSError *err;
 	connectionReady = NO;
 		
@@ -275,12 +277,23 @@
 	self.mySendExpect = [[[SendExpect alloc] initWithSequence: sequence] autorelease];
 	self.mySendExpect.name = @"Telnet Output Start";
 	self.mySendExpect.delegate = self;
-	
-	int port = 23;	// telnet port
-	
+		
 	// Create socket.
 	socket = [[AsyncSocket alloc] initWithDelegate:self];
 	
+	NSRange colon = [ipAddress rangeOfString: @":"];
+	if (colon.location != NSNotFound)
+	{
+		telnetAddress = ipAddress;
+	}
+	else
+	{
+		telnetAddress = [ipAddress substringToIndex: colon.location];
+	}
+	
+	NSLog(@"startTelnetCapture telnetAddress = %@", telnetAddress);
+	
+
 	// Set up stdin for non-blocking.
 	if (fcntl (STDIN_FILENO, F_SETFL, O_NONBLOCK) == -1)
 	{
@@ -288,9 +301,9 @@
 		exit(1);
 	}
 	
-	if (![socket connectToHost:ipAddress onPort:port error:&err])
+	if (![socket connectToHost:telnetAddress onPort: telnetPort error:&err])
 	{
-		NSLog (@"Stoker: Couldn't connect to %@:%u (%@).", ipAddress, port, err);
+		NSLog (@"Stoker: Couldn't connect to %@:%u (%@).", ipAddress, telnetPort, err);
 		return;
 	}
 
@@ -548,7 +561,7 @@
 	NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
 	NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
 	NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
-	[request setURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@:%@/stoker.Post_Handler", ipAddress, httpPort]]];
+	[request setURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/stoker.Post_Handler", ipAddress]]];
 	[request setHTTPMethod:@"POST"];
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -570,7 +583,7 @@
 	NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
 	NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
 	NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
-	[request setURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@:%@/stoker.Post_Handler", ipAddress, httpPort]]];
+	[request setURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/stoker.Post_Handler", ipAddress]]];
 	[request setHTTPMethod:@"POST"];
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];

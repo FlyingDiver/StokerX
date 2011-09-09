@@ -19,7 +19,10 @@
 #import "Sparkle/Sparkle.h"
 #import "FeedbackReporter/FRFeedbackReporter.h"
 
-@interface StokerXAppDelegate : NSObject <NSApplicationDelegate, CPTPlotDataSource, NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate, FRFeedbackReporterDelegate> {
+@interface StokerXAppDelegate : NSObject <NSApplicationDelegate, FRFeedbackReporterDelegate, 
+								CPTPlotSpaceDelegate, CPTPlotDataSource, CPTScatterPlotDelegate, 
+								NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
+{
 
 	IBOutlet NSWindow				*stokerWindow;
     IBOutlet NSButton				*startStopButton;
@@ -53,7 +56,7 @@
 	Boolean							updateWaiting;
 	NSInvocation					*updateInvocation;
 	
-
+	CPTLayerAnnotation				*textAnnotation;
 }
 
 - (IBAction) showHelpWindow:(id)sender;

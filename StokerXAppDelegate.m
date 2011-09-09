@@ -30,8 +30,7 @@
 	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kMaxGraphTempKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kLidOffDropKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kLidOffWaitKey];
-	[defaultValues setObject:[NSNumber numberWithInt: 80]  forKey:kStokerhttpPortKey];
-	[defaultValues setObject:[NSNumber numberWithInt: 1]   forKey:kTelnetKey];
+	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kHTTPOnlyKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kLidOffEnabledKey];
 
 	[defaultValues setObject:[NSNumber numberWithInt: 86400] forKey:@"SUScheduledCheckInterval"];
@@ -43,7 +42,6 @@
 
 -(void)awakeFromNib
 {	    
-
 	NSDateFormatter *dateFormatter;
 	
 	// Set up support for the color well in the sensor table
@@ -86,6 +84,9 @@
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
 	plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
     plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(minTemp) length:CPTDecimalFromDouble(maxTemp - minTemp)];
+    plotSpace.allowsUserInteraction = YES;
+    plotSpace.delegate = self;
+	
 	
 	// line styles
     CPTMutableLineStyle *gridLineStyle = [CPTMutableLineStyle lineStyle];
@@ -149,8 +150,7 @@
 
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
 	{
-		[theStoker connectToIPAddress: [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey] 
-							  andPort: [[NSUserDefaults standardUserDefaults] stringForKey: kStokerhttpPortKey]];
+		[theStoker connectToIPAddress: [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey]];
 	}
 	else
 	{
@@ -215,10 +215,10 @@
 			return;
 		}
 				
-		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kTelnetKey] boolValue])
-			theStoker.useTelnet = TRUE;	
+		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kHTTPOnlyKey] boolValue])
+			theStoker.useTelnet = FALSE;	
 		else
-			theStoker.useTelnet = FALSE;
+			theStoker.useTelnet = TRUE;
 		
 		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffEnabledKey] boolValue])
 		{
@@ -331,7 +331,7 @@
 								 nil]
 					   forKey: [theStoker idForBlower: i]];
 		
-        linePlot = [[CPTScatterPlot alloc] init];
+        linePlot = [[[CPTScatterPlot alloc] init] autorelease];
         linePlot.identifier = [theStoker idForBlower: i];
         linePlot.interpolation = CPTScatterPlotInterpolationStepped;
         linePlot.dataSource = self;
@@ -342,7 +342,6 @@
         linePlot.dataLineStyle = lineStyle;
         
         [graph addPlot:linePlot];
-        [linePlot release];
     }
 	
 	// get info on the sensors from the Stoker
@@ -376,9 +375,11 @@
         [self colorCell: nil setColor: plotColor forRow: i];
         
         // Create a plot for the sensor data
-        linePlot = [[CPTScatterPlot alloc] init];
+        linePlot = [[[CPTScatterPlot alloc] init] autorelease];
         linePlot.identifier = [theStoker idForSensor: i];
         linePlot.dataSource = self;			
+		linePlot.delegate = self;								// only add delegate and HitDetection for plots we want the user to be able to click on
+		linePlot.plotSymbolMarginForHitDetection = 5.0f;
         
         lineStyle = [CPTMutableLineStyle lineStyle];
         lineStyle.lineWidth = 1.5f;
@@ -386,10 +387,9 @@
         linePlot.dataLineStyle = lineStyle;
         
         [graph addPlot:linePlot];
-        [linePlot release];
         
         // Create a plot for the sensor target
-        linePlot = [[CPTScatterPlot alloc] init];
+        linePlot = [[[CPTScatterPlot alloc] init] autorelease];
         linePlot.identifier = [NSString stringWithFormat:@"%@ Target", [theStoker idForSensor: i]];
         linePlot.dataSource = self;
         linePlot.interpolation = CPTScatterPlotInterpolationStepped;
@@ -401,7 +401,6 @@
         linePlot.dataLineStyle = lineStyle;
 		
         [graph addPlot:linePlot];
-        [linePlot release];
     }
 	
 	// Save a copy of the plot setup data for debugging purposes
@@ -539,6 +538,44 @@
 //	NSLog(@"StokerXAppDelegate: numberForPlot: %@[%d, %d] = %@", plot.identifier, fieldEnum, index, [[[[stokerData objectForKey: plot.identifier] objectForKey: @"data"] objectAtIndex: index] objectAtIndex: fieldEnum]);
 	
     return [[[[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"] objectAtIndex: index] objectAtIndex: fieldEnum];
+}
+
+#pragma mark -
+#pragma mark CPTScatterPlot delegate method
+
+-(void)scatterPlot:(CPTScatterPlot *)plot plotSymbolWasSelectedAtRecordIndex:(NSUInteger)index
+{   
+    if (textAnnotation) 
+    {
+        [graph.plotAreaFrame.plotArea removeAnnotation:textAnnotation];
+        [textAnnotation release];
+        textAnnotation = nil;
+    }
+	
+    // Setup a style for the annotation
+    CPTMutableTextStyle *hitAnnotationTextStyle = [CPTMutableTextStyle textStyle];
+    hitAnnotationTextStyle.color = [CPTColor whiteColor];
+    hitAnnotationTextStyle.fontSize = 16.0f;
+    hitAnnotationTextStyle.fontName = @"Helvetica-Bold";
+	
+    // Determine point of symbol in plot coordinates
+    NSArray *plotData = [[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"];
+    NSNumber *time = [[plotData objectAtIndex:index] objectAtIndex: 0];
+    NSNumber *temp = [[plotData objectAtIndex:index] objectAtIndex: 1];
+    NSArray *anchorPoint = [NSArray arrayWithObjects:time, temp, nil];
+	
+    // Make a string for the temp value
+    NSNumberFormatter *formatter = [[[NSNumberFormatter alloc] init] autorelease];
+    [formatter setMaximumFractionDigits: 1];
+	[formatter setMinimumFractionDigits: 1];
+    NSString *tempString = [formatter stringFromNumber:temp];
+	
+    // Now add the annotation to the plot area
+    CPTTextLayer *textLayer = [[[CPTTextLayer alloc] initWithText:tempString style:hitAnnotationTextStyle] autorelease];
+    textAnnotation = [[CPTPlotSpaceAnnotation alloc] initWithPlotSpace:graph.defaultPlotSpace anchorPlotPoint:anchorPoint];
+    textAnnotation.contentLayer = textLayer;
+    textAnnotation.displacement = CGPointMake(0.0f, 20.0f);
+    [graph.plotAreaFrame.plotArea addAnnotation:textAnnotation];    
 }
 
 #pragma mark -

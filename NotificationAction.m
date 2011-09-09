@@ -19,7 +19,6 @@ static NSArray *_ActionList = nil;
     if (!_ActionList) 
 	{
 		_ActionList = [[NSArray alloc] initWithObjects: 
-							[[[NotificationAction alloc] initWithName: @"Audible Alarm"			andAction: kAudibleAlarm] autorelease], 
 							[[[NotificationAction alloc] initWithName: @"Growl Alert"			andAction: kGrowlAlert] autorelease],
 							[[[NotificationAction alloc] initWithName: @"Email Notification"	andAction: kEmailNotification] autorelease],
 							[[[NotificationAction alloc] initWithName: @"Twitter Notification"	andAction: kTwitterNotification] autorelease],
