@@ -10,7 +10,7 @@
 
 @implementation StokerXAppDelegate
 
-@synthesize updateTimer, startTime, graph, tweetController, preferencesController, loggingActive;
+@synthesize mainWindow, updateTimer, startTime, graph, tweetController, preferencesController, loggingActive;
 
 #define MINUTES	60.0
 #define TIME_RANGE_START		20 * MINUTES    

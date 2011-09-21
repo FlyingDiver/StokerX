@@ -23,8 +23,6 @@
 								CPTPlotSpaceDelegate, CPTPlotDataSource, CPTScatterPlotDelegate, 
 								NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
 {
-
-	IBOutlet NSWindow				*stokerWindow;
     IBOutlet NSButton				*startStopButton;
 	IBOutlet NSTextField			*statusField;
 	IBOutlet NSTextField			*totalBlowerActivityField;
@@ -34,7 +32,6 @@
 	IBOutlet NSPopUpButton			*blowerActivityDurationPopup;
 	IBOutlet NSMenuItem				*notificationListMenuItem;
 	IBOutlet NSButtonCell			*lidOffDetectionCheckBox;
-    IBOutlet NSWindow				*mainWindow;
     IBOutlet NSWindow				*notificationsWindow;
 	IBOutlet NSTableView			*sensorTable;
     IBOutlet CPTLayerHostingView	*graphView;
@@ -71,6 +68,7 @@
 - (void) plotSetup;
 - (void) updateGraph: (NSTimer *) timer;
 
+@property (nonatomic, retain) IBOutlet NSWindow			*mainWindow;
 @property (assign)			  Boolean					loggingActive;
 @property (nonatomic, retain) NSTimer					*updateTimer;
 @property (nonatomic, assign) NSTimeInterval			startTime;

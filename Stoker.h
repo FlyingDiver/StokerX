@@ -11,16 +11,17 @@
 #include <unistd.h>
 
 #import "GTMOAuth/GTMHTTPFetcher.h"
-#import "AsyncSocket.h"
+#import "GCDAsyncSocket.h"
 #import "JSON.h"
 #import "SendExpect.h"
 
 #define STOKER_QUERY_INTERVAL	10.0
 #define BLOWER_STEP				60.0
 
-@interface Stoker : NSObject {
+@interface Stoker : NSObject <GCDAsyncSocketDelegate> {
 @private
-	AsyncSocket 			*socket;
+	GCDAsyncSocket 			*socket;
+	dispatch_queue_t		socketQueue;
 	SendExpect				*mySendExpect;				// send-expect sequence for telnet interface
 	NSMutableDictionary		*sensorDict;				// dictionary of all sensor objects, keyed by DeviceID
 	NSMutableArray			*sensorArray;				// array of sensor objects, in graphing order

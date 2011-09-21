@@ -19,13 +19,25 @@
 		C91DD486140B269F00B67EE1 /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91DD485140B269F00B67EE1 /* Growl-WithInstaller.framework */; };
 		C91DD487140B26D100B67EE1 /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C91DD485140B269F00B67EE1 /* Growl-WithInstaller.framework */; };
 		C929300413F810C2007F685C /* StokerXTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = C929300313F810C2007F685C /* StokerXTwitter.m */; };
-		C9366AB0127F882700D79303 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C9366AAF127F882700D79303 /* AsyncSocket.m */; };
 		C94149BA1405A0C0006BDCE0 /* ReadMe.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
 		C946B0F7140B35AD00EA46D6 /* StokerX.icns in Resources */ = {isa = PBXBuildFile; fileRef = C946B0F6140B35AD00EA46D6 /* StokerX.icns */; };
 		C94BED83140B28A900CA06F8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94BED82140B28A900CA06F8 /* Security.framework */; };
 		C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94BED88140B293D00CA06F8 /* SystemConfiguration.framework */; };
 		C9503CE213FED6F8008B794F /* EmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C9503CE113FED6F8008B794F /* EmailSender.m */; };
 		C967349013E46DD70042841B /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C967348F13E46DD70042841B /* PreferencesController.m */; };
+		C9849182142A4F1B001CEF85 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849176142A4F1B001CEF85 /* GTMHTTPFetcher.m */; };
+		C9849183142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849178142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m */; };
+		C9849184142A4F1B001CEF85 /* GTMHTTPFetchHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = C984917A142A4F1B001CEF85 /* GTMHTTPFetchHistory.m */; };
+		C9849185142A4F1B001CEF85 /* GTMOAuthAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = C984917C142A4F1B001CEF85 /* GTMOAuthAuthentication.m */; };
+		C9849186142A4F1B001CEF85 /* GTMOAuthSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = C984917E142A4F1B001CEF85 /* GTMOAuthSignIn.m */; };
+		C9849187142A4F1B001CEF85 /* GTMOAuthWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C984917F142A4F1B001CEF85 /* GTMOAuthWindow.xib */; };
+		C9849188142A4F1B001CEF85 /* GTMOAuthWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849181142A4F1B001CEF85 /* GTMOAuthWindowController.m */; };
+		C984918D142A5328001CEF85 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C984918C142A5328001CEF85 /* GCDAsyncSocket.m */; };
+		C98491A6142A5C77001CEF85 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C984919D142A5C77001CEF85 /* DDAbstractDatabaseLogger.m */; };
+		C98491A7142A5C77001CEF85 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C984919F142A5C77001CEF85 /* DDASLLogger.m */; };
+		C98491A8142A5C77001CEF85 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C98491A1142A5C77001CEF85 /* DDFileLogger.m */; };
+		C98491A9142A5C77001CEF85 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = C98491A3142A5C77001CEF85 /* DDLog.m */; };
+		C98491AA142A5C77001CEF85 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C98491A5142A5C77001CEF85 /* DDTTYLogger.m */; };
 		C9867AE712330DB900023BC8 /* StokerXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */; };
 		C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9867AF9123319D500023BC8 /* QuartzCore.framework */; };
 		C98BDAF9140A62EC00D1424F /* loud.psd in Resources */ = {isa = PBXBuildFile; fileRef = C98BDAF6140A62EC00D1424F /* loud.psd */; };
@@ -47,8 +59,6 @@
 		C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */ = {isa = PBXBuildFile; fileRef = C9D5550813FEDCBE0066BB27 /* Mail.app */; };
 		C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */; };
 		C9D7D85513FB4D8200E5BA00 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7D85413FB4D8200E5BA00 /* NotificationController.m */; };
-		C9E117FB140EA9E100EA58D4 /* GTMOAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9E117FA140EA9E100EA58D4 /* GTMOAuth.framework */; };
-		C9E117FC140EA9F400EA58D4 /* GTMOAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9E117FA140EA9E100EA58D4 /* GTMOAuth.framework */; };
 		C9EB1D231226FF930067E58E /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */; };
 		C9EB1D241226FF930067E58E /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1C1226FF930067E58E /* NSString+SBJSON.m */; };
 		C9EB1D251226FF930067E58E /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1E1226FF930067E58E /* SBJsonBase.m */; };
@@ -83,7 +93,6 @@
 				C9CC351B1402A41300A6227A /* Sparkle.framework in CopyFiles */,
 				C9CC351D1402A41800A6227A /* CorePlot.framework in CopyFiles */,
 				C9F97B98140C55B9005B2A25 /* FeedbackReporter.framework in CopyFiles */,
-				C9E117FC140EA9F400EA58D4 /* GTMOAuth.framework in CopyFiles */,
 				C91DD487140B26D100B67EE1 /* Growl-WithInstaller.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,8 +133,6 @@
 		C91DD485140B269F00B67EE1 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Growl-WithInstaller.framework"; path = "../Frameworks/Growl-WithInstaller.framework"; sourceTree = "<group>"; };
 		C929300213F810C2007F685C /* StokerXTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StokerXTwitter.h; sourceTree = "<group>"; };
 		C929300313F810C2007F685C /* StokerXTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerXTwitter.m; sourceTree = "<group>"; };
-		C9366AAE127F882700D79303 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
-		C9366AAF127F882700D79303 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		C94149B714059CDF006BDCE0 /* ReadMe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ReadMe.html; sourceTree = "<group>"; };
 		C946B0F6140B35AD00EA46D6 /* StokerX.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = StokerX.icns; sourceTree = "<group>"; };
 		C94BED82140B28A900CA06F8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
@@ -134,6 +141,31 @@
 		C9503CE113FED6F8008B794F /* EmailSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailSender.m; sourceTree = "<group>"; };
 		C967348E13E46DD10042841B /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = StokerX.xcodeproj/../PreferencesController.h; sourceTree = SOURCE_ROOT; };
 		C967348F13E46DD70042841B /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = StokerX.xcodeproj/../PreferencesController.m; sourceTree = SOURCE_ROOT; };
+		C9849175142A4F1B001CEF85 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcher.h; sourceTree = "<group>"; };
+		C9849176142A4F1B001CEF85 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcher.m; sourceTree = "<group>"; };
+		C9849177142A4F1B001CEF85 /* GTMHTTPFetcherLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherLogging.h; sourceTree = "<group>"; };
+		C9849178142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherLogging.m; sourceTree = "<group>"; };
+		C9849179142A4F1B001CEF85 /* GTMHTTPFetchHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetchHistory.h; sourceTree = "<group>"; };
+		C984917A142A4F1B001CEF85 /* GTMHTTPFetchHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetchHistory.m; sourceTree = "<group>"; };
+		C984917B142A4F1B001CEF85 /* GTMOAuthAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthAuthentication.h; sourceTree = "<group>"; };
+		C984917C142A4F1B001CEF85 /* GTMOAuthAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthAuthentication.m; sourceTree = "<group>"; };
+		C984917D142A4F1B001CEF85 /* GTMOAuthSignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthSignIn.h; sourceTree = "<group>"; };
+		C984917E142A4F1B001CEF85 /* GTMOAuthSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthSignIn.m; sourceTree = "<group>"; };
+		C984917F142A4F1B001CEF85 /* GTMOAuthWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuthWindow.xib; sourceTree = "<group>"; };
+		C9849180142A4F1B001CEF85 /* GTMOAuthWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthWindowController.h; sourceTree = "<group>"; };
+		C9849181142A4F1B001CEF85 /* GTMOAuthWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthWindowController.m; sourceTree = "<group>"; };
+		C984918B142A5328001CEF85 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		C984918C142A5328001CEF85 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		C984919C142A5C77001CEF85 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
+		C984919D142A5C77001CEF85 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
+		C984919E142A5C77001CEF85 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
+		C984919F142A5C77001CEF85 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
+		C98491A0142A5C77001CEF85 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
+		C98491A1142A5C77001CEF85 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
+		C98491A2142A5C77001CEF85 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
+		C98491A3142A5C77001CEF85 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
+		C98491A4142A5C77001CEF85 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
+		C98491A5142A5C77001CEF85 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
 		C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerXAppDelegate.m; sourceTree = "<group>"; };
 		C9867AF9123319D500023BC8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C98BDAF6140A62EC00D1424F /* loud.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = loud.psd; sourceTree = "<group>"; };
@@ -156,7 +188,6 @@
 		C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		C9D7D85313FB4D8200E5BA00 /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
 		C9D7D85413FB4D8200E5BA00 /* NotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationController.m; sourceTree = "<group>"; };
-		C9E117FA140EA9E100EA58D4 /* GTMOAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GTMOAuth.framework; path = ../Frameworks/GTMOAuth.framework; sourceTree = "<group>"; };
 		C9EB1D181226FF930067E58E /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		C9EB1D191226FF930067E58E /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -188,7 +219,6 @@
 				C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */,
 				C91DD486140B269F00B67EE1 /* Growl-WithInstaller.framework in Frameworks */,
 				C9F97B97140C53DA005B2A25 /* FeedbackReporter.framework in Frameworks */,
-				C9E117FB140EA9E100EA58D4 /* GTMOAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +228,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C9849174142A4F1B001CEF85 /* GTMOAuth */,
 				C9BE1F1E12E4C355007FAEC5 /* Color */,
 				C9EB1D171226FF930067E58E /* JSON */,
 				C9213669131607D000CFB978 /* Socket Classes */,
@@ -220,7 +251,6 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C9E117FA140EA9E100EA58D4 /* GTMOAuth.framework */,
 				C9F97B96140C53DA005B2A25 /* FeedbackReporter.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				C9867AF9123319D500023BC8 /* QuartzCore.framework */,
@@ -307,10 +337,11 @@
 		C9213669131607D000CFB978 /* Socket Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C984918B142A5328001CEF85 /* GCDAsyncSocket.h */,
+				C984918C142A5328001CEF85 /* GCDAsyncSocket.m */,
 				C90C709612861E5E005D55B2 /* SendExpect.h */,
 				C90C709712861E5E005D55B2 /* SendExpect.m */,
-				C9366AAE127F882700D79303 /* AsyncSocket.h */,
-				C9366AAF127F882700D79303 /* AsyncSocket.m */,
+				C984919A142A5C77001CEF85 /* Vendor */,
 			);
 			name = "Socket Classes";
 			sourceTree = "<group>";
@@ -337,6 +368,52 @@
 				C91ADC621402ACF600A6472E /* NotificationTest.m */,
 			);
 			name = Notifications;
+			sourceTree = "<group>";
+		};
+		C9849174142A4F1B001CEF85 /* GTMOAuth */ = {
+			isa = PBXGroup;
+			children = (
+				C9849175142A4F1B001CEF85 /* GTMHTTPFetcher.h */,
+				C9849176142A4F1B001CEF85 /* GTMHTTPFetcher.m */,
+				C9849177142A4F1B001CEF85 /* GTMHTTPFetcherLogging.h */,
+				C9849178142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m */,
+				C9849179142A4F1B001CEF85 /* GTMHTTPFetchHistory.h */,
+				C984917A142A4F1B001CEF85 /* GTMHTTPFetchHistory.m */,
+				C984917B142A4F1B001CEF85 /* GTMOAuthAuthentication.h */,
+				C984917C142A4F1B001CEF85 /* GTMOAuthAuthentication.m */,
+				C984917D142A4F1B001CEF85 /* GTMOAuthSignIn.h */,
+				C984917E142A4F1B001CEF85 /* GTMOAuthSignIn.m */,
+				C984917F142A4F1B001CEF85 /* GTMOAuthWindow.xib */,
+				C9849180142A4F1B001CEF85 /* GTMOAuthWindowController.h */,
+				C9849181142A4F1B001CEF85 /* GTMOAuthWindowController.m */,
+			);
+			path = GTMOAuth;
+			sourceTree = "<group>";
+		};
+		C984919A142A5C77001CEF85 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				C984919B142A5C77001CEF85 /* CocoaLumberjack */,
+			);
+			name = Vendor;
+			path = ../Toolkits/cocoaasyncsocket/GCD/Vendor;
+			sourceTree = "<group>";
+		};
+		C984919B142A5C77001CEF85 /* CocoaLumberjack */ = {
+			isa = PBXGroup;
+			children = (
+				C984919C142A5C77001CEF85 /* DDAbstractDatabaseLogger.h */,
+				C984919D142A5C77001CEF85 /* DDAbstractDatabaseLogger.m */,
+				C984919E142A5C77001CEF85 /* DDASLLogger.h */,
+				C984919F142A5C77001CEF85 /* DDASLLogger.m */,
+				C98491A0142A5C77001CEF85 /* DDFileLogger.h */,
+				C98491A1142A5C77001CEF85 /* DDFileLogger.m */,
+				C98491A2142A5C77001CEF85 /* DDLog.h */,
+				C98491A3142A5C77001CEF85 /* DDLog.m */,
+				C98491A4142A5C77001CEF85 /* DDTTYLogger.h */,
+				C98491A5142A5C77001CEF85 /* DDTTYLogger.m */,
+			);
+			path = CocoaLumberjack;
 			sourceTree = "<group>";
 		};
 		C98BDAF5140A62EC00D1424F /* Images */ = {
@@ -478,6 +555,7 @@
 				C9C83DE51412B2C300AB8261 /* To-Do.rtf in Resources */,
 				C9B084971416B4B800F1C567 /* Help.rtf in Resources */,
 				C9B0849C1416BB8B00F1C567 /* Help.xib in Resources */,
+				C9849187142A4F1B001CEF85 /* GTMOAuthWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -527,7 +605,6 @@
 				C9EB1D271226FF930067E58E /* SBJsonWriter.m in Sources */,
 				C9867AE712330DB900023BC8 /* StokerXAppDelegate.m in Sources */,
 				C9EC2EEA1278F6DA00289387 /* Stoker.m in Sources */,
-				C9366AB0127F882700D79303 /* AsyncSocket.m in Sources */,
 				C90C709912861E5E005D55B2 /* SendExpect.m in Sources */,
 				C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */,
 				C917FC381310C6A300B6063E /* nsColorSupport.m in Sources */,
@@ -539,6 +616,18 @@
 				C91ADC631402ACF600A6472E /* NotificationTest.m in Sources */,
 				C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */,
 				C9B0849A1416BB6100F1C567 /* HelpController.m in Sources */,
+				C9849182142A4F1B001CEF85 /* GTMHTTPFetcher.m in Sources */,
+				C9849183142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m in Sources */,
+				C9849184142A4F1B001CEF85 /* GTMHTTPFetchHistory.m in Sources */,
+				C9849185142A4F1B001CEF85 /* GTMOAuthAuthentication.m in Sources */,
+				C9849186142A4F1B001CEF85 /* GTMOAuthSignIn.m in Sources */,
+				C9849188142A4F1B001CEF85 /* GTMOAuthWindowController.m in Sources */,
+				C984918D142A5328001CEF85 /* GCDAsyncSocket.m in Sources */,
+				C98491A6142A5C77001CEF85 /* DDAbstractDatabaseLogger.m in Sources */,
+				C98491A7142A5C77001CEF85 /* DDASLLogger.m in Sources */,
+				C98491A8142A5C77001CEF85 /* DDFileLogger.m in Sources */,
+				C98491A9142A5C77001CEF85 /* DDLog.m in Sources */,
+				C98491AA142A5C77001CEF85 /* DDTTYLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

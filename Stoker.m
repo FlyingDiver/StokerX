@@ -279,10 +279,11 @@
 	self.mySendExpect.delegate = self;
 		
 	// Create socket.
-	socket = [[AsyncSocket alloc] initWithDelegate:self];
+	socketQueue = dispatch_get_main_queue();
+	socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue: socketQueue];
 	
 	NSRange colon = [ipAddress rangeOfString: @":"];
-	if (colon.location != NSNotFound)
+	if (colon.location == NSNotFound)
 	{
 		telnetAddress = ipAddress;
 	}
@@ -295,21 +296,16 @@
 	
 
 	// Set up stdin for non-blocking.
-	if (fcntl (STDIN_FILENO, F_SETFL, O_NONBLOCK) == -1)
+/*	if (fcntl (STDIN_FILENO, F_SETFL, O_NONBLOCK) == -1)
 	{
 		NSLog (@"Stoker: Can't make STDIN non-blocking.");
 		exit(1);
 	}
-	
+*/	
 	if (![socket connectToHost:telnetAddress onPort: telnetPort error:&err])
 	{
 		NSLog (@"Stoker: Couldn't connect to %@:%u (%@).", ipAddress, telnetPort, err);
 		return;
-	}
-
-	telnetActive = YES;
-	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:telnetActive:)]) {
-		[[self delegate] stoker: self telnetActive: YES];
 	}
 }
 
@@ -411,10 +407,14 @@
 #pragma mark AsyncSocketDelegate methods
 
 
--(void) onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port;
+-(void) socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port;
 {
-//	NSLog (@"Stoker: onSocket:didConnectToHost: %@:%u.", host, port);
+	NSLog (@"Stoker: socket:didConnectToHost: %@:%u", host, port);
 	
+	telnetActive = YES;
+	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:telnetActive:)]) {
+		[[self delegate] stoker: self telnetActive: YES];
+	}
 	connectionReady = YES;	// can't use the controller until this is set
 	
 	// on first connection, we're looking for a "login:" prompt
@@ -423,17 +423,17 @@
 	[socket readDataToData:colon withTimeout:-1 tag: 0];
 }
 
-- (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
+- (void)socket:(GCDAsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
 	if (err)
 	{
-		NSLog (@"Stoker: onSocket:willDisconnectWithError: %@", err);    
+		NSLog (@"Stoker: socket:willDisconnectWithError: %@", err);    
 	}
 }
 
--(void) onSocketDidDisconnect:(AsyncSocket *)sock
+-(void) socketDidDisconnect:(GCDAsyncSocket *)sock
 {
-//	NSLog (@"Stoker: onSocketDidDisconnect:");
+	NSLog (@"Stoker: socketDidDisconnect:");
 
 	connectionReady = NO;
 	
@@ -446,9 +446,9 @@
 	}		
 }
 
--(void) onSocket:(AsyncSocket *)sock didReadData:(NSData*) sockData withTag:(long)tag
+-(void) socket:(GCDAsyncSocket *)sock didReadData:(NSData*) sockData withTag:(long)tag
 {
-//	NSLog (@"Stoker: onSocket: didReadData:");
+//	NSLog (@"Stoker: socket: didReadData:");
 
 	NSData *data;
 		
