@@ -8,7 +8,6 @@
 // Manages the preferences panel
 
 #import <Cocoa/Cocoa.h>
-#import "SoundPicker.h"
 
 extern NSString * const kStokeripAddressKey;
 extern NSString * const kMinGraphTempKey;

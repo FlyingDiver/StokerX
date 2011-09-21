@@ -7,7 +7,10 @@
 //
 
 #import "Stoker.h"
-
+#import "JSON.h"
+#import "StokerSensor.h"
+#import "StokerBlower.h"
+#import "GTMOAuth/GTMHTTPFetcher.h"
 
 @implementation Stoker
 
@@ -294,14 +297,6 @@
 	
 	NSLog(@"startTelnetCapture telnetAddress = %@", telnetAddress);
 	
-
-	// Set up stdin for non-blocking.
-/*	if (fcntl (STDIN_FILENO, F_SETFL, O_NONBLOCK) == -1)
-	{
-		NSLog (@"Stoker: Can't make STDIN non-blocking.");
-		exit(1);
-	}
-*/	
 	if (![socket connectToHost:telnetAddress onPort: telnetPort error:&err])
 	{
 		NSLog (@"Stoker: Couldn't connect to %@:%u (%@).", ipAddress, telnetPort, err);
@@ -690,35 +685,4 @@
 
 @end
 
-#pragma mark -
-#pragma mark Convenience Classes
 
-@implementation StokerBlower
-
-- (NSString *) description
-{
-	return [NSString stringWithFormat: @"StokerBlower: name = %@, id = %@, state = %d", blowerName, deviceID, state];
-}
-
-@synthesize blowerName;
-@synthesize deviceID;
-@synthesize state;
-@synthesize sensor;
-
-@end
-
-@implementation StokerSensor
-
-@synthesize sensorName;
-@synthesize deviceID;
-@synthesize tempCurrent;
-@synthesize tempTarget;
-@synthesize blowerID;
-@synthesize control;
-@synthesize blower;
-
-- (NSString *) description
-{
-	return [NSString stringWithFormat: @"StokerSensor: name = %@, id = %@, tc = %@, ta = %@, blower = %@", sensorName, deviceID, tempCurrent, tempTarget, blowerID];
-}
-@end

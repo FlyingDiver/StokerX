@@ -28,7 +28,7 @@
 #import <unistd.h>
 
 
-#if 1
+#if 0
 
 // Logging Enabled - See log level below
 

@@ -7,17 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-#import "GTMOAuth/GTMHTTPFetcher.h"
 #import "GCDAsyncSocket.h"
-#import "JSON.h"
 #import "SendExpect.h"
 
 #define STOKER_QUERY_INTERVAL	10.0
 #define BLOWER_STEP				60.0
 
+@class GTMHTTPFetcher;
 @interface Stoker : NSObject <GCDAsyncSocketDelegate> {
 @private
 	GCDAsyncSocket 			*socket;
@@ -116,48 +112,3 @@
 - (void) stoker: (Stoker *) stk updateSensorTemp: (NSNumber *) Temp forSensor: (NSString *) sensorID;
 
 @end
-
-@class StokerBlower;
-@class StokerSensor;
-
-@interface StokerSensor : NSObject {
-	
-	NSString	* sensorName;
-	NSString	* deviceID;
-	NSString	* blowerID;	
-	NSNumber	* tempCurrent;
-	NSNumber	* tempTarget;
-	NSNumber	* tempHigh;
-	NSNumber	* tempLow;
-	Boolean		alarm;
-	Boolean		control;
-	StokerBlower *blower;
-}
-
-@property (nonatomic, retain) 	NSString		* sensorName;
-@property (nonatomic, retain) 	NSString		* deviceID;
-@property (nonatomic, retain) 	NSNumber		* tempCurrent;
-@property (nonatomic, retain) 	NSNumber		* tempTarget;
-@property (nonatomic, retain) 	NSString		* blowerID;
-@property (nonatomic, assign) 	Boolean	  		control;
-@property (nonatomic, retain)	StokerBlower 	* blower;
-
-@end
-
-@interface StokerBlower : NSObject {
-	
-	NSString		*blowerName;
-	NSString		*deviceID;
-	Boolean			state;
-    NSInteger		onCycleCount;
-	StokerSensor 	*sensor;
-}
-
-@property (nonatomic, retain)	NSString		* blowerName;
-@property (nonatomic, retain)	NSString		* deviceID;
-@property (nonatomic, assign)	Boolean			state;
-@property (nonatomic, retain)	StokerSensor 	* sensor;
-
-@end
-
-
