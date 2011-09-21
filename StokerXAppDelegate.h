@@ -7,21 +7,18 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "JSON.h"
+#import "Sparkle/Sparkle.h"
+#import "FeedbackReporter/FRFeedbackReporter.h"
 #import "Stoker.h"
 #import "HelpController.h"
 #import "PreferencesController.h"
 #import "NotificationController.h"
 #import "LVColorWellCell.h"
-#import "nsColorSupport.h"
-#import "StokerXTwitter.h"
-#import "CorePlot/CorePlot.h"
-#import "Sparkle/Sparkle.h"
-#import "FeedbackReporter/FRFeedbackReporter.h"
+#import "MiniTwitter.h"
+#import "StokerPlotController.h"
 
 @interface StokerXAppDelegate : NSObject <NSApplicationDelegate, FRFeedbackReporterDelegate, 
-								CPTPlotSpaceDelegate, CPTPlotDataSource, CPTScatterPlotDelegate, 
-								NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
+NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
 {
     IBOutlet NSButton				*startStopButton;
 	IBOutlet NSTextField			*statusField;
@@ -30,30 +27,22 @@
 	IBOutlet NSTextField			*startTimeField;
 	IBOutlet NSTextField			*elapsedTimeField;
 	IBOutlet NSPopUpButton			*blowerActivityDurationPopup;
-	IBOutlet NSMenuItem				*notificationListMenuItem;
-	IBOutlet NSButtonCell			*lidOffDetectionCheckBox;
-    IBOutlet NSWindow				*notificationsWindow;
 	IBOutlet NSTableView			*sensorTable;
+
+    IBOutlet NSWindow				*notificationsWindow;
+	IBOutlet NSMenuItem				*notificationListMenuItem;
     IBOutlet CPTLayerHostingView	*graphView;
 	
-	IBOutlet PreferencesController	*preferencesController;
 	IBOutlet HelpController			*helpController;
-	IBOutlet StokerXTwitter			*tweetController;
 	IBOutlet NotificationController	*notificationController;
+	IBOutlet StokerPlotController	*plotController;
 
 	Stoker							*theStoker;
-		
-	NSTimeInterval					plotRange;
-	double							plotMinTemp;
-    double							plotMaxTemp;
-	
 	NSMutableDictionary				*stokerData;
-    
+	    
 	Boolean							exitWaiting;
 	Boolean							updateWaiting;
 	NSInvocation					*updateInvocation;
-	
-	CPTLayerAnnotation				*textAnnotation;
 }
 
 - (IBAction) showHelpWindow:(id)sender;
@@ -65,14 +54,13 @@
 - (IBAction) lidDetectOnOff:(id)sender;
 
 - (void) setStatusText: (NSString *) status;
-- (void) plotSetup;
-- (void) updateGraph: (NSTimer *) timer;
+- (void) updateUI: (NSTimer *) timer;
 
 @property (nonatomic, retain) IBOutlet NSWindow			*mainWindow;
 @property (assign)			  Boolean					loggingActive;
 @property (nonatomic, retain) NSTimer					*updateTimer;
 @property (nonatomic, assign) NSTimeInterval			startTime;
 @property (nonatomic, retain) CPTXYGraph				*graph;
-@property (nonatomic, retain) StokerXTwitter			*tweetController;
+@property (nonatomic, retain) MiniTwitter			*tweetController;
 @property (nonatomic, retain) PreferencesController		*preferencesController;
 @end

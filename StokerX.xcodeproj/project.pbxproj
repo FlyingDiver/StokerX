@@ -53,6 +53,8 @@
 		C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */ = {isa = PBXBuildFile; fileRef = C9D5550813FEDCBE0066BB27 /* Mail.app */; };
 		C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */; };
 		C9D7D85513FB4D8200E5BA00 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7D85413FB4D8200E5BA00 /* NotificationController.m */; };
+		C9EAC342142A7C1B00CCA1EB /* StokerPlotController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EAC341142A7C1B00CCA1EB /* StokerPlotController.m */; };
+		C9EAC343142A841600CCA1EB /* MiniTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = C929300313F810C2007F685C /* MiniTwitter.m */; };
 		C9EB1D231226FF930067E58E /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */; };
 		C9EB1D241226FF930067E58E /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1C1226FF930067E58E /* NSString+SBJSON.m */; };
 		C9EB1D251226FF930067E58E /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1E1226FF930067E58E /* SBJsonBase.m */; };
@@ -125,8 +127,8 @@
 		C91ADC641402B1D700A6472E /* NotificationAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NotificationAction.h; path = Notifications/NotificationAction.h; sourceTree = "<group>"; };
 		C91ADC651402B1D700A6472E /* NotificationAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NotificationAction.m; path = Notifications/NotificationAction.m; sourceTree = "<group>"; };
 		C91DD485140B269F00B67EE1 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Growl-WithInstaller.framework"; path = "../Frameworks/Growl-WithInstaller.framework"; sourceTree = "<group>"; };
-		C929300213F810C2007F685C /* StokerXTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StokerXTwitter.h; sourceTree = "<group>"; };
-		C929300313F810C2007F685C /* StokerXTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerXTwitter.m; sourceTree = "<group>"; };
+		C929300213F810C2007F685C /* MiniTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MiniTwitter.h; sourceTree = "<group>"; };
+		C929300313F810C2007F685C /* MiniTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MiniTwitter.m; sourceTree = "<group>"; };
 		C94149B714059CDF006BDCE0 /* ReadMe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ReadMe.html; sourceTree = "<group>"; };
 		C946B0F6140B35AD00EA46D6 /* StokerX.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = StokerX.icns; sourceTree = "<group>"; };
 		C94BED82140B28A900CA06F8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
@@ -174,6 +176,8 @@
 		C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		C9D7D85313FB4D8200E5BA00 /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NotificationController.h; path = Notifications/NotificationController.h; sourceTree = "<group>"; };
 		C9D7D85413FB4D8200E5BA00 /* NotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NotificationController.m; path = Notifications/NotificationController.m; sourceTree = "<group>"; };
+		C9EAC340142A7C1B00CCA1EB /* StokerPlotController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StokerPlotController.h; sourceTree = "<group>"; };
+		C9EAC341142A7C1B00CCA1EB /* StokerPlotController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerPlotController.m; sourceTree = "<group>"; };
 		C9EB1D181226FF930067E58E /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		C9EB1D191226FF930067E58E /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -223,8 +227,10 @@
 				C98491B7142A6AC5001CEF85 /* Stoker */,
 				256AC3D80F4B6AC300CF3369 /* StokerXAppDelegate.h */,
 				C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */,
-				C929300213F810C2007F685C /* StokerXTwitter.h */,
-				C929300313F810C2007F685C /* StokerXTwitter.m */,
+				C9EAC340142A7C1B00CCA1EB /* StokerPlotController.h */,
+				C9EAC341142A7C1B00CCA1EB /* StokerPlotController.m */,
+				C929300213F810C2007F685C /* MiniTwitter.h */,
+				C929300313F810C2007F685C /* MiniTwitter.m */,
 				C9B084981416BB6100F1C567 /* HelpController.h */,
 				C9B084991416BB6100F1C567 /* HelpController.m */,
 				C967348E13E46DD10042841B /* PreferencesController.h */,
@@ -583,6 +589,8 @@
 				C984918D142A5328001CEF85 /* GCDAsyncSocket.m in Sources */,
 				C98491BA142A6C33001CEF85 /* StokerSensor.m in Sources */,
 				C98491BD142A6CAF001CEF85 /* StokerBlower.m in Sources */,
+				C9EAC342142A7C1B00CCA1EB /* StokerPlotController.m in Sources */,
+				C9EAC343142A841600CCA1EB /* MiniTwitter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,8 +14,9 @@
 
 @implementation Stoker
 
-@synthesize delegate, stokerVersion, jsonTimer, jsonConnection, jsonRequest, jsonData, postConnection, ipAddress, logging;
-@synthesize useTelnet, stokerAvailable, telnetActive, mySendExpect, lastTemp, lidOffHold, blowerControlSensor, lastTempTarget;
+@synthesize delegate, stokerVersion, jsonTimer, jsonConnection, jsonRequest, jsonData, postConnection, ipAddress, isLogging;
+@synthesize useTelnet, stokerAvailable, mySendExpect, lastTemp, lidOffHold, blowerControlSensor, lastTempTarget;
+@synthesize completionBlock = completionBlock_;
 
 - (void)dealloc
 {	
@@ -51,30 +52,32 @@
 }
 - (void) startLogging
 {	
-	self.logging = TRUE;
+	self.isLogging = TRUE;
 	
 	if (useTelnet)
 	{
-		[self sendStatusUpdate: @"Telnet Logging started"];
-
+		[self sendStatusUpdate: @"Resetting Stoker for Logging"];
 		[self startTelnetCapture];
 	}
 	else 				// for JSON mode, the timer requests the data, and graphs are updated when data is received
 	{
-		[self sendStatusUpdate: @"HTTP Logging started"];
+		NSLog(@"Stoker: startLogging - HTTP Mode");
+		[self sendStatusUpdate: @"Logging started"];
 
 		self.jsonTimer = [NSTimer scheduledTimerWithTimeInterval: STOKER_QUERY_INTERVAL target:self selector:@selector(getStokerJSON:) userInfo: nil repeats:YES];
 		
 		[self getStokerJSON: nil];		// do it once now to get things started
 	}
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:isLogging:)]) {
-		[[self delegate] stoker: self isLogging: self.logging];
+		[[self delegate] stoker: self isLogging: self.isLogging];
 	}
 }		
 	
 - (void) stopLogging
 {
-	self.logging = FALSE;
+	NSLog(@"Stoker: stopLogging");
+
+	self.isLogging = FALSE;
 
 	if (useTelnet)
 	{
@@ -88,10 +91,26 @@
 		[self sendStatusUpdate: @"HTTP Logging stopped"];
     }
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:isLogging:)]) {
-		[[self delegate] stoker: self isLogging: self.logging];
+		[[self delegate] stoker: self isLogging: self.isLogging];
 	}
 }
 
+- (BOOL)shutdownWithCompletionHandler:(void (^)(void))handler 
+{
+	if (telnetActive)		// don't quit with the Stoker in telnet mode
+	{
+		self.completionBlock = handler;
+		[self stopTelnetCapture];
+		//		NSLog(@"Stoker: shutdownWithCompletionHandler: Wait for reset");
+		
+		return NO;
+	}
+	
+	[jsonTimer invalidate];
+	jsonTimer = nil;
+	//	NSLog(@"Stoker: shutdownWithCompletionHandler: shutdown now");
+	return YES;
+}
 
 #pragma mark -
 #pragma mark JSON Data Capture Methods
@@ -140,7 +159,7 @@
 
 	// If logging active, read the sensor values from the response and send to the Delegate
 
-	if (!logging)
+	if (!isLogging)
 		return;
 
 	NSArray *sensors = [[results objectForKey:@"stoker"] objectForKey:@"sensors"];

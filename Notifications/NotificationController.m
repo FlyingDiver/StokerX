@@ -9,7 +9,7 @@
 
 #import "NotificationController.h"
 #import "PreferencesController.h"
-#import "StokerXTwitter.h"
+#import "MiniTwitter.h"
 #import "EmailSender.h"
 #import "StokerXAppDelegate.h"
 

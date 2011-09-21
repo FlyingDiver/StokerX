@@ -28,7 +28,7 @@
 	double					lidOffDrop;
 	NSTimeInterval			lastTempTime;				// time of last sample for lid off detection
 	
-	Boolean					connectionReady, lidDetectionEnabled;
+	Boolean					connectionReady, lidDetectionEnabled, telnetActive;
 }
 
 @property (nonatomic, retain) id				delegate;
@@ -39,22 +39,24 @@
 @property (nonatomic, retain) NSURLConnection	*postConnection;
 @property (nonatomic, retain) NSTimer       	*jsonTimer;
 @property (nonatomic, retain) NSString			*ipAddress;
-@property (nonatomic, assign) Boolean			logging;
+@property (nonatomic, assign) Boolean			isLogging;
 @property (nonatomic, assign) Boolean			useTelnet;
 @property (nonatomic, assign) Boolean			stokerAvailable;
-@property (nonatomic, assign) Boolean			telnetActive;
 @property (nonatomic, retain) SendExpect		*mySendExpect;
 @property (nonatomic, retain) NSNumber			*lastTemp;					// last remembered temp for lid off detection
 @property (nonatomic, assign) Boolean			lidOffHold;
 
 @property (nonatomic, assign) NSInteger			blowerControlSensor;		// the sensor that controls the blower, for lid-off control
 @property (nonatomic, retain) NSNumber			*lastTempTarget;			// the temp to restore after lid-off
+@property (copy) void (^completionBlock)(void);
 
 - (void)connectToIPAddress: (NSString *) ip;
 - (void) getStokerJSON: (NSTimer *) theTimer;
 
 - (void) startLogging;
 - (void) stopLogging;
+- (BOOL) shutdownWithCompletionHandler:(void (^)(void))handler;
+
 - (void) startTelnetCapture;
 - (void) stopTelnetCapture;
 - (void) parseTelnetOutput: (NSString *) stokerOutput;

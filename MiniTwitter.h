@@ -11,11 +11,6 @@
 #import "PreferencesController.h"
 #import "JSON.h"
 
-// These are the keys for the OOB version (beta 0.5)
-
-// #define	kOAuthConsumerKey		@"UjMLz291haVFTs1cRdVA"
-// #define	kOAuthConsumerSecret	@"H9dgyFaEZhbFK45lZs7CdCACKnBAM1Jnj7rLmw5SJk"
-
 // These are the keys for the callback version
 
 #define kOAuthConsumerKey		@"yF1oP08RQhPGrFvUbEkNQ"
@@ -23,7 +18,7 @@
 
 #define MAX_MESSAGE_LENGTH		140		// twitter max
 
-@interface StokerXTwitter : NSObject
+@interface MiniTwitter : NSObject
 {	
 	IBOutlet NSMenuItem	*authorizeTwitterMenuItem;
 	IBOutlet NSMenuItem	*enableTwitterMenuItem;

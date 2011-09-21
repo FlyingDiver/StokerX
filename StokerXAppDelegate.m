@@ -21,9 +21,7 @@
 #pragma mark Application startup and Delegate Methods
 
 +(void) initialize
-{	
-	// set up the "Factory" defaults
-	
+{
 	NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
 	
 	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kMinGraphTempKey];
@@ -41,89 +39,16 @@
 }
 
 -(void)awakeFromNib
-{	    
-	NSDateFormatter *dateFormatter;
-	
+{	    	
 	// Set up support for the color well in the sensor table
 	
-	NSUInteger index = [sensorTable columnWithIdentifier:@"color"];  
-	NSTableColumn *colorColumn = [[sensorTable tableColumns] objectAtIndex:index];  
 	LVColorWellCell * colorCell = [[LVColorWellCell alloc] init];  
 	[colorCell setDelegate: self];
 	[colorCell setColorKey:@"color"];  
+
+	NSTableColumn *colorColumn = [[sensorTable tableColumns] objectAtIndex: [sensorTable columnWithIdentifier:@"color"]];  
 	[colorColumn setDataCell:colorCell]; 
-		
-	// Create graph from theme
-    graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:CGRectZero];
-	CPTTheme *theme = [CPTTheme themeNamed:kCPTSlateTheme];
-	[graph applyTheme:theme];
-	graphView.hostedLayer = graph;
-
-	// add some padding
-	graph.paddingLeft = 10.0;
-	graph.paddingTop = 10.0;
-	graph.paddingRight = 10.0;
-	graph.paddingBottom = 10.0;
-	
-	graph.plotAreaFrame.paddingTop = 20.0;
-	graph.plotAreaFrame.paddingBottom = 50.0;
-	graph.plotAreaFrame.paddingLeft = 50.0;
-	graph.plotAreaFrame.paddingRight = 20.0;
-	graph.plotAreaFrame.cornerRadius = 10.0;
-	
-	// initial graphing bounds
-	
-	plotRange = TIME_RANGE_START;
-	startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
-	
-    // Setup scatter plot space 
-
-	double minTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
-	double maxTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey] doubleValue];
-    
-    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
-	plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
-    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(minTemp) length:CPTDecimalFromDouble(maxTemp - minTemp)];
-    plotSpace.allowsUserInteraction = YES;
-    plotSpace.delegate = self;
-	
-	
-	// line styles
-    CPTMutableLineStyle *gridLineStyle = [CPTMutableLineStyle lineStyle];
-    gridLineStyle.lineWidth = 0.75;
-    gridLineStyle.lineColor = [[CPTColor colorWithGenericGray:0.2] colorWithAlphaComponent:0.75];
-    
-	CPTMutableLineStyle *tickLineStyle = [CPTMutableLineStyle lineStyle];
-	tickLineStyle.lineColor = [CPTColor blackColor];
-	tickLineStyle.lineWidth = 2.0f;
-	
-    // Axes
-	CPTXYAxisSet *axisSet = (CPTXYAxisSet *)graph.axisSet;
-	CPTXYAxis *x = axisSet.xAxis;
-    CPTXYAxis *y = axisSet.yAxis;
-    
-	dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    dateFormatter.dateStyle = NSDateFormatterNoStyle;
-    dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    CPTTimeFormatter *timeFormatter = [[[CPTTimeFormatter alloc] initWithDateFormatter:dateFormatter] autorelease];
-    
-	x.majorIntervalLength = CPTDecimalFromDouble(PLOT_INTERVAL_START);
-    x.minorTicksPerInterval = 0;
-    x.labelFormatter = timeFormatter;
-	x.majorTickLineStyle = tickLineStyle;
-	x.axisLineStyle = tickLineStyle;
-	x.majorTickLength = 7.0f;
-	x.labelOffset = 3.0f;
-	x.orthogonalCoordinateDecimal = CPTDecimalFromDouble(minTemp);
-	
-    y.majorIntervalLength = CPTDecimalFromDouble(50.0);;
-	y.minorTicksPerInterval = 0;
-	y.majorGridLineStyle = gridLineStyle;
-	y.axisLineStyle = tickLineStyle;
-	y.majorTickLength = 0.0f;
-	y.labelOffset = 3.0f;
-	y.orthogonalCoordinateDecimal = CPTDecimalFromDouble(startTime);
-}	
+}
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notes
 {	
@@ -134,6 +59,24 @@
 
     [[FRFeedbackReporter sharedReporter] setDelegate:self];
 	[[FRFeedbackReporter sharedReporter] reportIfCrash];
+	
+	// Watch for some preference changes
+	
+	[[NSUserDefaults standardUserDefaults] addObserver: self
+											forKeyPath: kStokeripAddressKey
+											   options: NSKeyValueObservingOptionNew
+											   context: NULL];
+	
+	[[NSUserDefaults standardUserDefaults] addObserver: self
+											forKeyPath: kMaxGraphTempKey
+											   options: NSKeyValueObservingOptionNew
+											   context: NULL];
+	
+	
+	[[NSUserDefaults standardUserDefaults] addObserver: self
+											forKeyPath: kMinGraphTempKey
+											   options: NSKeyValueObservingOptionNew
+											   context: NULL];
 	
 	// Use saved position of main window, and show it.
 	
@@ -146,6 +89,13 @@
 	theStoker.delegate = self;
 	theStoker.stokerAvailable = FALSE;
 	
+	stokerData = [[NSMutableDictionary alloc] initWithCapacity:4];
+	
+	plotController.stoker = theStoker;
+	plotController.stokerData = stokerData;
+	plotController.plotMinTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
+	plotController.plotMaxTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey] doubleValue];
+    
 	// attempt to connect to Stoker if IP address is set, if not show the preference panel
 
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
@@ -167,30 +117,74 @@
 		
 	}
 
-	self.updateTimer = [NSTimer scheduledTimerWithTimeInterval: GRAPH_UPDATE_INTERVAL target:self selector:@selector(updateGraph:) userInfo: nil repeats:YES];
-	[self updateGraph: nil];		// do it once now to get things started
+	self.updateTimer = [NSTimer scheduledTimerWithTimeInterval: GRAPH_UPDATE_INTERVAL target: self selector:@selector(updateUI:) userInfo: nil repeats:YES];
+	[self updateUI: updateTimer];
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
-{	
-	if (theStoker.telnetActive)		// don't quit with the Stoker in telnet mode
+{				
+	BOOL shutdownNow = [theStoker shutdownWithCompletionHandler:^(void) 
 	{
-		exitWaiting = TRUE;
-		[theStoker stopLogging];
-		[self setStatusText: @"Waiting for Stoker to exit telnet mode"];
-		return NSTerminateCancel;	
+//		[NSApp replyToApplicationShouldTerminate:YES];
+		[[NSRunningApplication currentApplication] terminate];
+	}];
+
+	if (!shutdownNow)
+	{
+		[self setStatusText: @"Waiting for Stoker Reset"];
+//		return NSTerminateLater;   
+		return NSTerminateCancel;   
 	}
 
 	[self setStatusText: @"StokerX Terminating"];
-	return NSTerminateNow;	
+	return NSTerminateNow;			
+}
+- (void) updateUI: (NSTimer *) theTimer
+{
+//	NSLog(@"StokerXAppDelegate: updateUI:");
+
+	NSTimeInterval elapsedTime;
+
+	if ([sensorTable currentEditor] != nil)		// don't update - table is being edited
+		return;
+	
+	// update elapsed time
+	
+	if (theStoker.isLogging) 
+	{
+		elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
+	}
+	else
+	{
+		elapsedTime = 0.0;
+		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
+	}
+	
+	NSInteger seconds = fmod(elapsedTime , 60);	
+	NSInteger minutes = fmod(elapsedTime / 60, 60);
+	NSInteger hours =   elapsedTime /60 / 60;
+	NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
+	[elapsedTimeField setStringValue: elapsedTimeString];
+
+	[sensorTable reloadData];	
+
+	[plotController updateGraphWithStartTime: startTime andElapsedTime: elapsedTime];
 }
 
-
-- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filepath
-{
-	NSLog(@"NSApp application:openFile: %@", filepath);
-	
-	return NO;
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{	
+	if ([keyPath isEqualTo: kStokeripAddressKey])
+	{
+		[theStoker connectToIPAddress: [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey]];
+	}
+	else if ([keyPath isEqualTo: kMaxGraphTempKey])
+	{
+		plotController.plotMaxTemp = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+	}
+	else if ([keyPath isEqualTo: kMinGraphTempKey])
+	{
+		plotController.plotMinTemp = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+	}
 }
 
 
@@ -277,18 +271,18 @@
 }
 
 
-- (IBAction)lidDetectOnOff:(id)sender 
-{
-	[[NSUserDefaults standardUserDefaults] setBool:[lidOffDetectionCheckBox state] forKey: kLidOffEnabledKey];
-	[theStoker enableLidDetection: [lidOffDetectionCheckBox state] 
-						 withDrop: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey] doubleValue]
-						  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
-
-}
-
 - (IBAction)showFeedbackForm:(id)sender
 {
 	[[FRFeedbackReporter sharedReporter] reportFeedback];
+}
+
+- (IBAction)lidDetectOnOff:(NSButtonCell *)sender 
+{
+	[[NSUserDefaults standardUserDefaults] setBool:[sender state] forKey: kLidOffEnabledKey];
+	[theStoker enableLidDetection: [sender state] 
+						 withDrop: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey] doubleValue]
+						  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
+
 }
 
 - (IBAction) savePlotData:(id)sender
@@ -304,278 +298,6 @@
 			[stokerData writeToFile: [[savePanel URL] path] atomically: NO];
 		}
     }];
-}
-
-// Configure the plots and data structures based on the sensors and blowers found
-
-- (void) plotSetup
-{
-    // set up the plots based on the Stoker info
-	
-    CPTScatterPlot *linePlot;
-    CPTMutableLineStyle *lineStyle;
-    int sensorCount = 0;
-    NSArray *sensorColors =  [NSArray arrayWithObjects: [NSColor redColor], [NSColor blueColor], [NSColor greenColor], [NSColor cyanColor], nil];
-    NSColor *plotColor = nil;
-	
-	stokerData = [[NSMutableDictionary alloc] initWithCapacity:4];
-	
-    for (int i = 0; i < [theStoker numberOfBlowers]; i++)
-    {        
-		// First, create an entry in the stokerData dictionary for this blower
-		
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [theStoker nameForBlower: i], @"name", 
-								 [NSNumber numberWithInt: 0],  @"count",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [theStoker idForBlower: i]];
-		
-        linePlot = [[[CPTScatterPlot alloc] init] autorelease];
-        linePlot.identifier = [theStoker idForBlower: i];
-        linePlot.interpolation = CPTScatterPlotInterpolationStepped;
-        linePlot.dataSource = self;
-        
-        lineStyle = [CPTMutableLineStyle lineStyle];
-        lineStyle.lineWidth = 1.0f;
-        lineStyle.lineColor = [CPTColor blackColor];
-        linePlot.dataLineStyle = lineStyle;
-        
-        [graph addPlot:linePlot];
-    }
-	
-	// get info on the sensors from the Stoker
-	
-    for (int i = 0; i < [theStoker numberOfSensors]; i++)
-    {		
-		// First, create an entry in the stokerData dictionary for this sensor
-		
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [theStoker nameForSensor: i], @"name", 
-								 [theStoker typeForSensor: i], @"type", 
-								 [theStoker tempForSensor: i], @"temp",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [theStoker idForSensor: i]];
-		
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [theStoker nameForSensor: i], @"name", 
-								 [theStoker targetForSensor: i], @"target",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [NSString stringWithFormat: @"%@ Target", [theStoker idForSensor: i]]];
-		
-        plotColor = [[NSUserDefaults standardUserDefaults]  colorForKey: [NSString stringWithFormat: @"PlotColor %@", [theStoker idForSensor: i]]];
-        if (!plotColor)
-        {
-            plotColor = [sensorColors objectAtIndex: sensorCount];
-            sensorCount++;
-            [[NSUserDefaults standardUserDefaults] setColor: plotColor forKey: [NSString stringWithFormat: @"PlotColor %@", [theStoker idForSensor: i]]];
-        }
-        [self colorCell: nil setColor: plotColor forRow: i];
-        
-        // Create a plot for the sensor data
-        linePlot = [[[CPTScatterPlot alloc] init] autorelease];
-        linePlot.identifier = [theStoker idForSensor: i];
-        linePlot.dataSource = self;			
-		linePlot.delegate = self;								// only add delegate and HitDetection for plots we want the user to be able to click on
-		linePlot.plotSymbolMarginForHitDetection = 5.0f;
-        
-        lineStyle = [CPTMutableLineStyle lineStyle];
-        lineStyle.lineWidth = 1.5f;
-        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(plotColor)];
-        linePlot.dataLineStyle = lineStyle;
-        
-        [graph addPlot:linePlot];
-        
-        // Create a plot for the sensor target
-        linePlot = [[[CPTScatterPlot alloc] init] autorelease];
-        linePlot.identifier = [NSString stringWithFormat:@"%@ Target", [theStoker idForSensor: i]];
-        linePlot.dataSource = self;
-        linePlot.interpolation = CPTScatterPlotInterpolationStepped;
-        
-        lineStyle = [CPTMutableLineStyle lineStyle];
-        lineStyle.lineWidth = 2.0f;
-        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(plotColor)];
-        lineStyle.dashPattern = [NSArray arrayWithObjects:[NSNumber numberWithFloat:5.0f], [NSNumber numberWithFloat:5.0f], nil];
-        linePlot.dataLineStyle = lineStyle;
-		
-        [graph addPlot:linePlot];
-    }
-	
-	// Save a copy of the plot setup data for debugging purposes
-		
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: @"StokerX"];
-	NSString *saveFilePath = [supportDir stringByAppendingPathComponent: @"PlotSetupData.plist"];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if ([fileManager fileExistsAtPath: saveFilePath] == NO)
-	{
-		[fileManager createDirectoryAtPath: supportDir withIntermediateDirectories:YES attributes:nil error:nil];
-	}
-	if (![stokerData writeToFile: saveFilePath atomically: NO])
-		NSLog(@"StokerX save PlotSetupData failed");
-
-}
-
-// Called via timer to update the UI
-
-- (void) updateGraph: (NSTimer *) theTimer
-{	
-	NSTimeInterval elapsedTime;
-	
-	if ([sensorTable currentEditor] != nil)		// don't update - table is being edited
-		return;
-	
-	CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
-	CPTXYAxisSet   *axisSet   = (CPTXYAxisSet *)graph.axisSet;
-	
-	// update elapsed time
-	
-	if (loggingActive) 
-	{
-		elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
-	}
-	else
-	{
-		elapsedTime = 0.0;
-		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
-	}
-	
-	NSInteger seconds = fmod(elapsedTime , 60);	
-	NSInteger minutes = fmod(elapsedTime / 60, 60);
-	NSInteger hours =   elapsedTime /60 / 60;
-	NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
-	[elapsedTimeField setStringValue: elapsedTimeString];
-	
-	// First, check to see if the horizontal axis needs to be re-scaled
-	
-	if (elapsedTime > (plotRange * 0.95))	// 95% max
-	{
-		if (plotRange < (90.0 * MINUTES))
-		{
-			plotRange = plotRange + (15.0 * MINUTES);
-		}
-		else if (plotRange < (180.0 * MINUTES))
-		{
-			plotRange = plotRange + (30.0 * MINUTES);
-		}
-		else
-		{
-			plotRange = plotRange + (60.0 * MINUTES);
-		}
-		
-		// adjust the axis ticks to something that looks nice
-		
-		if (plotRange < 40.0 * MINUTES)
-		{
-			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(5.0 * MINUTES);			
-		}
-		else if (plotRange < 80.0 * MINUTES)
-		{
-			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(10.0 * MINUTES);			
-		}
-		else if (plotRange < 120.0 * MINUTES)
-		{
-			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(15.0 * MINUTES);			
-		}
-		else if (plotRange < 240.0 * MINUTES)
-		{
-			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(30.0 * MINUTES);			
-		}
-		else if (plotRange < 480.0 * MINUTES)
-		{
-			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(60.0 * MINUTES);			
-		}
-		else if (plotRange < 960.0 * MINUTES)
-		{
-			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(120.0 * MINUTES);			
-		}
-		else
-		{
-			axisSet.xAxis.majorIntervalLength = CPTDecimalFromDouble(240.0 * MINUTES);			
-		}
-	}
-	
-	plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
-	axisSet.yAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(startTime);
-
-	// Check to see if the temperature range has changed from Preferences
-	
-	double minTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
-	double maxTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey] doubleValue];
-	
-	if ((minTemp != plotMinTemp) || (maxTemp != plotMaxTemp))
-	{
-		plotMaxTemp = maxTemp;
-		plotMinTemp = minTemp;
-		
-		plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(minTemp) length:CPTDecimalFromDouble(maxTemp - minTemp)];
-				
-		axisSet.xAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(minTemp);
-	}
-	
-	// update the UI
-	
-	[graph reloadData];
-	[sensorTable reloadData];	
-}        
-
-#pragma mark -
-#pragma mark Plot Data Source Methods
-
--(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
-{
-//	NSLog(@"StokerXAppDelegate: numberOfRecordsForPlot: %@ = %d", plot.identifier, [[[stokerData objectForKey: plot.identifier] objectForKey: @"data"] count]);
-	
-	return [[[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"] count];
-	
-}
-
--(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
-{	
-//	NSLog(@"StokerXAppDelegate: numberForPlot: %@[%d, %d] = %@", plot.identifier, fieldEnum, index, [[[[stokerData objectForKey: plot.identifier] objectForKey: @"data"] objectAtIndex: index] objectAtIndex: fieldEnum]);
-	
-    return [[[[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"] objectAtIndex: index] objectAtIndex: fieldEnum];
-}
-
-#pragma mark -
-#pragma mark CPTScatterPlot delegate method
-
--(void)scatterPlot:(CPTScatterPlot *)plot plotSymbolWasSelectedAtRecordIndex:(NSUInteger)index
-{   
-    if (textAnnotation) 
-    {
-        [graph.plotAreaFrame.plotArea removeAnnotation:textAnnotation];
-        [textAnnotation release];
-        textAnnotation = nil;
-    }
-	
-    // Setup a style for the annotation
-    CPTMutableTextStyle *hitAnnotationTextStyle = [CPTMutableTextStyle textStyle];
-    hitAnnotationTextStyle.color = [CPTColor whiteColor];
-    hitAnnotationTextStyle.fontSize = 16.0f;
-    hitAnnotationTextStyle.fontName = @"Helvetica-Bold";
-	
-    // Determine point of symbol in plot coordinates
-    NSArray *plotData = [[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"];
-    NSNumber *time = [[plotData objectAtIndex:index] objectAtIndex: 0];
-    NSNumber *temp = [[plotData objectAtIndex:index] objectAtIndex: 1];
-    NSArray *anchorPoint = [NSArray arrayWithObjects:time, temp, nil];
-	
-    // Make a string for the temp value
-    NSNumberFormatter *formatter = [[[NSNumberFormatter alloc] init] autorelease];
-    [formatter setMaximumFractionDigits: 1];
-	[formatter setMinimumFractionDigits: 1];
-    NSString *tempString = [formatter stringFromNumber:temp];
-	
-    // Now add the annotation to the plot area
-    CPTTextLayer *textLayer = [[[CPTTextLayer alloc] initWithText:tempString style:hitAnnotationTextStyle] autorelease];
-    textAnnotation = [[CPTPlotSpaceAnnotation alloc] initWithPlotSpace:graph.defaultPlotSpace anchorPlotPoint:anchorPoint];
-    textAnnotation.contentLayer = textLayer;
-    textAnnotation.displacement = CGPointMake(0.0f, 20.0f);
-    [graph.plotAreaFrame.plotArea addAnnotation:textAnnotation];    
 }
 
 #pragma mark -
@@ -619,10 +341,10 @@
 	else if ([[tableColumn identifier] isEqual: @"color"])
 	{
 		// Need to find the base plot associated with this row's ID, and return the color it's using
-		
+
 		NSString *rowID = [theStoker idForSensor: row];
 		
-		NSArray *thePlots = [graph allPlots];				  
+		NSArray *thePlots = [[plotController graph] allPlots];				  
 		for (CPTScatterPlot *plot in thePlots) 
 		{						
 			if ([rowID isEqualToString: (NSString *) [plot identifier]])
@@ -637,32 +359,19 @@
 	return nil;
 }
 
-- (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
+- (void)tableView:(NSTableView *)aTableView setObjectValue:(id)newValue forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {	
 //	NSLog(@"StokerXAppDelegate: tableView: setObjectValue: forTableColumn: %@ row: %d", [tableColumn identifier], rowIndex);
 
 	if ([[tableColumn identifier] isEqual: @"SensorName"])
 	{
-		[theStoker setName: anObject forSensor: rowIndex];
-
-		NSString *sensorID = [theStoker idForSensor: rowIndex];
-		[[stokerData objectForKey: sensorID] setObject: anObject forKey: @"name"];		
-}
+		[theStoker setName: newValue forSensor: rowIndex];
+		[[stokerData objectForKey: [theStoker idForSensor: rowIndex]] setObject: newValue forKey: @"name"];		
+	}
 	else if ([[tableColumn identifier] isEqual: @"TargetTemp"])
 	{
-		[theStoker setTarget: anObject forSensor: rowIndex];
-		
-		NSString *sensorID = [theStoker idForSensor: rowIndex];
-		NSString *targetID = [NSString stringWithFormat: @"%@ Target", sensorID];
-		[[stokerData objectForKey: targetID] setObject: anObject forKey: @"target"];
-	}
-	else if ([[tableColumn identifier] isEqual: @"Notifications"])
-	{
-		// edit internal alarm table here
-	}
-	else if ([[tableColumn identifier] isEqual: @"color"])
-	{
-		// Nothing to do here, it's done in the delegate for the color well view
+		[theStoker setTarget: newValue forSensor: rowIndex];
+		[[stokerData objectForKey: [NSString stringWithFormat: @"%@ Target", [theStoker idForSensor: rowIndex]]] setObject: newValue forKey: @"target"];
 	}
 }
 
@@ -675,7 +384,7 @@
 {
 	NSLog(@"Stoker is running version %@", [stk stokerVersion]);
 	
-	[self plotSetup];
+	[plotController plotSetup];
 	
     for (int i = 0; i < [theStoker numberOfSensors]; i++)
     {		
@@ -745,6 +454,8 @@
 // Sent when the stoker has updated Sensor temp
 - (void) stoker: (Stoker *) stk updateSensorTemp: (NSNumber *) sensorTemp forSensor: (NSString *) sensorID
 {
+//	NSLog(@"stoker:updateSensorTemp: %@ forSensor %@", sensorTemp, sensorID);
+
 	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
 		
 	[[stokerData objectForKey: sensorID] setObject: sensorTemp forKey: @"temp"];
@@ -767,11 +478,14 @@
 // Sent when the stoker has updated Blower data
 - (void) stoker: (Stoker *) stk updateBlowerState: (Boolean) active forBlower: (NSString *) blowerID
 {
+//	NSLog(@"stoker:updateBlowerState: %@ forBlower %@", active ? @"ON" : @"OFF", blowerID);
+
    	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
 	NSMutableDictionary *theBlower = [stokerData objectForKey: blowerID]; 
 	NSMutableArray	*blowerPlotData = [theBlower objectForKey:@"plotData"];
 							   
-	[blowerPlotData addObject: [NSArray arrayWithObjects: currentTime, [NSNumber numberWithDouble: ((double) active * BLOWER_STEP)], nil]];
+//	[blowerPlotData addObject: [NSArray arrayWithObjects: currentTime, [NSNumber numberWithDouble: ((double) active * BLOWER_STEP)], nil]];
+	[blowerPlotData addObject: [NSArray arrayWithObjects: currentTime, [NSNumber numberWithInt: active], nil]];
 		
 	NSInteger activeCount = [[theBlower objectForKey: @"count"] intValue];
 
@@ -836,7 +550,7 @@
 	
 	NSString *rowID = [theStoker idForSensor: row];
 		
-	NSArray *thePlots = [graph allPlots];				  
+	NSArray *thePlots = [[plotController graph] allPlots];				  
 	for (CPTScatterPlot *plot in thePlots) 
 	{			
 		NSString *plotID = (NSString *) [plot identifier];
@@ -862,7 +576,7 @@
 	
 	NSString *rowID = [theStoker idForSensor: row];
 	
-	NSArray *thePlots = [graph allPlots];				  
+	NSArray *thePlots = [[plotController graph] allPlots];				  
 	for (CPTScatterPlot *plot in thePlots) 
 	{			
 		if ([rowID isEqualToString: (NSString *) [plot identifier]])
@@ -886,64 +600,29 @@
 	return @"http://www.flyingdiver.com/submitfeedback.php";
 }
 
-//- (NSDictionary*) customParametersForFeedbackReport
-//{
-//   return [NSDictionary dictionaryWithObjectsAndKeys:@"StokerX", @"application", nil];
-//}
-
-
 #pragma mark -
 #pragma mark Sparkle Updater Delegate Methods
-
-- (void)appcast:(SUAppcast *)appcast failedToLoadWithError:(NSError *)error
-{
-	NSLog(@"appcast: %@ failedToLoadWithError: %@", appcast, error);
-}
-
-// Implement this if you want to do some special handling with the appcast once it finishes loading.
-- (void)updater:(SUUpdater *)updater didFinishLoadingAppcast:(SUAppcast *)appcast
-{
-}
-
-// Sent when a valid update is found by the update driver.
-- (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)update
-{
-	NSLog(@"Updater:didFindValidUpdate: %@ (%@)", [update title], [update versionString]);
-}
-
-// Sent when a valid update is not found.
-- (void)updaterDidNotFindUpdate:(SUUpdater *)update
-{
-	NSLog(@"updaterDidNotFindUpdate");
-}
-
-// Sent immediately before installing the specified update.
-- (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update
-{
-	NSLog(@"Updater:willInstallUpdate: %@ (%@)", [update title], [update versionString]);
-}
 
 // Return YES to delay the relaunch until you do some processing; invoke the given NSInvocation to continue.
 - (BOOL)updater:(SUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)update untilInvoking:(NSInvocation *)invocation
 {
 	NSLog(@"updater:shouldPostponeRelaunchForUpdate:untilInvoking:");
 
-	if (theStoker.telnetActive)		// don't quit with the Stoker in telnet mode
+	BOOL shutdownNow = [theStoker shutdownWithCompletionHandler:^(void) 
 	{
-		updateWaiting = TRUE;
-		[theStoker stopLogging];
-		[self setStatusText: @"Waiting for Stoker to exit telnet mode"];
+		[self setStatusText: @"Restarting for Application Update"];
+		[updateInvocation invoke];
+	}];
+	
+	if (!shutdownNow)
+	{
+		[self setStatusText: @"Waiting for Stoker to restart"];
 		updateInvocation = [invocation retain];
 		return YES;	
 	}
 	
+	[self setStatusText: @"Restarting for Application Update"];
 	return NO;
-}
-
-// Called immediately before relaunching.
-- (void)updaterWillRelaunchApplication:(SUUpdater *)updater
-{
-	NSLog(@"updaterWillRelaunchApplication");
 
 }
 

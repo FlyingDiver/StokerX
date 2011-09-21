@@ -6,9 +6,9 @@
 //  Copyright 2011 Joseph P Keenan Jr. All rights reserved.
 //
 
-#import "StokerXTwitter.h"
+#import "MiniTwitter.h"
 
-@implementation StokerXTwitter
+@implementation MiniTwitter
 
 static NSString *const kTwitterKeychainItemName = @"StokerX: Twitter";
 static NSString *const kTwitterServiceName = @"Twitter";
@@ -48,13 +48,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 {
 	NSString *myConsumerKey = kOAuthConsumerKey;
 	NSString *myConsumerSecret = kOAuthConsumerSecret;
-	
-	if ([myConsumerKey length] == 0 || [myConsumerSecret length] == 0) 
-	{
-		NSLog(@"StokerXTwitter Needs A Twitter Consumer Key And Secret");
-		return nil;
-	}
-	
+		
 	GTMOAuthAuthentication *auth = [[[GTMOAuthAuthentication alloc] initWithSignatureMethod: kGTMOAuthSignatureMethodHMAC_SHA1
 																				consumerKey: myConsumerKey
 																				 privateKey: myConsumerSecret] autorelease];
