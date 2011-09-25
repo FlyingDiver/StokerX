@@ -2,27 +2,15 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">11C35</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1617</string>
-		<string key="IBDocument.AppKitVersion">1138.15</string>
+		<string key="IBDocument.SystemVersion">11C55</string>
+		<string key="IBDocument.InterfaceBuilderVersion">907</string>
+		<string key="IBDocument.AppKitVersion">1138.20</string>
 		<string key="IBDocument.HIToolboxVersion">567.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">1617</string>
+			<string key="NS.object.0">907</string>
 		</object>
-		<array key="IBDocument.IntegratedClassDependencies">
-			<string>NSTextField</string>
-			<string>NSView</string>
-			<string>NSWindowTemplate</string>
-			<string>NSCustomObject</string>
-			<string>NSMenu</string>
-			<string>NSMenuItem</string>
-			<string>NSPopUpButton</string>
-			<string>NSButtonCell</string>
-			<string>NSPopUpButtonCell</string>
-			<string>NSButton</string>
-			<string>NSTextFieldCell</string>
-		</array>
+		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 		</array>
@@ -46,8 +34,9 @@
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
+				<string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
 				<object class="NSView" key="NSWindowView" id="1006">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSTextField" id="249749572">
@@ -55,7 +44,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{152, 202}, {130, 22}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="276956840"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="1065882516">
@@ -65,7 +53,7 @@
 								<object class="NSFont" key="NSSupport" id="73755225">
 									<string key="NSName">LucidaGrande</string>
 									<double key="NSSize">13</double>
-									<int key="NSfFlags">1044</int>
+									<int key="NSfFlags">1040</int>
 								</object>
 								<reference key="NSControlView" ref="249749572"/>
 								<bool key="NSDrawsBackground">YES</bool>
@@ -94,7 +82,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{29, 205}, {121, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="249749572"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="467244773">
@@ -125,7 +112,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{163, 159}, {29, 22}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="1009148794"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="923789880">
@@ -144,7 +130,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{29, 161}, {121, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="204716236"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="30111955">
@@ -162,7 +147,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{216, 121}, {247, 22}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="568780687"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="902555366">
@@ -181,7 +165,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{29, 123}, {173, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="990788169"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="96722762">
@@ -199,7 +182,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{381, 159}, {37, 22}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="346586426"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="958306108">
@@ -218,7 +200,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{251, 161}, {121, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="140260134"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="675261722">
@@ -236,7 +217,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{357, 203}, {137, 18}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="574940683"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="829586413">
@@ -265,7 +245,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{30, 74}, {225, 18}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="767136038"/>
 							<string key="NSReuseIdentifierKey">_NS:239</string>
 							<bool key="NSEnabled">YES</bool>
@@ -291,7 +270,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{300, 69}, {160, 26}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="959362088"/>
 							<string key="NSReuseIdentifierKey">_NS:179</string>
 							<bool key="NSEnabled">YES</bool>
@@ -370,7 +348,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{30, 32}, {228, 18}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="688778199"/>
 							<string key="NSReuseIdentifierKey">_NS:239</string>
 							<bool key="NSEnabled">YES</bool>
@@ -396,7 +373,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{301, 32}, {146, 18}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSWindow"/>
 							<string key="NSReuseIdentifierKey">_NS:239</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="428626456">
@@ -418,12 +394,10 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{500, 245}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="66981272"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
-				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
+				<string key="NSMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="766923904">
@@ -593,20 +567,20 @@
 					<int key="connectionID">154</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">httpOnlyCheckBox</string>
+					<object class="IBActionConnection" key="connection">
+						<string key="label">changeHTTPOnlyMode:</string>
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="568780687"/>
 					</object>
-					<int key="connectionID">187</int>
+					<int key="connectionID">189</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">changeHTTPOnly:</string>
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">httpOnlyModeCheckBox</string>
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="568780687"/>
 					</object>
-					<int key="connectionID">188</int>
+					<int key="connectionID">190</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -912,7 +886,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">188</int>
+			<int key="maxID">190</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -921,7 +895,7 @@
 					<string key="superclassName">NSWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="changeEmailAddressField:">id</string>
-						<string key="changeHTTPOnly:">id</string>
+						<string key="changeHTTPOnlyMode:">id</string>
 						<string key="changeMaxGraphTempField:">id</string>
 						<string key="changeMinGraphTempField:">id</string>
 						<string key="changeStokeripAddressField:">id</string>
@@ -931,8 +905,8 @@
 							<string key="name">changeEmailAddressField:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="changeHTTPOnly:">
-							<string key="name">changeHTTPOnly:</string>
+						<object class="IBActionInfo" key="changeHTTPOnlyMode:">
+							<string key="name">changeHTTPOnlyMode:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="changeMaxGraphTempField:">
@@ -950,7 +924,7 @@
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="emailAddress">NSTextField</string>
-						<string key="httpOnlyCheckBox">NSButton</string>
+						<string key="httpOnlyModeCheckBox">NSButton</string>
 						<string key="ipAddress">NSTextField</string>
 						<string key="maxGraphTemp">NSTextField</string>
 						<string key="minGraphTemp">NSTextField</string>
@@ -960,8 +934,8 @@
 							<string key="name">emailAddress</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="httpOnlyCheckBox">
-							<string key="name">httpOnlyCheckBox</string>
+						<object class="IBToOneOutletInfo" key="httpOnlyModeCheckBox">
+							<string key="name">httpOnlyModeCheckBox</string>
 							<string key="candidateClassName">NSButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="ipAddress">
@@ -1025,6 +999,7 @@
 			<real value="4100" key="NS.object.0"/>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
+		<nil key="IBDocument.LastKnownRelativeProjectPath"/>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="NSMenuCheckmark">{9, 8}</string>

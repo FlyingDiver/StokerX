@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Growl/Growl.h"
+#import "MiniTwitter.h"
 #import "NotificationAction.h"
 #import "NotificationRule.h"
 #import "NotificationTest.h"
@@ -38,5 +39,6 @@
 @property (nonatomic, retain) NSMutableArray		*ruleList;	
 @property (nonatomic, retain) NSMutableArray		*sensorList;	
 @property (nonatomic, retain) NSMutableDictionary	*sensorDict;
+@property (nonatomic, retain) MiniTwitter			*tweetController;
 
 @end

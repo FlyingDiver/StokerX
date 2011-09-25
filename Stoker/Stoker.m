@@ -8,15 +8,14 @@
 
 #import "Stoker.h"
 #import "JSON.h"
-#import "StokerSensor.h"
-#import "StokerBlower.h"
 #import "GTMOAuth/GTMHTTPFetcher.h"
 
 @implementation Stoker
 
-@synthesize delegate, stokerVersion, jsonTimer, jsonConnection, jsonRequest, jsonData, postConnection, ipAddress, isLogging;
-@synthesize useTelnet, stokerAvailable, mySendExpect, lastTemp, lidOffHold, blowerControlSensor, lastTempTarget;
-@synthesize completionBlock = completionBlock_;
+@synthesize delegate, stokerVersion, jsonTimer, ipAddress, isLogging;
+@synthesize httpOnlyMode, stokerAvailable, mySendExpect, lastTemp, lidOffHold, blowerControlSensor, lastTempTarget;
+@synthesize shutdownCompletionBlock = shutdownCompletionBlock_;
+@synthesize connectCompletionBlock  = connectCompletionBlock_;
 
 - (void)dealloc
 {	
@@ -36,80 +35,65 @@
 	}
 }
 
-- (void)connectToIPAddress: (NSString *) ip
-{	    
-	self.ipAddress = ip;
-	
-	// build the JSON data request once, and save it
-	
-	self.jsonRequest = [[[NSURLRequest alloc] initWithURL: [NSURL URLWithString: [NSString stringWithFormat: @"http://%@/stoker.json?version=true", ipAddress]]] autorelease];
+- (BOOL)connectWithCompletionHandler:(void (^)(void))handler 
+{	
+	self.connectCompletionBlock = handler;
 	
 	[self sendStatusUpdate: [NSString stringWithFormat: @"Attempting HTTP connection to %@", ipAddress]];
-
-	// try the JSON request
+	
 	[self getStokerJSON: nil];
 	
-}
-- (void) startLogging
-{	
-	self.isLogging = TRUE;
-	
-	if (useTelnet)
-	{
-		[self sendStatusUpdate: @"Resetting Stoker for Logging"];
-		[self startTelnetCapture];
-	}
-	else 				// for JSON mode, the timer requests the data, and graphs are updated when data is received
-	{
-		NSLog(@"Stoker: startLogging - HTTP Mode");
-		[self sendStatusUpdate: @"Logging started"];
-
-		self.jsonTimer = [NSTimer scheduledTimerWithTimeInterval: STOKER_QUERY_INTERVAL target:self selector:@selector(getStokerJSON:) userInfo: nil repeats:YES];
-		
-		[self getStokerJSON: nil];		// do it once now to get things started
-	}
-	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:isLogging:)]) {
-		[[self delegate] stoker: self isLogging: self.isLogging];
-	}
-}		
-	
-- (void) stopLogging
-{
-	NSLog(@"Stoker: stopLogging");
-
-	self.isLogging = FALSE;
-
-	if (useTelnet)
-	{
-		[self sendStatusUpdate: @"Telnet Logging stopped"];
-		[self stopTelnetCapture];
-	}
-    else
-    {
-        [jsonTimer invalidate];
-        jsonTimer = nil;
-		[self sendStatusUpdate: @"HTTP Logging stopped"];
-    }
-	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:isLogging:)]) {
-		[[self delegate] stoker: self isLogging: self.isLogging];
-	}
+	return YES;
 }
 
 - (BOOL)shutdownWithCompletionHandler:(void (^)(void))handler 
 {
 	if (telnetActive)		// don't quit with the Stoker in telnet mode
 	{
-		self.completionBlock = handler;
-		[self stopTelnetCapture];
-		//		NSLog(@"Stoker: shutdownWithCompletionHandler: Wait for reset");
-		
+		self.shutdownCompletionBlock = handler;
+		[self stopTelnetCapture];		
 		return NO;
 	}
 	
 	[jsonTimer invalidate];
 	jsonTimer = nil;
-	//	NSLog(@"Stoker: shutdownWithCompletionHandler: shutdown now");
 	return YES;
+}
+
+- (void) startLogging
+{	
+	self.isLogging = TRUE;
+	
+	if (httpOnlyMode)
+	{
+		[self sendStatusUpdate: @"HTTP Logging started"];
+		
+		self.jsonTimer = [NSTimer scheduledTimerWithTimeInterval: STOKER_QUERY_INTERVAL target:self selector:@selector(getStokerJSON:) userInfo: nil repeats:YES];
+		
+		[self getStokerJSON: nil];		// do it once now to get things started
+	}
+	else 				// for JSON mode, the timer requests the data, and graphs are updated when data is received
+	{
+		[self sendStatusUpdate: @"Resetting Stoker for Telnet Logging"];
+		[self startTelnetCapture];
+	}
+}		
+	
+- (void) stopLogging
+{
+	self.isLogging = FALSE;
+
+	if (httpOnlyMode)
+	{
+        [jsonTimer invalidate];
+        jsonTimer = nil;
+		[self sendStatusUpdate: @"HTTP Logging stopped"];
+	}
+    else
+    {
+		[self sendStatusUpdate: @"Resetting Stoker to stop Logging"];
+		[self stopTelnetCapture];
+    }
 }
 
 #pragma mark -
@@ -128,7 +112,7 @@
 }
 
 - (void)jsonFetcher:(GTMHTTPFetcher *)fetcher finishedWithData:(NSData *)retrievedData error:(NSError *)error;
-{
+{	
 	if (error != nil) 
 	{
 		NSLog(@"getStokerJSON GTMHTTPFetcher error: %@", error);
@@ -153,7 +137,6 @@
 
 	if (nil == sensorDict)
 	{		
-		self.stokerVersion = [[results objectForKey:@"stoker"] objectForKey:@"version"];
 		[self sensorSetup: results];
 	}
 
@@ -167,14 +150,7 @@
 	{
 		for (NSDictionary *sensor in sensors)
 		{
-			if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:updateSensorTemp:forSensor:)]) {
-				[[self delegate] stoker: self updateSensorTemp: [sensor objectForKey:@"tc"] forSensor: [sensor objectForKey:@"id"]];
-			}
-			
-			if (([sensor objectForKey:@"blower"] != [NSNull null]) && lidDetectionEnabled)		// only check for lid off on control blower
-			{
-				[self checkLidOffSensor: [sensor objectForKey:@"id"] withTemp: [sensor objectForKey:@"tc"]];
-			}
+			[self updateSensor: [sensor objectForKey:@"id"] withTemp: [[sensor objectForKey:@"tc"] doubleValue] andTarget: [[sensor objectForKey:@"ta"] doubleValue]];
 		}
 	}	
 
@@ -182,21 +158,28 @@
 	if (blowers != (NSArray *) [NSNull null])
 	{
 		for (NSDictionary *blower in blowers)
-		{
-			if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:updateBlowerState:forBlower:)]) {
-				[[self delegate] stoker: self updateBlowerState: [[blower objectForKey:@"on"] intValue] forBlower: [blower objectForKey:@"id"]];
-			}
+		{			
+			[self updateBlower: [blower objectForKey:@"id"] withState: [[blower objectForKey:@"on"] intValue]];
 		}
 	}
+	
+	if([self delegate] && [[self delegate] respondsToSelector:@selector(stokerSensorUpdate:)]) 
+	{
+		[[self delegate] stokerSensorUpdate: self];
+	}    
 }
 
 - (void)sensorSetup: (NSDictionary *) jsonResults
 {		    
+	self.stokerVersion = [[jsonResults objectForKey:@"stoker"] objectForKey:@"version"];
+
 	blowerArray = [[NSMutableArray alloc] init];	
 	blowerDict  = [[NSMutableDictionary dictionaryWithCapacity:3] retain];
     
 	sensorArray = [[NSMutableArray alloc] init];	
 	sensorDict = [[NSMutableDictionary dictionaryWithCapacity:10] retain];
+	
+	deviceDict = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	
 	NSArray *blowers = [[jsonResults objectForKey:@"stoker"] objectForKey:@"blowers"];	
     
@@ -204,13 +187,13 @@
 	{
 		for (NSDictionary *blower in blowers)
 		{			
-			StokerBlower *theBlower = [[StokerBlower alloc] init];
-			theBlower.blowerName 	= [blower objectForKey:@"name"];
-			theBlower.deviceID   	= [blower objectForKey:@"id"];
+			StokerBlower *theBlower	= [[StokerBlower alloc] initWithName: [blower objectForKey:@"name"] andID: [blower objectForKey:@"id"]];
 			theBlower.state      	= [[blower objectForKey:@"on"] intValue];
-			theBlower.sensor		= nil;
 			
+			NSLog(@"sensorSetup: blower %@ (%@) is %@", theBlower.deviceID, theBlower.deviceName, theBlower.state ? @"On" : @"Off");
+
 			[blowerDict setObject: theBlower forKey: theBlower.deviceID];
+			[deviceDict setObject: theBlower forKey: theBlower.deviceID];
 			[blowerArray addObject: theBlower];
 			[theBlower release];
 		}
@@ -222,27 +205,30 @@
 	{
 		for (NSDictionary *sensor in sensors)
 		{			
-			StokerSensor *theSensor	= [[StokerSensor alloc] init];
-			theSensor.sensorName	= [sensor objectForKey:@"name"];
-			theSensor.deviceID 		= [sensor objectForKey:@"id"];
-			theSensor.blowerID 		= [sensor objectForKey:@"blower"];
+			StokerSensor *theSensor	= [[StokerSensor alloc] initWithName: [sensor objectForKey:@"name"] andID: [sensor objectForKey:@"id"]];
 			theSensor.tempTarget 	= [sensor objectForKey:@"ta"];
 			theSensor.tempCurrent 	= [sensor objectForKey:@"tc"];
 			
 			// Look for a matching BlowerID for this sensor
 			if ([blowerDict count] > 0)
 			{
-				for (NSString *blowerKey in blowerDict)
+				for (StokerBlower *blower in blowerArray)
 				{
-					StokerBlower *blower = [blowerDict objectForKey: blowerKey];
-					if ([theSensor.blowerID isEqual: blower.deviceID])
+					if ([blower.deviceID isEqual: [sensor objectForKey:@"blower"]])
 					{
 						theSensor.blower = blower;
 						blower.sensor = theSensor;
+					
+						NSLog(@"sensorSetup: sensor %@ (%@), current = %@, target = %@, blower = %@ (%@)", 
+							  theSensor.deviceID, theSensor.deviceName, theSensor.tempCurrent, theSensor.tempTarget, blower.deviceID, blower.deviceName);
 					}
+					else
+						NSLog(@"sensorSetup: sensor %@ (%@), current = %@, target = %@", theSensor.deviceID, theSensor.deviceName, theSensor.tempCurrent, theSensor.tempTarget);						
 				}
 			}
+			
 			[sensorDict setObject: theSensor forKey: theSensor.deviceID];
+			[deviceDict setObject: theSensor forKey: theSensor.deviceID];
 			[theSensor release];
 		}
 	}
@@ -271,9 +257,8 @@
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(stokerHasCompletedSetup:)]) 
 	{
 		[[self delegate] stokerHasCompletedSetup: self];
-	}           
+	}    
 }
-
 
 #pragma mark -
 #pragma mark Telnet Data Capture Methods
@@ -341,7 +326,9 @@
 
 
 - (void) parseTelnetOutput: (NSString *) stokerOutput 
-{		
+{	
+	static double lastUpdate = 0;
+	
 	if ([stokerOutput rangeOfString:@":"].location != NSNotFound)		// must have : after device ID or it's garbage
 	{ 			  
 		NSString *deviceID = nil;
@@ -378,41 +365,61 @@
 			[scanner scanUpToString:@" " intoString:&blower];			// get the value
 		}		
 		
-        if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:updateSensorTemp:forSensor:)]) {
-            [[self delegate] stoker: self updateSensorTemp: [NSNumber numberWithDouble: [tempUser doubleValue]] forSensor: deviceID];
-        }
-		
-		StokerSensor *theSensor;
-		StokerBlower *theBlower;
-		
-		if ((theSensor = [sensorDict objectForKey: deviceID]))
+		[self updateSensor: deviceID withTemp: [tempUser doubleValue] andTarget: [[[sensorDict objectForKey: deviceID] tempTarget] doubleValue]];
+		 
+		if (blower)
 		{
-			theSensor.tempCurrent = [NSNumber numberWithDouble: [tempUser doubleValue]];
-			
-			if (blower)
-			{
-				theBlower = [blowerDict objectForKey: [theSensor blowerID]];
+			StokerDevice *theBlower = [[sensorDict objectForKey: deviceID] blower];
 
-				if ([blower compare: @"on" options: NSCaseInsensitiveSearch range: NSMakeRange(0,2)] == NSOrderedSame)
-				{
-					theBlower.state = TRUE;
-				}
-				else
-				{
-					theBlower.state = FALSE;
-				}
-                
-                if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:updateBlowerState:forBlower:)]) {
-                    [[self delegate] stoker: self updateBlowerState: theBlower.state forBlower: theBlower.deviceID];
-                }           
-
-				if (lidDetectionEnabled)
-				{
-					[self checkLidOffSensor: theSensor.deviceID withTemp: theSensor.tempCurrent];		// this sensor has the blower, so it's the right one for lid detection	
-				}
-				
-			}
+			Boolean state =	([blower compare: @"on" options: NSCaseInsensitiveSearch range: NSMakeRange(0,2)] == NSOrderedSame) ? TRUE : FALSE;
+			[self updateBlower: theBlower.deviceID withState: state];				
 		}
+	}
+
+	double currentTime = [[NSDate date] timeIntervalSinceReferenceDate];
+	
+	if ((currentTime - lastUpdate) > 5.0)	// limit update rate
+	{
+		lastUpdate = currentTime;
+		
+		if([self delegate] && [[self delegate] respondsToSelector:@selector(stokerSensorUpdate:)]) 
+		{
+			[[self delegate] stokerSensorUpdate: self];
+		}    
+	}
+}
+
+
+- (void) updateSensor: (NSString *) sensorID withTemp: (double) temp andTarget: (double) target
+{
+//	NSLog(@"Stoker updateSensor: %@ withTemp %lf andTarget: %lf", sensorID, temp, target);
+	
+	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
+	
+	StokerSensor *theSensor = [sensorDict objectForKey: sensorID];
+	
+	theSensor.tempCurrent = [NSNumber numberWithDouble: temp];
+	theSensor.tempTarget  = [NSNumber numberWithDouble: target];			
+	[theSensor.plotData addObject: [NSArray arrayWithObjects: currentTime, theSensor.tempCurrent, theSensor.tempTarget, nil]];	
+		
+	if (theSensor.control && lidDetectionEnabled)		// only check for lid off on control blower
+	{
+		[self checkLidOffForSensor: theSensor];
+	}
+}
+
+- (void) updateBlower: (NSString *) blowerID withState: (Boolean) state
+{
+//	NSLog(@"Stoker updateBlower: %@ withState: %@", blowerID, state ? @"On" : @"Off");
+
+	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
+	
+	StokerBlower *theBlower = [blowerDict objectForKey: blowerID];
+	theBlower.state = state;
+	[theBlower.plotData addObject: [NSArray arrayWithObjects: currentTime, [NSNumber numberWithBool: theBlower.state], nil]];				
+	if (theBlower.state)
+	{
+		theBlower.onCount = theBlower.onCount + 1;
 	}
 }
 
@@ -423,7 +430,7 @@
 
 -(void) socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port;
 {
-	NSLog (@"Stoker: socket:didConnectToHost: %@:%u", host, port);
+//	NSLog (@"Stoker: socket:didConnectToHost: %@:%u", host, port);
 	
 	telnetActive = YES;
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:telnetActive:)]) {
@@ -445,38 +452,34 @@
 	}
 }
 
--(void) socketDidDisconnect:(GCDAsyncSocket *)sock
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
-	NSLog (@"Stoker: socketDidDisconnect:");
-
 	connectionReady = NO;
 	
 	if (telnetActive)
 	{
 		telnetActive = NO;	
-		if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:telnetActive:)]) {
-			[[self delegate] stoker: self telnetActive: NO];
-		}
-	}		
+	}
+	
+	if (shutdownCompletionBlock_) 
+    {
+        shutdownCompletionBlock_();
+    }
+	else
+		NSLog (@"Stoker: socketDidDisconnect:withError: %@", err);
 }
 
 -(void) socket:(GCDAsyncSocket *)sock didReadData:(NSData*) sockData withTag:(long)tag
-{
-//	NSLog (@"Stoker: socket: didReadData:");
-
-	NSData *data;
-		
+{		
 	if (mySendExpect)
 	{
 		NSString *send = [mySendExpect nextSend];
-				
-		data  =  [send dataUsingEncoding:NSASCIIStringEncoding];
-		[socket writeData: data withTimeout:-1 tag: 1];
-				
 		NSString *expect = [mySendExpect nextExpect];
-	
-		data = [expect dataUsingEncoding:NSASCIIStringEncoding];
-		[socket readDataToData: data withTimeout:-1 tag: 0];
+				
+//		NSLog(@"Stoker sending \"%@\", expecting \"%@\"", send, expect);
+		
+		[socket writeData: [send dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
+		[socket readDataToData: [expect dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
 				
 		if (mySendExpect.completed)	// all done
 		{			
@@ -504,60 +507,143 @@
 
 - (int) numberOfSensors
 {
-	return [sensorDict count];
+	return [sensorArray count];
 }
 
 - (int) numberOfBlowers
 {
-	return [blowerDict count];
+	return [blowerArray count];
 }
 
 - (NSString *) typeForSensor: (int) sensorNo
 {
-	if ([(StokerSensor *)[sensorArray objectAtIndex: sensorNo] blowerID] != (NSString *) [NSNull null])
+	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
+	
+	if (theSensor.blower)
 		return @"Control";
 	else
 		return @"Monitor";
-	
 }
 
 - (NSString *) nameForSensor: (int) sensorNo
 {
-	return [(StokerSensor *)[sensorArray objectAtIndex: sensorNo] sensorName];
+	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
+
+	return theSensor.deviceName;
 }
 
 - (NSString *) idForSensor: (int) sensorNo
 {
-	return [(StokerSensor *)[sensorArray objectAtIndex: sensorNo] deviceID];
+	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
+
+	return theSensor.deviceID;
 }
 
 - (NSNumber *) tempForSensor: (int) sensorNo
 {
-	return [(StokerSensor *)[sensorArray objectAtIndex: sensorNo] tempCurrent];
+	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
+	
+	return theSensor.tempCurrent;
 }
 
 - (NSNumber *) targetForSensor: (int) sensorNo
 {
-	return [(StokerSensor *)[sensorArray objectAtIndex: sensorNo] tempTarget];
+	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
+	
+	return theSensor.tempTarget;
 }
 
 - (NSString *) blowerForSensor: (int) sensorNo
 {
-	if ([(StokerSensor *)[sensorArray objectAtIndex: sensorNo] blower] != nil)
-		return [[(StokerSensor *)[sensorArray objectAtIndex: sensorNo] blower] state] ? @"On" : @"Off";
+	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
+	
+	if (theSensor.blower)
+	{
+		StokerBlower *theBlower = (StokerBlower *) theSensor.blower;
+		return theBlower.state ? @"On" : @"Off";
+	}
 	else
 		return nil;
 }
 
 - (NSString *) nameForBlower: (int) blowerNo
 {
-	return [(StokerBlower *)[blowerArray objectAtIndex: blowerNo] blowerName];
+	return [(StokerBlower *)[blowerArray objectAtIndex: blowerNo] deviceName];
 }
 
 - (NSString *) idForBlower: (int) blowerNo
 {
-	return [(StokerBlower *)[blowerArray objectAtIndex: blowerNo] deviceID];
+	StokerSensor *theBlower = [blowerArray objectAtIndex: blowerNo];
+	return theBlower.deviceID;
 }
+
+- (NSUInteger) numberOfRecordsForPlot:(id <NSCopying, NSObject>)deviceID
+{
+//	NSLog(@"numberOfRecordsForPlot: %@ = %ld", deviceID, [[[deviceDict objectForKey: deviceID] plotData] count]);
+
+	return [[[deviceDict objectForKey: deviceID] plotData] count];
+}
+
+- (NSNumber *) plotValueForPlot:(id <NSCopying, NSObject>) deviceID field: (NSUInteger)fieldEnum recordIndex: (NSUInteger)index
+{
+	NSNumber *value = [[[[deviceDict objectForKey: deviceID] plotData] objectAtIndex: index] objectAtIndex: fieldEnum];
+	
+//	NSLog(@"plotValueForPlot: %@ field: %ld recordIndex: %ld = %@", deviceID, fieldEnum, index, value);
+	
+	return  value;
+	
+//	return [[[deviceDict objectForKey: deviceID] plotData] objectAtIndex: fieldEnum];
+}
+
+- (double) totalBlowerRatio
+{
+	StokerBlower *theBlower = [blowerArray objectAtIndex: blowerControlSensor];
+	
+	return ((double) theBlower.onCount / (double) [theBlower.plotData count]);
+}
+
+- (double) recentBlowerRatio: (NSInteger) minutes
+{
+	StokerBlower *theBlower = [blowerArray objectAtIndex: blowerControlSensor];
+	
+	int onCount = 0, totalCount = 0;
+	NSArray *record;
+	
+	int index = [theBlower.plotData count] - 1;
+	
+	double interval = minutes * 60.0;		// in seconds 
+	double current = [[NSDate date] timeIntervalSinceReferenceDate];
+	
+	double earliest = current - interval;
+	
+	while (index >= 0) 
+	{
+		record = [theBlower.plotData objectAtIndex: index];
+		
+		double timestamp = [[record objectAtIndex:0] doubleValue];
+		
+		if (timestamp < earliest)	// earlier than sample period
+			break;
+		
+		totalCount++;
+				
+		if ([[record objectAtIndex:1] intValue] != 0)
+			onCount++;
+		
+		index--;
+	}
+	
+	if (totalCount > 0)
+	{
+		return ((float) onCount / (float) totalCount * 100.0);
+	}
+	else
+	{
+		return 0.0;
+		
+	}
+}
+
 
 #pragma mark -
 #pragma mark Stoker Update Methods
@@ -565,53 +651,46 @@
 - (void) setName: (NSString *) name forSensor: (int) sensorNo
 {
 	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
+	theSensor.deviceName = name;	
 	
-	theSensor.sensorName = name;
+	NSString *requestString =  [NSString stringWithFormat: @"http://%@/stoker.Post_Handler", ipAddress];
+	NSString *post = [NSString stringWithFormat:@"na%@=%@", theSensor.deviceID, [self urlEncodeValue: theSensor.deviceName]];
 
-	NSLog(@"Stoker: setName: %@ forSensor: %@ (%@)", name, [theSensor deviceID],[theSensor sensorName]);
-	
-	NSString *post = [NSString stringWithFormat:@"na%@=%@", theSensor.deviceID, [self urlEncodeValue: [theSensor sensorName]]];
-	
-	NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-	NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
-	NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
-	[request setURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/stoker.Post_Handler", ipAddress]]];
-	[request setHTTPMethod:@"POST"];
-	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-	[request setHTTPBody:postData];
-	
-	postConnection = [[NSURLConnection alloc] initWithRequest: request delegate:self];
+	GTMHTTPFetcher* jsonFetcher = [GTMHTTPFetcher fetcherWithRequest: [NSMutableURLRequest requestWithURL: [NSURL URLWithString: requestString]]];	
+	jsonFetcher.postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];	
+	[jsonFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
+	 {
+		 if (error != nil) 
+		 {
+			 NSLog(@"Stoker setName:forSensor: GTMHTTPFetcher error: %@", error);
+		 } 
+	 }];
 }
 
 - (void) setTarget: (NSNumber *) target forSensor: (int) sensorNo
 {
 	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
-
 	theSensor.tempTarget = target;
 			
-//	NSLog(@"Stoker: setTarget: %@ forSensor: %@ (%@)", target, theSensor.deviceID, [theSensor sensorName]);
-
-	NSString *post = [NSString stringWithFormat:@"ta%@=%@", theSensor.deviceID, [self urlEncodeValue: [target stringValue]]];
+	NSString *requestString =  [NSString stringWithFormat: @"http://%@/stoker.Post_Handler", ipAddress];
+	NSString *post = [NSString stringWithFormat:@"ta%@=%@", theSensor.deviceID, [self urlEncodeValue: [theSensor.tempTarget stringValue]]];
 	
-	NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-	NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
-	NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
-	[request setURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/stoker.Post_Handler", ipAddress]]];
-	[request setHTTPMethod:@"POST"];
-	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-	[request setHTTPBody:postData];
-	
-	postConnection = [[NSURLConnection alloc] initWithRequest: request delegate:self];
+	GTMHTTPFetcher* jsonFetcher = [GTMHTTPFetcher fetcherWithRequest: [NSMutableURLRequest requestWithURL: [NSURL URLWithString: requestString]]];	
+	jsonFetcher.postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+	[jsonFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
+	 {
+		 if (error != nil) 
+		 {
+			 NSLog(@"Stoker setTarget:forSensor: GTMHTTPFetcher error: %@", error);
+		 } 
+	 }];
 }
 
-- (NSString *)urlEncodeValue:(NSString *)str
+- (NSString *) urlEncodeValue:(NSString *)str
 {
-	NSString *result = (NSString *) CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8);
+	NSString *result = (NSString *) CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8);	
 	return [result autorelease];
 }
-
 
 #pragma mark -
 #pragma mark Lid Detection Methods
@@ -632,13 +711,13 @@
 	}
 }
 
-- (void) checkLidOffSensor:(NSString *) sensorID withTemp: (NSNumber *) currTemp
+- (void) checkLidOffForSensor: (StokerSensor *) theSensor
 {
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
 	if (!lastTemp)		// first time, get a last temp to use going forward
 	{
-		self.lastTemp = currTemp;
+		self.lastTemp = theSensor.tempCurrent;
 		lastTempTime = currentTime;
 	}
 	
@@ -646,7 +725,7 @@
 	
 	if (!lidOffHold &&  (interval > 15.0))				// not on hold, looking for a drop, check every 15 sec
 	{
-		double tempDrop = [lastTemp doubleValue] - [currTemp doubleValue];
+		double tempDrop = [lastTemp doubleValue] - [theSensor.tempCurrent doubleValue];
 	
 		if (tempDrop > lidOffDrop)
 		{
@@ -672,7 +751,7 @@
 		[self sendStatusUpdate: @"Enabling Stoker (Lid Off)"];
 
 		lastTempTime = currentTime;
-		self.lastTemp = currTemp;
+		self.lastTemp = theSensor.tempCurrent;
 		
 		lidOffHold = FALSE;
 		

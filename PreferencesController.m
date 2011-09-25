@@ -10,7 +10,7 @@
 #import "PreferencesController.h"
 
 NSString * const kStokeripAddressKey = @"StokeripAddress";
-NSString * const kHTTPOnlyKey        = @"kHTTPOnlyKey";
+NSString * const kHTTPOnlyModeKey    = @"kHTTPOnlyMode";
 NSString * const kMinGraphTempKey    = @"MinGraphTemp";
 NSString * const kMaxGraphTempKey    = @"MaxGraphTemp";
 NSString * const kEmailAddressKey    = @"EmailAddress";
@@ -38,9 +38,9 @@ NSString * const kSendTweetsKey      = @"SendTweets";
 	[[NSUserDefaults standardUserDefaults] setObject:[ipAddress stringValue] forKey: kStokeripAddressKey];
 }
 
-- (IBAction)changeHTTPOnly:(id)sender
+- (IBAction)changeHTTPOnlyMode:(id)sender
 {
-	[[NSUserDefaults standardUserDefaults] setBool:[httpOnlyCheckBox state] forKey: kHTTPOnlyKey];
+	[[NSUserDefaults standardUserDefaults] setBool:[httpOnlyModeCheckBox state] forKey: kHTTPOnlyModeKey];
 }
 
 - (IBAction)changeMinGraphTempField:(id)sender
@@ -77,7 +77,7 @@ NSString * const kSendTweetsKey      = @"SendTweets";
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
 		[ipAddress setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey]];
 	
-	[httpOnlyCheckBox setState:[[[NSUserDefaults standardUserDefaults] stringForKey: kHTTPOnlyKey] boolValue]];
+	[httpOnlyModeCheckBox setState:[[[NSUserDefaults standardUserDefaults] stringForKey: kHTTPOnlyModeKey] boolValue]];
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey])
 		[minGraphTemp setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey]];

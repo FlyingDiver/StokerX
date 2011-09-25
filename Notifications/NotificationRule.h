@@ -19,8 +19,7 @@
 + (NSMutableArray *)	ruleList;
 + (void)				saveRules: (NSMutableArray *) ruleList;
 
-@property (nonatomic, retain) 	NSString		*sensorName;
-@property (nonatomic, retain) 	NSString		*sensorID;
+@property (nonatomic, copy) 	NSString		*sensorID;
 @property (nonatomic, retain) 	NSNumber		*value;
 @property (nonatomic, retain)	NSNumber		*lastNotified;
 @property (assign)				Boolean			enabled;

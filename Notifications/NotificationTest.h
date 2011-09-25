@@ -23,6 +23,6 @@ typedef enum {
 
 - (id) initWithName: (NSString *) theName andTest: (TestTypes) theTest;
 
-@property (nonatomic,retain) 	NSString	*name;
-@property (assign)				TestTypes	test;
+@property (nonatomic,copy) 	NSString	*name;
+@property (assign)			TestTypes	test;
 @end

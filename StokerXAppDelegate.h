@@ -17,8 +17,7 @@
 #import "MiniTwitter.h"
 #import "StokerPlotController.h"
 
-@interface StokerXAppDelegate : NSObject <NSApplicationDelegate, FRFeedbackReporterDelegate, 
-NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
+@interface StokerXAppDelegate : NSObject <NSApplicationDelegate, FRFeedbackReporterDelegate, NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
 {
     IBOutlet NSButton				*startStopButton;
 	IBOutlet NSTextField			*statusField;
@@ -38,29 +37,25 @@ NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate>
 	IBOutlet StokerPlotController	*plotController;
 
 	Stoker							*theStoker;
-	NSMutableDictionary				*stokerData;
 	    
-	Boolean							exitWaiting;
-	Boolean							updateWaiting;
 	NSInvocation					*updateInvocation;
 }
 
+- (IBAction) showReadMe:(id)sender;
 - (IBAction) showHelpWindow:(id)sender;
 - (IBAction) showFeedbackForm:(id)sender;
 - (IBAction) showPreferencePanel:(id)sender;
 - (IBAction) showNotificationsWindow:(id)sender;
 - (IBAction) startLogging: (id) sender;
-- (IBAction) savePlotData:(id)sender;
 - (IBAction) lidDetectOnOff:(id)sender;
 
 - (void) setStatusText: (NSString *) status;
-- (void) updateUI: (NSTimer *) timer;
+- (void) updateUI;
 
 @property (nonatomic, retain) IBOutlet NSWindow			*mainWindow;
 @property (assign)			  Boolean					loggingActive;
-@property (nonatomic, retain) NSTimer					*updateTimer;
 @property (nonatomic, assign) NSTimeInterval			startTime;
 @property (nonatomic, retain) CPTXYGraph				*graph;
-@property (nonatomic, retain) MiniTwitter			*tweetController;
+@property (nonatomic, retain) MiniTwitter				*tweetController;
 @property (nonatomic, retain) PreferencesController		*preferencesController;
 @end

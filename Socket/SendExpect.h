@@ -23,7 +23,7 @@
 - (NSString *)   nextExpect;
 
 @property (nonatomic, retain) id			delegate;
-@property (nonatomic, retain) NSString		*name;
+@property (nonatomic, copy)   NSString		*name;
 @property (nonatomic, retain) NSArray 		*sequence;
 
 @property (nonatomic, assign) NSUInteger	next;

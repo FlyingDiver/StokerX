@@ -43,7 +43,7 @@
 - (void) signInNetworkLost:(NSNotification *)note;
 
 @property (nonatomic, retain) GTMOAuthAuthentication *myAuth;
-@property (nonatomic, retain) NSString *twitterHandle;
-@property (nonatomic, retain) NSString *twitterUserName;
+@property (nonatomic, copy) NSString *twitterHandle;
+@property (nonatomic, copy) NSString *twitterUserName;
 
 @end

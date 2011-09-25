@@ -16,9 +16,26 @@
 
 @implementation StokerPlotController
 
-@synthesize graph, startTime,plotMaxTemp, plotMinTemp, stoker, stokerData;
+@synthesize graph, startTime,plotMaxTemp, plotMinTemp, stoker;
 
--(void)awakeFromNib
+- (id)init 
+{
+    self = [super init];
+    if (self) 
+	{
+//        stokerData = [NSMutableDictionary dictionaryWithCapacity: 10];
+    }
+    return self;
+}
+
+- (void)dealloc 
+{
+//    [stokerData release];
+	
+    [super dealloc];
+}
+
+-(void)setupGraph
 {	    
 	NSDateFormatter *dateFormatter;
 	
@@ -45,7 +62,7 @@
 	graph.plotAreaFrame.paddingRight = 20.0;
 	graph.plotAreaFrame.cornerRadius = 10.0;
 	
-    // Setup scatter plot space 
+    // Setup plot space(s) 
 
 	double initialRange = plotMaxTemp - plotMinTemp;
 	double displacement = initialRange * BLOWER_PLOT_RESERVE;
@@ -96,7 +113,7 @@
 	tempAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(startTime);
 	
 	NSArray *exclusionRanges  = [NSArray arrayWithObjects:
-								 [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0) length:CPTDecimalFromDouble(adjustedStart)],
+								 [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(-50.0) length:CPTDecimalFromDouble(adjustedStart)],
 								 nil];
 	tempAxis.labelExclusionRanges = exclusionRanges;
 	
@@ -106,15 +123,13 @@
 	blowerGraphPlotSpace.xRange = [CPTPlotRange plotRangeWithLocation: CPTDecimalFromDouble(startTime) length: CPTDecimalFromDouble(plotRange)];
     blowerGraphPlotSpace.yRange = [CPTPlotRange plotRangeWithLocation: CPTDecimalFromInt(0) length: CPTDecimalFromInt(20)];
 	[graph addPlotSpace: blowerGraphPlotSpace];
-	 
- }	
+	 		
+}	
 
 // Configure the plots and data structures based on the sensors and blowers found
 
-- (void) plotSetup
+- (void) setupPlots
 {
-	NSLog(@"StokerPlotController plotSetup");
-
     // set up the plots based on the Stoker info
 	
     CPTScatterPlot *linePlot;
@@ -124,16 +139,7 @@
     NSColor *plotColor = nil;
 		
     for (int i = 0; i < [stoker numberOfBlowers]; i++)
-    {        
-		// First, create an entry in the stokerData dictionary for this blower
-		
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [stoker nameForBlower: i], @"name", 
-								 [NSNumber numberWithInt: 0],  @"count",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [stoker idForBlower: i]];
-		
+    {        		
         linePlot = [[[CPTScatterPlot alloc] init] autorelease];
         linePlot.identifier = [stoker idForBlower: i];
         linePlot.interpolation = CPTScatterPlotInterpolationStepped;
@@ -150,24 +156,7 @@
 	// get info on the sensors from the Stoker
 	
     for (int i = 0; i < [stoker numberOfSensors]; i++)
-    {		
-		// First, create an entry in the stokerData dictionary for this sensor
-		
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [stoker nameForSensor: i], @"name", 
-								 [stoker typeForSensor: i], @"type", 
-								 [stoker tempForSensor: i], @"temp",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [stoker idForSensor: i]];
-		
-		[stokerData setObject:	[NSMutableDictionary dictionaryWithObjectsAndKeys: 
-								 [stoker nameForSensor: i], @"name", 
-								 [stoker targetForSensor: i], @"target",
-								 [NSMutableArray arrayWithCapacity: 1000], @"plotData", 
-								 nil]
-					   forKey: [NSString stringWithFormat: @"%@ Target", [stoker idForSensor: i]]];
-		
+    {				
         plotColor = [[NSUserDefaults standardUserDefaults]  colorForKey: [NSString stringWithFormat: @"PlotColor %@", [stoker idForSensor: i]]];
         if (!plotColor)
         {
@@ -204,22 +193,6 @@
 		
 		[graph addPlot:linePlot toPlotSpace:tempGraphPlotSpace];
     }
-
-	
-	// Save a copy of the plot setup data for debugging purposes
-	
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: @"StokerX"];
-	NSString *saveFilePath = [supportDir stringByAppendingPathComponent: @"PlotSetupData.plist"];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if ([fileManager fileExistsAtPath: saveFilePath] == NO)
-	{
-		[fileManager createDirectoryAtPath: supportDir withIntermediateDirectories:YES attributes:nil error:nil];
-	}
-	if (![stokerData writeToFile: saveFilePath atomically: NO])
-		NSLog(@"StokerX save PlotSetupData failed");
-	
 }
 
 // Called via timer to update the UI
@@ -309,19 +282,41 @@
 #pragma mark -
 #pragma mark Plot Data Source Methods
 
+// simple redirects to the data source methods in the stoker
+
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {	
-//	NSLog(@"StokerPlotController numberOfRecordsForPlot: %@ = %ld", plot.identifier, [[[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"] count]);
+	NSString *identifier = [NSString stringWithString: (NSString *) plot.identifier];
+	NSRange target = [identifier rangeOfString: @" Target"];
 
-	return [[[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"] count];
+	if (target.location == NSNotFound)
+	{
+		return [stoker numberOfRecordsForPlot: plot.identifier];
+	}
+	else
+	{
+		identifier = [identifier substringToIndex: target.location];
+		return [stoker numberOfRecordsForPlot: identifier];
+	}
 }
 
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {	
-//	NSLog(@"StokerPlotController numberForPlot: %@ field: %ld recordIndex: %ld = %@", 
-//		  plot.identifier, fieldEnum, index, [[[[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"] objectAtIndex: index] objectAtIndex: fieldEnum]);
-
-    return [[[[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"] objectAtIndex: index] objectAtIndex: fieldEnum];
+	NSString *identifier = [NSString stringWithString: (NSString *) plot.identifier];
+	NSRange target = [identifier rangeOfString: @" Target"];
+	
+	if (target.location == NSNotFound)
+	{
+		return [stoker plotValueForPlot: plot.identifier field: fieldEnum recordIndex: index];
+	}
+	else
+	{
+		identifier = [identifier substringToIndex: target.location];
+		if (fieldEnum == 0)
+			return [stoker plotValueForPlot: identifier field: 0 recordIndex: index];
+		else
+			return [stoker plotValueForPlot: identifier field: 2 recordIndex: index];
+	}
 }
 
 #pragma mark -
@@ -336,9 +331,8 @@
     hitAnnotationTextStyle.fontName = @"Helvetica-Bold";
 	
     // Determine point of symbol in plot coordinates
-    NSArray *plotData = [[stokerData objectForKey: plot.identifier] objectForKey: @"plotData"];
-    NSNumber *time = [[plotData objectAtIndex:index] objectAtIndex: 0];
-    NSNumber *temp = [[plotData objectAtIndex:index] objectAtIndex: 1];
+	NSNumber *time = [stoker plotValueForPlot: plot.identifier field: 0 recordIndex: index];
+	NSNumber *temp = [stoker plotValueForPlot: plot.identifier field: 1 recordIndex: index];
     NSArray *anchorPoint = [NSArray arrayWithObjects:time, temp, nil];
 	
     // Make a string for the temp value
@@ -348,9 +342,9 @@
     NSString *tempString = [formatter stringFromNumber:temp];
 	
     // Now add the annotation to the plot area
-    CPTTextLayer *textLayer = [[[CPTTextLayer alloc] initWithText:tempString style:hitAnnotationTextStyle] autorelease];
+//    CPTTextLayer *textLayer = [[[CPTTextLayer alloc] initWithText:tempString style:hitAnnotationTextStyle] autorelease];
     CPTPlotSpaceAnnotation *annotation = [[[CPTPlotSpaceAnnotation alloc] initWithPlotSpace:tempGraphPlotSpace anchorPlotPoint:anchorPoint] autorelease];
-    annotation.contentLayer = textLayer;
+    annotation.contentLayer = [[[CPTTextLayer alloc] initWithText:tempString style:hitAnnotationTextStyle] autorelease];
     annotation.displacement = CGPointMake(0.0f, 20.0f);
     [graph.plotAreaFrame.plotArea addAnnotation: annotation];   
 	
@@ -368,8 +362,6 @@
 	CPTPlotSpaceAnnotation *annotation = [theTimer userInfo];
 
 	[graph.plotAreaFrame.plotArea removeAnnotation: annotation];
-//	[annotation release];
-//	annotation = nil;
 }
 
 @end

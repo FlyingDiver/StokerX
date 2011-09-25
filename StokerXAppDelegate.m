@@ -10,7 +10,7 @@
 
 @implementation StokerXAppDelegate
 
-@synthesize mainWindow, updateTimer, startTime, graph, tweetController, preferencesController, loggingActive;
+@synthesize mainWindow, startTime, graph, tweetController, preferencesController, loggingActive;
 
 #define MINUTES	60.0
 #define TIME_RANGE_START		20 * MINUTES    
@@ -28,7 +28,7 @@
 	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kMaxGraphTempKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kLidOffDropKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kLidOffWaitKey];
-	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kHTTPOnlyKey];
+	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kHTTPOnlyModeKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kLidOffEnabledKey];
 
 	[defaultValues setObject:[NSNumber numberWithInt: 86400] forKey:@"SUScheduledCheckInterval"];
@@ -78,29 +78,38 @@
 											   options: NSKeyValueObservingOptionNew
 											   context: NULL];
 	
-	// Use saved position of main window, and show it.
+	[[NSUserDefaults standardUserDefaults] addObserver: self
+											forKeyPath: kEmailAddressKey
+											   options: NSKeyValueObservingOptionNew
+											   context: NULL];
 	
-	[mainWindow setFrameAutosaveName:@"Main Window"];
-    [mainWindow makeKeyAndOrderFront:nil];
-			
 	// get a Stoker object
 	
 	theStoker = [[Stoker alloc] init];
 	theStoker.delegate = self;
-	theStoker.stokerAvailable = FALSE;
-	
-	stokerData = [[NSMutableDictionary alloc] initWithCapacity:4];
-	
+		
 	plotController.stoker = theStoker;
-	plotController.stokerData = stokerData;
 	plotController.plotMinTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
 	plotController.plotMaxTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey] doubleValue];
-    
+	[plotController setupGraph];
+	
+	notificationController.tweetController = tweetController;
+	
+	// Use saved position of main window, and show it.
+	
+	[mainWindow setFrameAutosaveName:@"Main Window"];
+    [mainWindow makeKeyAndOrderFront:nil];
+	
 	// attempt to connect to Stoker if IP address is set, if not show the preference panel
 
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
 	{
-		[theStoker connectToIPAddress: [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey]];
+		theStoker.ipAddress = [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey];
+		[theStoker connectWithCompletionHandler:^(void) 
+		{
+			NSLog(@"connectWithCompletionHandler called");
+		}];
+		[self updateUI];
 	}
 	else
 	{
@@ -114,32 +123,26 @@
 		
 		[alert runModal];
 		[alert release];
-		
 	}
-
-	self.updateTimer = [NSTimer scheduledTimerWithTimeInterval: GRAPH_UPDATE_INTERVAL target: self selector:@selector(updateUI:) userInfo: nil repeats:YES];
-	[self updateUI: updateTimer];
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {				
 	BOOL shutdownNow = [theStoker shutdownWithCompletionHandler:^(void) 
 	{
-//		[NSApp replyToApplicationShouldTerminate:YES];
-		[[NSRunningApplication currentApplication] terminate];
+		[NSApp replyToApplicationShouldTerminate:YES];
 	}];
 
 	if (!shutdownNow)
 	{
 		[self setStatusText: @"Waiting for Stoker Reset"];
-//		return NSTerminateLater;   
-		return NSTerminateCancel;   
+		return NSTerminateLater;   
 	}
 
 	[self setStatusText: @"StokerX Terminating"];
 	return NSTerminateNow;			
 }
-- (void) updateUI: (NSTimer *) theTimer
+- (void) updateUI
 {
 //	NSLog(@"StokerXAppDelegate: updateUI:");
 
@@ -153,21 +156,26 @@
 	if (theStoker.isLogging) 
 	{
 		elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
+
+		NSInteger seconds = fmod(elapsedTime , 60);	
+		NSInteger minutes = fmod(elapsedTime / 60, 60);
+		NSInteger hours =   elapsedTime /60 / 60;
+		NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
+		[elapsedTimeField setStringValue: elapsedTimeString];
+		
+		[totalBlowerActivityField  setStringValue: [NSString stringWithFormat:@"%3.0f%%", [theStoker totalBlowerRatio] * 100.0]];
+		[recentBlowerActivityField setStringValue: [NSString stringWithFormat:@"%3.0f%%", [theStoker recentBlowerRatio: [[blowerActivityDurationPopup selectedItem] tag]] * 100.0]];
 	}
 	else
 	{
 		elapsedTime = 0.0;
 		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
+
+		[totalBlowerActivityField  setStringValue: @"0%"];
+		[recentBlowerActivityField setStringValue: @"0%"];
 	}
 	
-	NSInteger seconds = fmod(elapsedTime , 60);	
-	NSInteger minutes = fmod(elapsedTime / 60, 60);
-	NSInteger hours =   elapsedTime /60 / 60;
-	NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
-	[elapsedTimeField setStringValue: elapsedTimeString];
-
 	[sensorTable reloadData];	
-
 	[plotController updateGraphWithStartTime: startTime andElapsedTime: elapsedTime];
 }
 
@@ -175,15 +183,20 @@
 {	
 	if ([keyPath isEqualTo: kStokeripAddressKey])
 	{
-		[theStoker connectToIPAddress: [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey]];
+		theStoker.ipAddress = [change objectForKey:NSKeyValueChangeNewKey];
 	}
 	else if ([keyPath isEqualTo: kMaxGraphTempKey])
 	{
 		plotController.plotMaxTemp = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		[self updateUI];
 	}
 	else if ([keyPath isEqualTo: kMinGraphTempKey])
 	{
 		plotController.plotMinTemp = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		[self updateUI];
+	}
+	else if ([keyPath isEqualTo: kEmailAddressKey])
+	{
 	}
 }
 
@@ -209,18 +222,11 @@
 			return;
 		}
 				
-		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kHTTPOnlyKey] boolValue])
-			theStoker.useTelnet = FALSE;	
-		else
-			theStoker.useTelnet = TRUE;
+		theStoker.httpOnlyMode = [[[NSUserDefaults standardUserDefaults] stringForKey: kHTTPOnlyModeKey] boolValue];
 		
-		if ([[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffEnabledKey] boolValue])
-		{
-			[theStoker enableLidDetection: TRUE 
-								 withDrop: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey] doubleValue]
-								  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
-		} else
-			[theStoker enableLidDetection: FALSE withDrop:0 andWait:0.0];
+		[theStoker enableLidDetection: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffEnabledKey] boolValue] 
+							 withDrop: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey] doubleValue]
+							  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
 
 		
 		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];					// reset on actual start of logging
@@ -239,6 +245,8 @@
 		[theStoker stopLogging];
 		[sender setTitle: @"Start"];
 	}
+	else
+		NSLog(@"StokerX unknown button command state");
 }
 
 - (void) setStatusText: (NSString *) status
@@ -264,6 +272,15 @@
 	[helpController showWindow:self];
 }
 
+- (IBAction)showReadMe:(id)sender 
+{
+	NSString *version =  [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleShortVersionString"];
+	NSURL *readMeURL = [NSURL URLWithString: [NSString stringWithFormat: @"http://www.flyingdiver.com/StokerX/StokerX-ReadMe-%@.html", version]];
+	
+	[[NSWorkspace sharedWorkspace] openURL: readMeURL];
+}
+
+
 
 - (IBAction)showNotificationsWindow:(id)sender
 {	
@@ -283,21 +300,6 @@
 						 withDrop: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey] doubleValue]
 						  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
 
-}
-
-- (IBAction) savePlotData:(id)sender
-{
-	NSSavePanel * savePanel = [NSSavePanel savePanel];
-	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"StokerX"]];
-	
-    [savePanel beginSheetModalForWindow:[NSApp mainWindow] completionHandler:^(NSInteger result)
-	{
-        if (result == NSFileHandlingPanelOKButton) 
-		{
-            [savePanel orderOut:self];
-			[stokerData writeToFile: [[savePanel URL] path] atomically: NO];
-		}
-    }];
 }
 
 #pragma mark -
@@ -361,17 +363,14 @@
 
 - (void)tableView:(NSTableView *)aTableView setObjectValue:(id)newValue forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {	
-//	NSLog(@"StokerXAppDelegate: tableView: setObjectValue: forTableColumn: %@ row: %d", [tableColumn identifier], rowIndex);
-
 	if ([[tableColumn identifier] isEqual: @"SensorName"])
 	{
 		[theStoker setName: newValue forSensor: rowIndex];
-		[[stokerData objectForKey: [theStoker idForSensor: rowIndex]] setObject: newValue forKey: @"name"];		
+		[notificationController addSensor: [theStoker idForSensor: rowIndex] name:[theStoker nameForSensor: rowIndex]];
 	}
 	else if ([[tableColumn identifier] isEqual: @"TargetTemp"])
 	{
 		[theStoker setTarget: newValue forSensor: rowIndex];
-		[[stokerData objectForKey: [NSString stringWithFormat: @"%@ Target", [theStoker idForSensor: rowIndex]]] setObject: newValue forKey: @"target"];
 	}
 }
 
@@ -384,7 +383,8 @@
 {
 	NSLog(@"Stoker is running version %@", [stk stokerVersion]);
 	
-	[plotController plotSetup];
+	[plotController setupPlots];
+	[self updateUI];
 	
     for (int i = 0; i < [theStoker numberOfSensors]; i++)
     {		
@@ -395,12 +395,24 @@
 	[self setStatusText: @"Stoker Setup Complete"];
 }
 
+// Sent when the stoker has updated Sensor temps
+
+- (void) stokerSensorUpdate: (Stoker *) stk
+{	
+    for (int i = 0; i < [theStoker numberOfSensors]; i++)
+    {		
+		[notificationController checkSensor: [theStoker idForSensor: i] andTemp: [theStoker tempForSensor: i]];
+	}
+	
+	[self updateUI];
+}
+
 // Sent when the HTTP/JSON connection has an error
+
 - (void) stoker: (Stoker *) stk httpError: (NSString *) theError
 {
 	NSLog(@"stoker:httpError: %@", theError);
 }
-
 
 // Sent when there is some status change worthy of display :)
 
@@ -420,16 +432,6 @@
 	else
 	{
 		[self setStatusText: @"Telnet connection inactive"];
-		
-		if (updateWaiting)
-		{
-			[updateInvocation invoke];
-		}
-		
-		if (exitWaiting)
-		{			
-			[[NSRunningApplication currentApplication] terminate];
-		}
 	}
 }
 
@@ -450,96 +452,6 @@
 	}
 }
 
-
-// Sent when the stoker has updated Sensor temp
-- (void) stoker: (Stoker *) stk updateSensorTemp: (NSNumber *) sensorTemp forSensor: (NSString *) sensorID
-{
-//	NSLog(@"stoker:updateSensorTemp: %@ forSensor %@", sensorTemp, sensorID);
-
-	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
-		
-	[[stokerData objectForKey: sensorID] setObject: sensorTemp forKey: @"temp"];
-
-	[[[stokerData objectForKey: sensorID] objectForKey: @"plotData"] addObject: [NSArray arrayWithObjects: currentTime, sensorTemp, nil]];	
-	
-	// Since we don't get target temperature updates from the Stoker, create them here as needed.
-	
-	NSString *targetID =       [NSString stringWithFormat: @"%@ Target", sensorID];
-	NSNumber *tempTarget =     [[stokerData objectForKey: targetID] objectForKey: @"target"];
-	NSMutableArray *plotData = [[stokerData objectForKey: targetID] objectForKey: @"plotData"];
-			
-	[plotData addObject: [NSArray arrayWithObjects: currentTime, tempTarget, nil]];
-		
-	// See if this new reading triggers any notifications
-	
-	[notificationController checkSensor: sensorID andTemp: sensorTemp];
-}
-
-// Sent when the stoker has updated Blower data
-- (void) stoker: (Stoker *) stk updateBlowerState: (Boolean) active forBlower: (NSString *) blowerID
-{
-//	NSLog(@"stoker:updateBlowerState: %@ forBlower %@", active ? @"ON" : @"OFF", blowerID);
-
-   	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
-	NSMutableDictionary *theBlower = [stokerData objectForKey: blowerID]; 
-	NSMutableArray	*blowerPlotData = [theBlower objectForKey:@"plotData"];
-							   
-//	[blowerPlotData addObject: [NSArray arrayWithObjects: currentTime, [NSNumber numberWithDouble: ((double) active * BLOWER_STEP)], nil]];
-	[blowerPlotData addObject: [NSArray arrayWithObjects: currentTime, [NSNumber numberWithInt: active], nil]];
-		
-	NSInteger activeCount = [[theBlower objectForKey: @"count"] intValue];
-
-	if (active)
-	{
-		activeCount++;
-		[theBlower setObject:[NSNumber numberWithInt: activeCount] forKey: @"count"];
-	}
-	
-	// recalculate and display the blower duty cycle info
-	
-	double totalCycleRatio = (double) activeCount / (double) [blowerPlotData count];
-	
-	[totalBlowerActivityField  setStringValue: [NSString stringWithFormat:@"%3.0f%%", totalCycleRatio * 100.0]];
-	
-	int onCount = 0, totalCount = 0;
-	NSArray *record;
-	
-	int index = [blowerPlotData count] - 1;
-	
-	double interval = (double) [[blowerActivityDurationPopup selectedItem] tag] * 60.0;		// in seconds 
-	double current = [[NSDate date] timeIntervalSinceReferenceDate];
-	
-	double earliest = current - interval;
-		
-	while (index >= 0) 
-	{
-		record = [blowerPlotData objectAtIndex: index];
-		
-		double timestamp = [[record objectAtIndex:0] doubleValue];
-		
-		if (timestamp < earliest)	// earlier than sample period
-			break;
-		
-		totalCount++;
-		
-		int blowerOn = [[record objectAtIndex:1] intValue];
-		
-		if (blowerOn != 0)
-			onCount++;
-				
-		index--;
-	}
-		
-	if (totalCount > 0)
-	{
-		[recentBlowerActivityField setStringValue: [NSString stringWithFormat:@"%3.0f%%", (((float) onCount / (float) totalCount) * 100.0)]];
-	}
-	else
-	{
-		[recentBlowerActivityField setStringValue: @"0%"];
-		
-	}
-}
 
 #pragma mark -
 #pragma mark Color Well Delegate Methods

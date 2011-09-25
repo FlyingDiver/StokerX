@@ -53,6 +53,7 @@
 		C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */ = {isa = PBXBuildFile; fileRef = C9D5550813FEDCBE0066BB27 /* Mail.app */; };
 		C9D5550B13FEDD4F0066BB27 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */; };
 		C9D7D85513FB4D8200E5BA00 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7D85413FB4D8200E5BA00 /* NotificationController.m */; };
+		C9E852E5142E55410030C87A /* StokerDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E852E4142E55410030C87A /* StokerDevice.m */; };
 		C9EAC342142A7C1B00CCA1EB /* StokerPlotController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EAC341142A7C1B00CCA1EB /* StokerPlotController.m */; };
 		C9EAC343142A841600CCA1EB /* MiniTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = C929300313F810C2007F685C /* MiniTwitter.m */; };
 		C9EB1D231226FF930067E58E /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D1A1226FF930067E58E /* NSObject+SBJSON.m */; };
@@ -176,6 +177,8 @@
 		C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		C9D7D85313FB4D8200E5BA00 /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NotificationController.h; path = Notifications/NotificationController.h; sourceTree = "<group>"; };
 		C9D7D85413FB4D8200E5BA00 /* NotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NotificationController.m; path = Notifications/NotificationController.m; sourceTree = "<group>"; };
+		C9E852E3142E55410030C87A /* StokerDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StokerDevice.h; path = Stoker/StokerDevice.h; sourceTree = "<group>"; };
+		C9E852E4142E55410030C87A /* StokerDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StokerDevice.m; path = Stoker/StokerDevice.m; sourceTree = "<group>"; };
 		C9EAC340142A7C1B00CCA1EB /* StokerPlotController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StokerPlotController.h; sourceTree = "<group>"; };
 		C9EAC341142A7C1B00CCA1EB /* StokerPlotController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StokerPlotController.m; sourceTree = "<group>"; };
 		C9EB1D181226FF930067E58E /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
@@ -384,6 +387,8 @@
 			children = (
 				C9EC2EE81278F6DA00289387 /* Stoker.h */,
 				C9EC2EE91278F6DA00289387 /* Stoker.m */,
+				C9E852E3142E55410030C87A /* StokerDevice.h */,
+				C9E852E4142E55410030C87A /* StokerDevice.m */,
 				C98491BB142A6CAF001CEF85 /* StokerBlower.h */,
 				C98491BC142A6CAF001CEF85 /* StokerBlower.m */,
 				C98491B8142A6C33001CEF85 /* StokerSensor.h */,
@@ -591,6 +596,7 @@
 				C98491BD142A6CAF001CEF85 /* StokerBlower.m in Sources */,
 				C9EAC342142A7C1B00CCA1EB /* StokerPlotController.m in Sources */,
 				C9EAC343142A841600CCA1EB /* MiniTwitter.m in Sources */,
+				C9E852E5142E55410030C87A /* StokerDevice.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

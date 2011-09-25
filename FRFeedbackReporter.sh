@@ -6,5 +6,6 @@
 #  Created by Joe Keenan on 8/30/11.
 #  Copyright 2011 Joseph P Keenan Jr. All rights reserved.
 # 
-cat ~/Library/Application\ Support/StokerX/PlotSetupData.plist
+#cat ~/Library/Application\ Support/StokerX/BlowerData.plist
+#cat ~/Library/Application\ Support/StokerX/SensorData.plist
 

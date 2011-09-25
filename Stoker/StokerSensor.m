@@ -7,28 +7,16 @@
 //
 
 #import "StokerSensor.h"
+#import "StokerBlower.h"
 
 @implementation StokerSensor
 
-@synthesize sensorName;
-@synthesize deviceID;
-@synthesize tempCurrent;
-@synthesize tempTarget;
-@synthesize blowerID;
-@synthesize control;
-@synthesize blower;
+@synthesize tempCurrent, tempTarget, control, blower;
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        // Initialization code here.
-    }
-    
-    return self;
-}
 - (NSString *) description
 {
-	return [NSString stringWithFormat: @"StokerSensor: name = %@, id = %@, tc = %@, ta = %@, blower = %@", sensorName, deviceID, tempCurrent, tempTarget, blowerID];
+	return [NSString stringWithFormat: @"StokerSensor: name = %@, id = %@, tc = %@, ta = %@, blower = %@, temp plot count = %ld", 
+			self.deviceName, self.deviceID, self.tempCurrent, self.tempTarget, self.blower.deviceID, [self.plotData count]];
 }
+
 @end

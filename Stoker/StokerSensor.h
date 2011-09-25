@@ -7,28 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "StokerDevice.h"
 
-@class StokerBlower;
-@interface StokerSensor : NSObject {
-	
-	NSString	* sensorName;
-	NSString	* deviceID;
-	NSString	* blowerID;	
-	NSNumber	* tempCurrent;
-	NSNumber	* tempTarget;
-	NSNumber	* tempHigh;
-	NSNumber	* tempLow;
-	Boolean		alarm;
-	Boolean		control;
-	StokerBlower *blower;
+@interface StokerSensor : StokerDevice {
 }
 
-@property (nonatomic, retain) 	NSString		* sensorName;
-@property (nonatomic, retain) 	NSString		* deviceID;
-@property (nonatomic, retain) 	NSNumber		* tempCurrent;
-@property (nonatomic, retain) 	NSNumber		* tempTarget;
-@property (nonatomic, retain) 	NSString		* blowerID;
+@property (nonatomic, retain) 	NSNumber		*tempCurrent;
+@property (nonatomic, retain) 	NSNumber		*tempTarget;
 @property (nonatomic, assign) 	Boolean	  		control;
-@property (nonatomic, retain)	StokerBlower 	* blower;
+@property (nonatomic, retain)	StokerDevice 	*blower;
 
 @end

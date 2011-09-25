@@ -26,9 +26,9 @@
 @property (nonatomic, assign) double				plotMinTemp;
 @property (nonatomic, assign) double				plotMaxTemp;
 @property (nonatomic, retain) Stoker				*stoker;
-@property (nonatomic, retain) NSMutableDictionary	*stokerData;
 
-- (void) plotSetup;
+- (void) setupGraph;
+- (void) setupPlots;
 - (void) updateGraphWithStartTime: (NSTimeInterval) start andElapsedTime: (NSTimeInterval) elapsed;
 
 @end

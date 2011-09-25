@@ -11,6 +11,6 @@
 
 @interface EmailSender: NSObject 
 
-- (void)sendEmailMessage:(id)sender;
+- (void)sendEmailMessage:(NSString *)message to: (NSString *) recipient;
 
 @end

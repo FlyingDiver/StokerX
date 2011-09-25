@@ -12,18 +12,20 @@ static NSMutableArray *_RuleList = nil;
 
 @implementation NotificationRule
 
-@synthesize sensorName, sensorID, value, lastNotified, enabled, test, action;
+@synthesize sensorID, value, lastNotified, enabled, test, action;
 
 + (NSMutableArray *) ruleList
 {
 	NSData *data;
 	NSKeyedUnarchiver *unarchiver;
-
+	id	restoreObject;
+	
 	if (_RuleList) 
 	{
 		return _RuleList;
 	}
 		
+	
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]];
 	NSString *saveFilePath = [supportDir stringByAppendingPathComponent: kSavedNotificationsFile];
@@ -34,28 +36,50 @@ static NSMutableArray *_RuleList = nil;
 	{						
 		data = [NSData dataWithContentsOfFile: saveFilePath];
 		unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData: data];
-		_RuleList = [unarchiver decodeObjectForKey:@"NotificationRuleList"];
+		restoreObject = [unarchiver decodeObjectForKey:@"NotificationRuleList"];
 		[unarchiver finishDecoding];
 		[unarchiver release];
-		if ([_RuleList count] > 0)
+		
+		if ([restoreObject isKindOfClass: [NSArray class]])
 		{
-			// make sure we don't crash because rules were removed.  Need to add a version to the saved rule list and do the fixups right
+			NSLog(@"NotificationRule Restoring Array object");
+			_RuleList = restoreObject;
 			
-			for (NotificationRule *rule in _RuleList)
+			if ([_RuleList count] > 0)
 			{
-				if (rule.test >= [[NotificationTest testList] count])
-					rule.test = 0;
+				// make sure we don't crash because rules were removed.  Need to add a version to the saved rule list and do the fixups right
 				
-				if (rule.action >= [[NotificationAction actionList] count])
-					rule.action = 0;
+				for (NotificationRule *rule in _RuleList)
+				{
+					if (rule.test >= [[NotificationTest testList] count])
+						rule.test = 0;
+					
+					if (rule.action >= [[NotificationAction actionList] count])
+						rule.action = 0;
+				}
+				
+				return _RuleList;
 			}
-
-			return _RuleList;
+			else
+				[_RuleList release];
 		}
-		else
-			[_RuleList release];
+		else if ([restoreObject isKindOfClass: [NSDictionary class]])
+		{			
+			// Might need to do fixups here if the version has changed
+			
+			if ([@"1.0" isEqualTo: [restoreObject objectForKey: @"version"]])
+			{
+				NSLog(@"NotificationRule Restoring Dictionary object, version = %@", [restoreObject objectForKey: @"version"]);
+
+				_RuleList = [restoreObject objectForKey: @"rules"];
+				return  _RuleList;
+			}
+			else
+				NSLog(@"NotificationRule unknown saved rules version");
+		}
 	}
 	
+	NSLog(@"NotificationRule creating new rules array");
 	_RuleList = [[NSMutableArray alloc] initWithCapacity: 10];
 
 	return _RuleList;
@@ -66,7 +90,11 @@ static NSMutableArray *_RuleList = nil;
 	NSMutableData *data;
 	NSKeyedArchiver *archiver;
 	BOOL result;
-		
+	
+	NSString *versionString = @"1.0";	// version of rules graph
+	
+	NSDictionary *saveDict = [NSDictionary dictionaryWithObjectsAndKeys: versionString, @"version", theRules, @"rules", nil];
+	
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: @"StokerX"];
 	
@@ -81,7 +109,7 @@ static NSMutableArray *_RuleList = nil;
 	
 	data = [NSMutableData data];
 	archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData: data];
-	[archiver encodeObject: theRules forKey:@"NotificationRuleList"];
+	[archiver encodeObject: saveDict forKey:@"NotificationRuleList"];
 	[archiver finishEncoding];
 	result = [data writeToFile: saveFilePath atomically:YES];
 	[archiver release];
@@ -93,11 +121,20 @@ static NSMutableArray *_RuleList = nil;
 - (id)init
 {
     self = [super init];
-    if (self) {
+    if (self) 
+	{
         // Initialization code here.
     }
     
     return self;
+}
+- (void)dealloc 
+{
+    [sensorID release];
+	[value release];
+	[lastNotified release];
+	
+    [super dealloc];
 }
 
 - (NSString *) description
@@ -108,12 +145,11 @@ static NSMutableArray *_RuleList = nil;
 					  
 					  
 	return [NSString stringWithFormat: @"NotificationRule Name = '%@', ID = %@, Enabled %@, Value = %@, Test = '%@', Action = '%@'",
-			self.sensorName, self.sensorID, enabledString, self.value, testString, actionString];
+			self.sensorID, enabledString, self.value, testString, actionString];
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder 
 {
-    [coder encodeObject: sensorName forKey: @"NRSensorName"];
     [coder encodeObject: sensorID   forKey: @"NRSensorID"];
     [coder encodeObject: value      forKey: @"NRValue"];
     [coder encodeBool: enabled      forKey: @"NREnabled"];
@@ -125,7 +161,6 @@ static NSMutableArray *_RuleList = nil;
 {
 	self = [super init];
 
-    sensorName	= [[coder decodeObjectForKey: @"NRSensorName"] retain];
     sensorID	= [[coder decodeObjectForKey: @"NRSensorID"] retain];
     value		= [[coder decodeObjectForKey: @"NRValue"] retain];
     enabled		= [coder decodeBoolForKey:    @"NREnabled"];

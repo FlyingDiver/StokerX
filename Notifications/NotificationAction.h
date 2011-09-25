@@ -22,7 +22,7 @@ typedef enum {
 
 - (id) initWithName: (NSString *) theName andAction: (ActionTypes) theAction;
 
-@property (nonatomic,retain) 	NSString	*name;
-@property (assign)				ActionTypes	action;
+@property (nonatomic,copy) 	NSString	*name;
+@property (assign)			ActionTypes	action;
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import <CoreServices/CoreServices.h>
-#import "PreferencesController.h"
 #import "EmailSender.h"
 #import "Mail.h"
 
@@ -20,11 +19,8 @@
     return nil;
 }
 
-- (void)sendEmailMessage: (NSString *) messageBody 
-{
-
-	NSString *emailAddress = [[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey];
-	
+- (void)sendEmailMessage:(NSString *) messageBody to: (NSString *) recipient;
+{	
 	MailApplication *mail = [SBApplication applicationWithBundleIdentifier:@"com.apple.Mail"];
     mail.delegate = (id) self;
 	
@@ -36,7 +32,7 @@
 				
 	[[mail outgoingMessages] addObject: emailMessage];
 
-	emailMessage.sender = emailAddress;
+	emailMessage.sender = recipient;
 	emailMessage.visible = NO;
     
     if ( [mail lastError] != nil )
@@ -47,7 +43,7 @@
 	
 	MailToRecipient *theRecipient = [[[mail classForScriptingClass:@"to recipient"] alloc] initWithProperties:
                                         [NSDictionary dictionaryWithObjectsAndKeys:
-                                            emailAddress, @"address",
+                                            recipient, @"address",
                                             nil]];
 	[emailMessage.toRecipients addObject: theRecipient];
     [theRecipient release];

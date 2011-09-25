@@ -9,13 +9,11 @@
 
 #import "NotificationController.h"
 #import "PreferencesController.h"
-#import "MiniTwitter.h"
 #import "EmailSender.h"
-#import "StokerXAppDelegate.h"
 
 @implementation NotificationController
 
-@synthesize ruleList, sensorList, sensorDict;
+@synthesize ruleList, sensorList, sensorDict, tweetController;
 
 #pragma mark -
 #pragma mark Constructor/Destructor Methods
@@ -114,11 +112,27 @@
 {				
 //	NSLog(@"NotificationsController addSensor: %@ name: %@ index: %ld", sensorID, sensorName, index);
 	
-	NSNumber *index = [NSNumber numberWithInt: [sensorList count]];
-	NSMutableDictionary *sensor = [NSMutableDictionary dictionaryWithObjectsAndKeys: sensorName, @"name", sensorID, @"id", index, @"index", nil];
+	NSMutableDictionary *oldSensor = [sensorDict objectForKey: sensorID];
 	
-	[sensorList addObject: sensor];
-	[sensorDict setObject: sensor forKey: sensorID];
+	if (oldSensor)		// already in list, so it's a name change
+	{
+		NSNumber *index = [oldSensor objectForKey: @"index"];
+
+		NSMutableArray *newSensor = [NSMutableDictionary dictionaryWithObjectsAndKeys: sensorName, @"name", sensorID, @"id", index , @"index", nil];
+
+		[sensorList replaceObjectAtIndex: [index intValue] withObject: newSensor];
+		[sensorDict setObject: newSensor forKey: sensorID];
+
+	}
+	else
+	{
+		NSNumber *index = [NSNumber numberWithInt: [sensorList count]];
+		
+		NSMutableArray *newSensor = [NSMutableDictionary dictionaryWithObjectsAndKeys: sensorName, @"name", sensorID, @"id", index, @"index", nil];
+
+		[sensorList addObject: newSensor];
+		[sensorDict setObject: newSensor forKey: sensorID];
+	}
 }
 
 - (NSString *) notificationsTextForSensor: (NSString *) sensorID
@@ -169,7 +183,7 @@
 						if ([sensorTemp compare: [rule value]] == NSOrderedAscending)
 						{
 							[self doNotification: rule withMessage: 
-							 [NSString stringWithFormat: @"StokerX Under Temperature Alarm (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [rule sensorName]]];
+								[NSString stringWithFormat: @"StokerX Under Temperature Alarm (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [[sensorDict objectForKey: rule.sensorID] objectForKey: @"name"]]];
 						}
 						break;
 						
@@ -177,7 +191,7 @@
 						if ([sensorTemp compare: [rule value]] == NSOrderedDescending)
 						{
 							[self doNotification: rule withMessage: 
-							 [NSString stringWithFormat: @"StokerX Over Temperature Alarm (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [rule sensorName]]];
+								[NSString stringWithFormat: @"StokerX Over Temperature Alarm (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [[sensorDict objectForKey: rule.sensorID] objectForKey: @"name"]]];
 						}
 						break;
 						
@@ -185,7 +199,7 @@
 						if ([sensorTemp compare: [rule value]] == NSOrderedDescending)
 						{
 							[self doNotification: rule withMessage: 
-							 [NSString stringWithFormat: @"StokerX Target Temperature (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [rule sensorName]]];
+								[NSString stringWithFormat: @"StokerX Target Temperature (%3.1f) for sensor \"%@\".", [sensorTemp floatValue], [[sensorDict objectForKey: rule.sensorID] objectForKey: @"name"]]];						
 						}
 						break;
 						
@@ -194,7 +208,7 @@
 						{
 							[self doNotification: rule withMessage: 
 									[NSString stringWithFormat: @"StokerX Periodic Notification for sensor \"%@\", current temperature is %3.1f.", 
-										[rule sensorName], [sensorTemp floatValue]]];
+										[[sensorDict objectForKey: rule.sensorID] objectForKey: @"name"], [sensorTemp floatValue]]];
 							[rule setLastNotified: [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]]];
 						}
 						break;
@@ -235,15 +249,16 @@
 		}
 			
 		case kEmailNotification:
-		{
-			EmailSender *emailSender = [[[EmailSender alloc] init] autorelease];
-			[emailSender sendEmailMessage: message];
+		{			
+			EmailSender *emailSender = [[EmailSender alloc] init];
+			[emailSender sendEmailMessage: message to: [[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey]];
+			[emailSender release];
 			break;
 		}
 			
 		case kTwitterNotification:
 		{
-			[[[NSApp delegate] tweetController] sendTweet: message];
+			[self.tweetController sendTweet: message];
 			
 			break;
 		}
@@ -265,13 +280,13 @@
 	// populate the pop-ups on the panel
 	
 	NotificationRule *theRule = [ruleList objectAtIndex: [ruleTable selectedRow]];
-	NSDictionary *sensor = [sensorDict objectForKey: [theRule sensorID]];
+	NSDictionary *sensor = [sensorDict objectForKey: theRule.sensorID];
 	NSInteger index = [[sensor objectForKey: @"index"] intValue];
 	
 	[sensorPopup selectItemAtIndex: index];
-	[testPopup selectItemAtIndex:   [theRule test]];
-	[actionPopup selectItemAtIndex: [theRule action]];
-	[valueTextField setStringValue: [[theRule value] stringValue]];
+	[testPopup selectItemAtIndex:   theRule.test];
+	[actionPopup selectItemAtIndex: theRule.action];
+	[valueTextField setStringValue: [theRule.value stringValue]];
 	
 	// show as a sheet
 	
@@ -358,12 +373,12 @@
 
 	NSMutableDictionary *sensor = [sensorList objectAtIndex: [[sensorPopup selectedItem] tag]];
 								   
-	[theRule setSensorID:   [sensor objectForKey: @"id"]];
-	[theRule setSensorName: [sensor objectForKey: @"name"]];
-	[theRule setTest:	[[testPopup selectedItem] tag]];
-	[theRule setAction: [[actionPopup selectedItem] tag]];
-	[theRule setValue:	[NSNumber numberWithDouble: [valueTextField doubleValue]]];
-	[theRule setLastNotified: [NSNumber numberWithDouble: 0.0]];					// reset last on any edit
+	theRule.sensorID		= [sensor objectForKey: @"id"];
+	theRule.test			= [[testPopup selectedItem] tag];
+	theRule.action			= [[actionPopup selectedItem] tag];
+	theRule.value			= [NSNumber numberWithDouble: [valueTextField doubleValue]];
+	theRule.lastNotified	= [NSNumber numberWithDouble: 0.0];	
+
 	NSLog(@"Notifications ruleEditDidEnd: new rule = %@", theRule);
 
 	[NotificationRule saveRules: ruleList];
@@ -372,30 +387,25 @@
 	[ruleTable reloadData];
 }
 
+// These don't actually need to do anything, because the selected item is queried when the sheet is dismissed
 
 - (IBAction) changeRuleSensor:(id)sender
 {	
-//	NSInteger tag = [[sender selectedItem] tag];
-//	NSLog(@"Notifications changeRuleSensor: new sensor = %@ (%ld)", [sensorList objectAtIndex: tag], tag);
+//	NSLog(@"Notifications changeRuleSensor: new sensor = %@ (%ld)", [sensorList objectAtIndex: [[sender selectedItem] tag]], [[sender selectedItem] tag]);
 	
 }
-
 - (IBAction) changeRuleTest:(id)sender
 {	
-//	NSInteger tag = [[sender selectedItem] tag];
-//	NSLog(@"Notifications changeRuleTest: new test = %@ (%ld)", [[NotificationTest testList] objectAtIndex: tag], tag);
+//	NSLog(@"Notifications changeRuleTest: new test = %@ (%ld)", [[NotificationTest testList] objectAtIndex: [[sender selectedItem] tag]], [[sender selectedItem] tag]);
 	
 }
-
 - (IBAction) changeRuleValue:(id)sender
 {
 //	NSLog(@"Notifications changeRuleValue: new value = %@", [sender stringValue]);
 }
-
 - (IBAction) changeRuleAction:(id)sender
 {
-//	NSInteger tag = [[sender selectedItem] tag];
-//	NSLog(@"Notifications changeRuleAction: new action = %@ (%ld)", [[NotificationAction actionList] objectAtIndex: tag], tag);
+//	NSLog(@"Notifications changeRuleAction: new action = %@ (%ld)", [[NotificationAction actionList] objectAtIndex: [[sender selectedItem] tag]], [[sender selectedItem] tag]);
 }
 
 #pragma mark -
@@ -415,23 +425,23 @@
 	
 	if ([[tableColumn identifier] isEqual: @"Enabled"])
 	{
-		return [NSNumber numberWithInt: [theRule enabled]];
+		return [NSNumber numberWithInt: theRule.enabled];
 	}
 	else if ([[tableColumn identifier] isEqual: @"Sensor"])
 	{
-		return [theRule sensorName];
+		return [[sensorDict objectForKey: theRule.sensorID] objectForKey: @"name"];
 	}
 	else if ([[tableColumn identifier] isEqual: @"Test"])
 	{
-		return [[[NotificationTest testList] objectAtIndex: [theRule test]]  name];
+		return [[[NotificationTest testList] objectAtIndex: theRule.test]  name];
 	}
 	else if ([[tableColumn identifier] isEqual: @"Value"])
 	{
-		return [theRule value];
+		return theRule.value;
 	}
 	else if ([[tableColumn identifier] isEqual: @"Action"])
 	{
-		return [[[NotificationAction actionList] objectAtIndex: [theRule action]] name];
+		return [[[NotificationAction actionList] objectAtIndex: theRule.action] name];
 	}
 	else
 		return nil;
@@ -439,8 +449,6 @@
 
 - (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {	
-//	NSLog(@"Notifications tableView: setObjectValue: %@ forTableColumn: %@ row: %ld", [anObject description], [tableColumn identifier], (long)  rowIndex);
-
 	NotificationRule *theRule = [ruleList objectAtIndex: rowIndex];
 
 	if ([[tableColumn identifier] isEqual: @"Enabled"])

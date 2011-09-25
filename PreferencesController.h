@@ -12,7 +12,7 @@
 extern NSString * const kStokeripAddressKey;
 extern NSString * const kMinGraphTempKey;
 extern NSString * const kMaxGraphTempKey;
-extern NSString * const kHTTPOnlyKey;
+extern NSString * const kHTTPOnlyModeKey;
 extern NSString * const kEmailAddressKey;
 extern NSString * const kLidOffEnabledKey;
 extern NSString * const kLidOffDropKey;
@@ -22,14 +22,14 @@ extern NSString * const kSendTweetsKey;
 @interface PreferencesController : NSWindowController
 {
 	IBOutlet NSTextField *ipAddress;
-	IBOutlet NSButton    *httpOnlyCheckBox;
+	IBOutlet NSButton    *httpOnlyModeCheckBox;
 	IBOutlet NSTextField *minGraphTemp;
 	IBOutlet NSTextField *maxGraphTemp;
 	IBOutlet NSTextField *emailAddress;
 }
 
 - (IBAction)changeStokeripAddressField:(id)sender;
-- (IBAction)changeHTTPOnly:(id)sender;
+- (IBAction)changeHTTPOnlyMode:(id)sender;
 - (IBAction)changeMinGraphTempField:(id)sender;
 - (IBAction)changeMaxGraphTempField:(id)sender;
 - (IBAction)changeEmailAddressField:(id)sender;
