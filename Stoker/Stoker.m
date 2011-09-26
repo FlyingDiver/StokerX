@@ -240,7 +240,7 @@
 		StokerSensor *theSensor = [sensorDict objectForKey: sensorKey]; 
 		if (theSensor.blower != nil)
 		{
-			blowerControlSensor = [sensorArray count];		// the index for the one being added is the current count
+			blowerControlSensor = theSensor.deviceID;	
 			[sensorArray addObject:theSensor];
 		}
 	}
@@ -597,15 +597,21 @@
 
 - (double) totalBlowerRatio
 {
-	StokerBlower *theBlower = [blowerArray objectAtIndex: blowerControlSensor];
+	StokerBlower *theBlower = [deviceDict objectForKey: blowerControlSensor];
+
+	if (!theBlower)
+		return 0.0;
 	
 	return ((double) theBlower.onCount / (double) [theBlower.plotData count]);
 }
 
 - (double) recentBlowerRatio: (NSInteger) minutes
 {
-	StokerBlower *theBlower = [blowerArray objectAtIndex: blowerControlSensor];
+	StokerBlower *theBlower = [deviceDict objectForKey: blowerControlSensor];
 	
+	if (!theBlower)
+		return 0.0;
+
 	int onCount = 0, totalCount = 0;
 	NSArray *record;
 	
@@ -686,6 +692,25 @@
 	 }];
 }
 
+- (void) setTarget: (NSNumber *) target forSensorID: (NSString *) sensorID
+{
+	StokerSensor *theSensor = [deviceDict objectForKey: sensorID];
+	theSensor.tempTarget = target;
+	
+	NSString *requestString =  [NSString stringWithFormat: @"http://%@/stoker.Post_Handler", ipAddress];
+	NSString *post = [NSString stringWithFormat:@"ta%@=%@", theSensor.deviceID, [self urlEncodeValue: [theSensor.tempTarget stringValue]]];
+	
+	GTMHTTPFetcher* jsonFetcher = [GTMHTTPFetcher fetcherWithRequest: [NSMutableURLRequest requestWithURL: [NSURL URLWithString: requestString]]];	
+	jsonFetcher.postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+	[jsonFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
+	 {
+		 if (error != nil) 
+		 {
+			 NSLog(@"Stoker setTarget:forSensorID: GTMHTTPFetcher error: %@", error);
+		 } 
+	 }];
+}
+
 - (NSString *) urlEncodeValue:(NSString *)str
 {
 	NSString *result = (NSString *) CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8);	
@@ -735,10 +760,8 @@
 			
 			// set the Stoker's target way down to keep the blower off, but don't reset the internal data so we can restore
 			
-			StokerSensor *theSensor = [sensorArray objectAtIndex: blowerControlSensor];
-
 			self.lastTempTarget = [theSensor tempTarget];
-			[self setTarget: [NSNumber numberWithFloat: 100.0] forSensor: blowerControlSensor];
+			[self setTarget: [NSNumber numberWithFloat: 100.0] forSensorID: blowerControlSensor];
 			theSensor.tempTarget = lastTempTarget;
 					
 		}		
@@ -757,7 +780,7 @@
 		
 		// restore the Stoker's temp target
 		
-		[self setTarget: lastTempTarget forSensor: blowerControlSensor];
+		[self setTarget: lastTempTarget forSensorID: blowerControlSensor];
 
 	}
 }

@@ -517,6 +517,7 @@
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */,
 				C9A3616813FCB87500D98912 /* Notifications.xib in Resources */,
+				C9849187142A4F1B001CEF85 /* GTMOAuthWindow.xib in Resources */,
 				C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */,
 				C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */,
 				C99B85C014002FB000E27494 /* Credits.rtf in Resources */,
@@ -525,7 +526,6 @@
 				C9C83DE51412B2C300AB8261 /* To-Do.rtf in Resources */,
 				C9B084971416B4B800F1C567 /* Help.rtf in Resources */,
 				C9B0849C1416BB8B00F1C567 /* Help.xib in Resources */,
-				C9849187142A4F1B001CEF85 /* GTMOAuthWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

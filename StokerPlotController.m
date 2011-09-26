@@ -48,7 +48,7 @@
     graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:CGRectZero];
 	CPTTheme *theme = [CPTTheme themeNamed:kCPTSlateTheme];
 	[graph applyTheme:theme];
-	graphView.hostedLayer = graph;
+	graphView.hostedGraph = graph;
 	
 	// add some padding
 	graph.paddingLeft = 10.0;
@@ -342,7 +342,6 @@
     NSString *tempString = [formatter stringFromNumber:temp];
 	
     // Now add the annotation to the plot area
-//    CPTTextLayer *textLayer = [[[CPTTextLayer alloc] initWithText:tempString style:hitAnnotationTextStyle] autorelease];
     CPTPlotSpaceAnnotation *annotation = [[[CPTPlotSpaceAnnotation alloc] initWithPlotSpace:tempGraphPlotSpace anchorPlotPoint:anchorPoint] autorelease];
     annotation.contentLayer = [[[CPTTextLayer alloc] initWithText:tempString style:hitAnnotationTextStyle] autorelease];
     annotation.displacement = CGPointMake(0.0f, 20.0f);

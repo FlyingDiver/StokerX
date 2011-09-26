@@ -13,7 +13,7 @@
 
 @interface StokerPlotController : NSObject <CPTPlotSpaceDelegate, CPTPlotDataSource>
 {
-    IBOutlet CPTLayerHostingView	*graphView;
+    IBOutlet CPTGraphHostingView	*graphView;
 	
 	CPTXYPlotSpace					*tempGraphPlotSpace; 
 	CPTXYPlotSpace					*blowerGraphPlotSpace; 

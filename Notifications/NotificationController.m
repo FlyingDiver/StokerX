@@ -56,28 +56,28 @@
 		
 	// Before we can display anything, we need to build the popups
 	
-	for (NSMutableDictionary *sensor in sensorList) 
+	for (NSMutableDictionary *theSensor in sensorList) 
 	{				
-		NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: [sensor objectForKey: @"name"] action: NULL keyEquivalent: @""];		
-		[newItem setTag: [[sensor objectForKey: @"index"] intValue]];
+		NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: [theSensor objectForKey: @"name"] action: NULL keyEquivalent: @""];		
+		[newItem setTag: [[theSensor objectForKey: @"index"] intValue]];
 		[newItem setTarget:self];
 		[[sensorPopup menu] addItem: newItem];
 		[newItem release];
 	}
 	
-	for (NotificationTest *test in [NotificationTest testList]) 
+	for (NotificationTest *theTest in [NotificationTest testList]) 
 	{		
-		NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: [test name] action: NULL keyEquivalent: @""];		
-		[newItem setTag: [test test]];
+		NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: theTest.name action: NULL keyEquivalent: @""];		
+		[newItem setTag: theTest.test];
 		[newItem setTarget:self];
 		[[testPopup menu] addItem: newItem];
 		[newItem release];
 	}
 
-	for (NotificationAction *action in [NotificationAction actionList]) 
+	for (NotificationAction *theAction in [NotificationAction actionList]) 
 	{		
-		NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: [action name] action: NULL keyEquivalent: @""];		
-		[newItem setTag: [action action]];
+		NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: theAction.name action: NULL keyEquivalent: @""];		
+		[newItem setTag: theAction.action];
 		[newItem setTarget:self];
 		[[actionPopup menu] addItem: newItem];
 		[newItem release];
@@ -98,7 +98,7 @@
 		}
 		if (!found)
 		{
-			[rule setEnabled: NO];		
+			rule.enabled = NO;
 		}		
 	}
 	
@@ -371,6 +371,9 @@
 		theRule = [(NotificationRule *) contextInfo retain]; 
 	}
 
+	NSInteger sensorNum = [[sensorPopup selectedItem] tag];
+	NSAssert1((sensorNum < [sensorList count]), @"SensorPopup tag out of range: %ld", sensorNum);
+	
 	NSMutableDictionary *sensor = [sensorList objectAtIndex: [[sensorPopup selectedItem] tag]];
 								   
 	theRule.sensorID		= [sensor objectForKey: @"id"];

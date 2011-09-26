@@ -28,12 +28,9 @@
 	IBOutlet NSPopUpButton			*blowerActivityDurationPopup;
 	IBOutlet NSTableView			*sensorTable;
 
-    IBOutlet NSWindow				*notificationsWindow;
 	IBOutlet NSMenuItem				*notificationListMenuItem;
-    IBOutlet CPTLayerHostingView	*graphView;
-	
+	IBOutlet NotificationController	*notificationController;	
 	IBOutlet HelpController			*helpController;
-	IBOutlet NotificationController	*notificationController;
 	IBOutlet StokerPlotController	*plotController;
 
 	Stoker							*theStoker;

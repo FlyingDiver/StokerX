@@ -46,7 +46,7 @@
 @property (nonatomic, retain) NSNumber			*lastTemp;					// last remembered temp for lid off detection
 @property (nonatomic, assign) Boolean			lidOffHold;
 
-@property (nonatomic, assign) NSInteger			blowerControlSensor;		// the sensor that controls the blower, for lid-off control
+@property (nonatomic, copy)   NSString			*blowerControlSensor;		// the sensor that controls the blower, for lid-off control
 @property (nonatomic, retain) NSNumber			*lastTempTarget;			// the temp to restore after lid-off
 @property (copy) void (^shutdownCompletionBlock)(void);
 @property (copy) void (^connectCompletionBlock)(void);
@@ -88,6 +88,7 @@
 
 - (void) setName:   (NSString *) name   forSensor: (int) sensorNo;
 - (void) setTarget: (NSNumber *) target forSensor: (int) sensorNo;
+- (void) setTarget: (NSNumber *) target forSensorID: (NSString *) sensorID;
 - (NSString *)urlEncodeValue:(NSString *)str;
 
 - (void) sendStatusUpdate: (NSString *) status;

@@ -1367,7 +1367,7 @@
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView"/>
-							<string key="NSClassName">CPTLayerHostingView</string>
+							<string key="NSClassName">CPTGraphHostingView</string>
 						</object>
 						<object class="NSTextField" id="161041701">
 							<reference key="NSNextResponder" ref="439893737"/>
@@ -3418,11 +3418,11 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
-					<string key="className">CPTLayerHostingView</string>
+					<string key="className">CPTGraphHostingView</string>
 					<string key="superclassName">NSView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/CPTLayerHostingView.h</string>
+						<string key="minorKey">./Classes/CPTGraphHostingView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3622,13 +3622,13 @@
 					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">graphView</string>
-						<string key="NS.object.0">CPTLayerHostingView</string>
+						<string key="NS.object.0">CPTGraphHostingView</string>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<string key="NS.key.0">graphView</string>
 						<object class="IBToOneOutletInfo" key="NS.object.0">
 							<string key="name">graphView</string>
-							<string key="candidateClassName">CPTLayerHostingView</string>
+							<string key="candidateClassName">CPTGraphHostingView</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -3681,7 +3681,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="blowerActivityDurationPopup">NSPopUpButton</string>
 						<string key="elapsedTimeField">NSTextField</string>
-						<string key="graphView">CPTLayerHostingView</string>
+						<string key="graphView">CPTGraphHostingView</string>
 						<string key="helpController">HelpController</string>
 						<string key="mainWindow">NSWindow</string>
 						<string key="notificationController">NotificationController</string>
@@ -3706,7 +3706,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="graphView">
 							<string key="name">graphView</string>
-							<string key="candidateClassName">CPTLayerHostingView</string>
+							<string key="candidateClassName">CPTGraphHostingView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="helpController">
 							<string key="name">helpController</string>

@@ -52,7 +52,7 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notes
 {	
-	[self setStatusText: @"Starting StokerX"];
+	[self setStatusText: [NSString stringWithFormat: @"Starting StokerX %@", [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleShortVersionString"]]];
 
 //	Enabling this causes Fetcher logs to be written to the desktop!
 //	[GTMHTTPFetcher setLoggingEnabled:YES];
@@ -481,7 +481,7 @@
 	return;
 }
 
--(NSColor *)colorCell:(LVColorWellCell *)colorCell 	colorForRow:(int)row
+-(NSColor *)colorCell:(LVColorWellCell *)colorCell colorForRow:(int)row
 {
 	NSColor *nsColor;
 	CPTColor *cpColor;

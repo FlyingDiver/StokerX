@@ -47,7 +47,7 @@ static NSMutableArray *_RuleList = nil;
 			
 			if ([_RuleList count] > 0)
 			{
-				// make sure we don't crash because rules were removed.  Need to add a version to the saved rule list and do the fixups right
+				// make sure we don't crash because rules were removed.
 				
 				for (NotificationRule *rule in _RuleList)
 				{
@@ -144,7 +144,7 @@ static NSMutableArray *_RuleList = nil;
 	NSString *actionString = [[[NotificationAction actionList] objectAtIndex: self.action] name];
 					  
 					  
-	return [NSString stringWithFormat: @"NotificationRule Name = '%@', ID = %@, Enabled %@, Value = %@, Test = '%@', Action = '%@'",
+	return [NSString stringWithFormat: @"NotificationRule ID = %@, Enabled %@, Value = %@, Test = '%@', Action = '%@'",
 			self.sensorID, enabledString, self.value, testString, actionString];
 }
 
