@@ -597,7 +597,7 @@
 
 - (double) totalBlowerRatio
 {
-	StokerBlower *theBlower = [deviceDict objectForKey: blowerControlSensor];
+	StokerBlower *theBlower = (StokerBlower *) [[deviceDict objectForKey: blowerControlSensor] blower];
 
 	if (!theBlower)
 		return 0.0;
@@ -607,7 +607,7 @@
 
 - (double) recentBlowerRatio: (NSInteger) minutes
 {
-	StokerBlower *theBlower = [deviceDict objectForKey: blowerControlSensor];
+	StokerBlower *theBlower = (StokerBlower *) [[deviceDict objectForKey: blowerControlSensor] blower];
 	
 	if (!theBlower)
 		return 0.0;

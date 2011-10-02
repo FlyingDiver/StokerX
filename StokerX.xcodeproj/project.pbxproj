@@ -24,6 +24,7 @@
 		C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94BED88140B293D00CA06F8 /* SystemConfiguration.framework */; };
 		C9503CE213FED6F8008B794F /* EmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C9503CE113FED6F8008B794F /* EmailSender.m */; };
 		C967349013E46DD70042841B /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C967348F13E46DD70042841B /* PreferencesController.m */; };
+		C977AE8314389F83005E0138 /* ReadMe.html in Resources */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
 		C9849182142A4F1B001CEF85 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849176142A4F1B001CEF85 /* GTMHTTPFetcher.m */; };
 		C9849183142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849178142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m */; };
 		C9849184142A4F1B001CEF85 /* GTMHTTPFetchHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = C984917A142A4F1B001CEF85 /* GTMHTTPFetchHistory.m */; };
@@ -523,6 +524,7 @@
 				C99B85C014002FB000E27494 /* Credits.rtf in Resources */,
 				C946B0F7140B35AD00EA46D6 /* StokerX.icns in Resources */,
 				C9AF1F18140D2DC2002AEEFE /* FRFeedbackReporter.sh in Resources */,
+				C977AE8314389F83005E0138 /* ReadMe.html in Resources */,
 				C9C83DE51412B2C300AB8261 /* To-Do.rtf in Resources */,
 				C9B084971416B4B800F1C567 /* Help.rtf in Resources */,
 				C9B0849C1416BB8B00F1C567 /* Help.xib in Resources */,
