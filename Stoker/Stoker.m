@@ -641,7 +641,7 @@
 	
 	if (totalCount > 0)
 	{
-		return ((float) onCount / (float) totalCount * 100.0);
+		return ((float) onCount / (float) totalCount);
 	}
 	else
 	{

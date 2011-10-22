@@ -78,11 +78,6 @@
 											   options: NSKeyValueObservingOptionNew
 											   context: NULL];
 	
-	[[NSUserDefaults standardUserDefaults] addObserver: self
-											forKeyPath: kEmailAddressKey
-											   options: NSKeyValueObservingOptionNew
-											   context: NULL];
-	
 	// get a Stoker object
 	
 	theStoker = [[Stoker alloc] init];
@@ -159,7 +154,7 @@
 
 		NSInteger seconds = fmod(elapsedTime , 60);	
 		NSInteger minutes = fmod(elapsedTime / 60, 60);
-		NSInteger hours =   elapsedTime /60 / 60;
+		NSInteger hours =   elapsedTime / 60 / 60;
 		NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
 		[elapsedTimeField setStringValue: elapsedTimeString];
 		
@@ -181,6 +176,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {	
+	NSLog(@"StokerXAppDelegate - observeValueForKeyPath: %@ change: %@", keyPath, [change objectForKey:NSKeyValueChangeNewKey]);
 	if ([keyPath isEqualTo: kStokeripAddressKey])
 	{
 		theStoker.ipAddress = [change objectForKey:NSKeyValueChangeNewKey];
@@ -194,9 +190,6 @@
 	{
 		plotController.plotMinTemp = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
 		[self updateUI];
-	}
-	else if ([keyPath isEqualTo: kEmailAddressKey])
-	{
 	}
 }
 

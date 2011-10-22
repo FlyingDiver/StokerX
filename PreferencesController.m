@@ -10,7 +10,7 @@
 #import "PreferencesController.h"
 
 NSString * const kStokeripAddressKey = @"StokeripAddress";
-NSString * const kHTTPOnlyModeKey    = @"kHTTPOnlyMode";
+NSString * const kHTTPOnlyModeKey    = @"HTTPOnlyMode";
 NSString * const kMinGraphTempKey    = @"MinGraphTemp";
 NSString * const kMaxGraphTempKey    = @"MaxGraphTemp";
 NSString * const kEmailAddressKey    = @"EmailAddress";
@@ -35,16 +35,19 @@ NSString * const kSendTweetsKey      = @"SendTweets";
 
 - (IBAction)changeStokeripAddressField:(id)sender
 {
+	NSLog(@"PreferencesController - saving StokeripAddress: %@", [ipAddress stringValue]);
 	[[NSUserDefaults standardUserDefaults] setObject:[ipAddress stringValue] forKey: kStokeripAddressKey];
 }
 
 - (IBAction)changeHTTPOnlyMode:(id)sender
 {
+	NSLog(@"PreferencesController - saving HTTPOnlyMode: %@", [httpOnlyModeCheckBox state] ? @"Yes" : @"No");
 	[[NSUserDefaults standardUserDefaults] setBool:[httpOnlyModeCheckBox state] forKey: kHTTPOnlyModeKey];
 }
 
 - (IBAction)changeMinGraphTempField:(id)sender
 { 
+	NSLog(@"PreferencesController - saving MinGraphTemp: %@", [minGraphTemp stringValue]);
     if ([minGraphTemp doubleValue] < MIN_TEMP_AXIS)
     {
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f", MIN_TEMP_AXIS] forKey: kMinGraphTempKey];
@@ -57,6 +60,7 @@ NSString * const kSendTweetsKey      = @"SendTweets";
 
 - (IBAction)changeMaxGraphTempField:(id)sender
 {    
+	NSLog(@"PreferencesController - saving MaxGraphTemp: %@", [maxGraphTemp stringValue]);
     if ([maxGraphTemp doubleValue] > MAX_TEMP_AXIS)
     {
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f", MAX_TEMP_AXIS] forKey: kMaxGraphTempKey];
@@ -69,6 +73,7 @@ NSString * const kSendTweetsKey      = @"SendTweets";
 
 - (IBAction)changeEmailAddressField:(id)sender
 {
+	NSLog(@"PreferencesController - saving EmailAddress: %@", [emailAddress stringValue]);
 	[[NSUserDefaults standardUserDefaults] setObject:[emailAddress stringValue] forKey: kEmailAddressKey];
 }
 
