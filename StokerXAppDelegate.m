@@ -358,8 +358,11 @@
 {	
 	if ([[tableColumn identifier] isEqual: @"SensorName"])
 	{
+		NSString *sensorID = [theStoker idForSensor: rowIndex];
+		
 		[theStoker setName: newValue forSensor: rowIndex];
-		[notificationController addSensor: [theStoker idForSensor: rowIndex] name:[theStoker nameForSensor: rowIndex]];
+		[notificationController addSensor: sensorID name: newValue];
+		[[plotController.graph plotWithIdentifier: sensorID] setTitle: newValue];
 	}
 	else if ([[tableColumn identifier] isEqual: @"TargetTemp"])
 	{
@@ -451,7 +454,7 @@
 
 -(void)colorCell:(LVColorWellCell *)colorCell setColor:(NSColor *)nsColor forRow:(int)row
 {
-	CPTColor *cpColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(nsColor)];
+	CPTColor *cpColor = [CPTColor colorWithCGColor: CPTCreateCGColorFromNSColor(nsColor)];
 	
 	NSString *rowID = [theStoker idForSensor: row];
 		

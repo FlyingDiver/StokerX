@@ -11,7 +11,7 @@
 #import "Stoker.h"
 #import "nsColorSupport.h"
 
-@interface StokerPlotController : NSObject <CPTPlotSpaceDelegate, CPTPlotDataSource>
+@interface StokerPlotController : NSObject <CPTPlotSpaceDelegate, CPTPlotDataSource, CPTAxisDelegate>
 {
     IBOutlet CPTGraphHostingView	*graphView;
 	
@@ -30,5 +30,9 @@
 - (void) setupGraph;
 - (void) setupPlots;
 - (void) updateGraphWithStartTime: (NSTimeInterval) start andElapsedTime: (NSTimeInterval) elapsed;
+
+// PDF / image export
+-(IBAction) exportToPDF:(id)sender;
+-(IBAction) exportToPNG:(id)sender;
 
 @end

@@ -57,7 +57,7 @@
 	graph.paddingBottom = 10.0;
 	
 	graph.plotAreaFrame.paddingTop = 20.0;
-	graph.plotAreaFrame.paddingBottom = 50.0;
+	graph.plotAreaFrame.paddingBottom = 70.0;
 	graph.plotAreaFrame.paddingLeft = 50.0;
 	graph.plotAreaFrame.paddingRight = 20.0;
 	graph.plotAreaFrame.cornerRadius = 10.0;
@@ -72,7 +72,7 @@
     tempGraphPlotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
 	tempGraphPlotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(startTime) length:CPTDecimalFromDouble(plotRange)];
     tempGraphPlotSpace.yRange = [CPTPlotRange plotRangeWithLocation: CPTDecimalFromDouble(adjustedStart) length: CPTDecimalFromDouble(adjustedRange)];
-  	tempGraphPlotSpace.identifier = @"Sensor Plot Space";
+  	tempGraphPlotSpace.identifier = @"SensorPlotSpace";
 	tempGraphPlotSpace.allowsUserInteraction = YES;
     tempGraphPlotSpace.delegate = self;
 	
@@ -103,6 +103,7 @@
 	timeAxis.majorTickLength = 7.0f;
 	timeAxis.labelOffset = 3.0f;
 	timeAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(adjustedStart);
+	timeAxis.delegate = self;
 	
     tempAxis.majorIntervalLength = CPTDecimalFromDouble(50.0);;
 	tempAxis.minorTicksPerInterval = 0;
@@ -111,6 +112,7 @@
 	tempAxis.majorTickLength = 0.0f;
 	tempAxis.labelOffset = 3.0f;
 	tempAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(startTime);
+	tempAxis.delegate = self;
 	
 	NSArray *exclusionRanges  = [NSArray arrayWithObjects:
 								 [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(-50.0) length:CPTDecimalFromDouble(adjustedStart)],
@@ -119,7 +121,7 @@
 	
 	// Add plotSpace for the blower data
     blowerGraphPlotSpace = [[CPTXYPlotSpace alloc] init];
-	blowerGraphPlotSpace.identifier = @"Blower Plot Space";
+	blowerGraphPlotSpace.identifier = @"BlowerPlotSpace";
 	blowerGraphPlotSpace.xRange = [CPTPlotRange plotRangeWithLocation: CPTDecimalFromDouble(startTime) length: CPTDecimalFromDouble(plotRange)];
     blowerGraphPlotSpace.yRange = [CPTPlotRange plotRangeWithLocation: CPTDecimalFromInt(0) length: CPTDecimalFromInt(20)];
 	[graph addPlotSpace: blowerGraphPlotSpace];
@@ -137,11 +139,13 @@
     int sensorCount = 0;
     NSArray *sensorColors =  [NSArray arrayWithObjects: [NSColor redColor], [NSColor blueColor], [NSColor greenColor], [NSColor cyanColor], nil];
     NSColor *plotColor = nil;
+	NSMutableArray *legendArray = [NSMutableArray arrayWithCapacity: 10];
 		
     for (int i = 0; i < [stoker numberOfBlowers]; i++)
     {        		
         linePlot = [[[CPTScatterPlot alloc] init] autorelease];
         linePlot.identifier = [stoker idForBlower: i];
+		linePlot.title = [stoker nameForBlower: i];
         linePlot.interpolation = CPTScatterPlotInterpolationStepped;
         linePlot.dataSource = self;
         
@@ -168,17 +172,19 @@
         // Create a plot for the sensor data
         linePlot = [[[CPTScatterPlot alloc] init] autorelease];
         linePlot.identifier = [stoker idForSensor: i];
+        linePlot.title = [stoker nameForSensor: i];
         linePlot.dataSource = self;			
 		linePlot.delegate = self;								// only add delegate and HitDetection for plots we want the user to be able to click on
 		linePlot.plotSymbolMarginForHitDetection = 5.0f;
         
         lineStyle = [CPTMutableLineStyle lineStyle];
         lineStyle.lineWidth = 1.5f;
-        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(plotColor)];
+        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTCreateCGColorFromNSColor(plotColor)];
         linePlot.dataLineStyle = lineStyle;
         
 		[graph addPlot:linePlot toPlotSpace:tempGraphPlotSpace];
-        
+ 		[legendArray addObject: linePlot];
+       
         // Create a plot for the sensor target
         linePlot = [[[CPTScatterPlot alloc] init] autorelease];
         linePlot.identifier = [NSString stringWithFormat:@"%@ Target", [stoker idForSensor: i]];
@@ -187,12 +193,26 @@
         
         lineStyle = [CPTMutableLineStyle lineStyle];
         lineStyle.lineWidth = 2.0f;
-        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTNewCGColorFromNSColor(plotColor)];
+        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTCreateCGColorFromNSColor(plotColor)];
         lineStyle.dashPattern = [NSArray arrayWithObjects:[NSNumber numberWithFloat:5.0f], [NSNumber numberWithFloat:5.0f], nil];
         linePlot.dataLineStyle = lineStyle;
 		
 		[graph addPlot:linePlot toPlotSpace:tempGraphPlotSpace];
     }
+
+	// Add legend
+	graph.legend = [CPTLegend legendWithPlots: legendArray];
+
+	lineStyle = [CPTMutableLineStyle lineStyle];
+	lineStyle.lineWidth = 0.0f;
+	graph.legend.borderLineStyle = lineStyle;
+
+	CPTXYAxisSet *axisSet = (CPTXYAxisSet *)graph.axisSet;
+	graph.legend.textStyle = axisSet.xAxis.titleTextStyle;
+	graph.legend.numberOfRows = 1;
+	graph.legend.swatchSize = CGSizeMake(25.0, 25.0);
+	graph.legendAnchor = CPTRectAnchorBottom;
+	graph.legendDisplacement = CGPointMake(0.0, 15.0);
 }
 
 // Called via timer to update the UI
@@ -320,7 +340,7 @@
 }
 
 #pragma mark -
-#pragma mark Plot delegate method
+#pragma mark Scatter Plot delegate method
 
 -(void)scatterPlot:(CPTScatterPlot *)plot plotSymbolWasSelectedAtRecordIndex:(NSUInteger)index
 {   							   
@@ -361,6 +381,149 @@
 	CPTPlotSpaceAnnotation *annotation = [theTimer userInfo];
 
 	[graph.plotAreaFrame.plotArea removeAnnotation: annotation];
+}
+
+#pragma mark -
+#pragma mark Plot Space delegate methods
+
+- (BOOL) plotSpace:(CPTPlotSpace*)space shouldScaleBy:(CGFloat)interactionScale aboutPoint:(CGPoint)interactionPoint
+{
+	NSLog(@"StokerPlotController - plotSpace: %@ shouldScaleBy: %f aboutPoint: %f,%f", 
+		  space.identifier, (double) interactionScale, (double) interactionPoint.x, (double) interactionPoint.y);
+	
+	return YES;
+}
+
+-(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceDownEvent:(id)event atPoint:(CGPoint)point
+{
+/*	NSEvent *theEvent = (NSEvent *) event;
+	
+	if (theEvent.modifierFlags & NSShiftKeyMask)
+		NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent:atPoint:, NSShiftKeyMask", space.identifier);
+	if (theEvent.modifierFlags & NSControlKeyMask)
+		NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent:atPoint:, NSControlKeyMask", space.identifier);
+	if (theEvent.modifierFlags & NSAlternateKeyMask)
+		NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent:atPoint:, NSAlternateKeyMask", space.identifier);
+	if (theEvent.modifierFlags & NSCommandKeyMask)
+		NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent:atPoint:, NSCommandKeyMask", space.identifier);
+*/
+	return YES;
+}
+
+-(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceDraggedEvent:(id)event atPoint:(CGPoint)point
+{
+//	NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDraggedEvent: atPoint: %f,%f", space.identifier, (double) point.x, (double) point.y);
+	
+	return YES;
+}
+
+-(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceCancelledEvent:(id)event
+{
+//	NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceCancelledEvent:", space.identifier);
+	
+	return YES;
+}
+
+-(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceUpEvent:(id)event atPoint:(CGPoint)point
+{
+//	NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceUpEvent: atPoint: %f,%f", space.identifier, (double) point.x, (double) point.y);
+	
+	return YES;
+}
+
+-(CGPoint)plotSpace:(CPTPlotSpace *)space willDisplaceBy:(CGPoint)proposedDisplacementVector
+{
+	NSLog(@"StokerPlotController - plotSpace: %@ willDisplaceBy: %f,%f", 
+		  space.identifier, (double) proposedDisplacementVector.x, (double) proposedDisplacementVector.y);
+	
+	CGPoint newVector;
+	newVector.x = proposedDisplacementVector.x;
+	newVector.y = 0.0;
+	return newVector;
+}
+
+-(CPTPlotRange *)plotSpace:(CPTPlotSpace *)space willChangePlotRangeTo:(CPTPlotRange *)newRange forCoordinate:(CPTCoordinate)coordinate
+{
+	NSLog(@"StokerPlotController - plotSpace: %@ willChangePlotRangeTo: %@ forCoordinate: %d", 
+		  space.identifier, [newRange description], (int) coordinate);
+	
+	return newRange;
+}
+
+
+-(void)plotSpace:(CPTPlotSpace *)space didChangePlotRangeForCoordinate:(CPTCoordinate)coordinate
+{
+//	NSLog(@"StokerPlotController - plotSpace: %@ didChangePlotRangeForCoordinate: %d", space.identifier, (int) coordinate);
+}
+
+/*
+#pragma mark -
+#pragma mark Axis delegate methods
+
+-(BOOL)axisShouldRelabel:(CPTAxis *)axis
+{
+	NSLog(@"StokerPlotController - axisShouldRelabel: %@", axis.title);
+	
+	return  YES;
+}
+
+-(void)axisDidRelabel:(CPTAxis *)axis
+{
+	NSLog(@"StokerPlotController - axisDidRelabel: %@", axis.title);
+}
+
+-(BOOL)axis:(CPTAxis *)axis shouldUpdateAxisLabelsAtLocations:(NSSet *)locations
+{
+	NSLog(@"StokerPlotController - axis: %@ shouldUpdateAxisLabelsAtLocations: %@", axis.title, locations);
+
+	return YES;
+}
+*/
+
+#pragma mark -
+#pragma mark PDF / image export
+
+-(IBAction)exportToPDF:(id)sender
+{
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setDateFormat:@"yyyy-MM-dd"];
+	NSString *formattedDateString = [dateFormatter stringFromDate: [NSDate date]];
+		
+	NSSavePanel *pdfSavingDialog = [NSSavePanel savePanel];
+	[pdfSavingDialog setAllowedFileTypes: [NSArray arrayWithObject:@"pdf"]];
+	[pdfSavingDialog setNameFieldStringValue: [NSString stringWithFormat: @"StokerX %@", formattedDateString]];
+	
+	[pdfSavingDialog beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result==NSFileHandlingPanelOKButton)
+		 {
+			 NSData *dataForPDF = [graph dataForPDFRepresentationOfLayer];
+			 [dataForPDF writeToURL: pdfSavingDialog.URL atomically:NO];
+		 }		 
+	 }];
+}
+
+-(IBAction)exportToPNG:(id)sender
+{
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setDateFormat:@"yyyy-MM-dd"];
+	NSString *formattedDateString = [dateFormatter stringFromDate: [NSDate date]];
+	
+	NSSavePanel *pngSavingDialog = [NSSavePanel savePanel];
+	[pngSavingDialog setAllowedFileTypes: [NSArray arrayWithObject:@"png"]];
+	[pngSavingDialog setNameFieldStringValue: [NSString stringWithFormat: @"StokerX %@", formattedDateString]];
+	
+	[pngSavingDialog beginWithCompletionHandler:^(NSInteger result)
+	{
+		 if (result==NSFileHandlingPanelOKButton)
+		 {
+			 NSImage *image = [graph imageOfLayer];
+			 NSData *tiffData = [image TIFFRepresentation];
+			 NSBitmapImageRep *tiffRep = [NSBitmapImageRep imageRepWithData:tiffData];
+			 NSData *pngData = [tiffRep representationUsingType:NSPNGFileType properties:nil];
+			 [pngData writeToURL: pngSavingDialog.URL atomically:NO];
+		 }		 
+	 }];
 }
 
 @end
