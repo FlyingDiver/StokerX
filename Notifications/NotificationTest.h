@@ -17,6 +17,8 @@ typedef enum {
 
 @interface NotificationTest : NSObject
 {
+	NSString	*name;
+	TestTypes	test;
 }
 
 + (NSArray *) testList;

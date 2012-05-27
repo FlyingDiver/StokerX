@@ -22,6 +22,10 @@
 {	
 	IBOutlet NSMenuItem	*authorizeTwitterMenuItem;
 	IBOutlet NSMenuItem	*enableTwitterMenuItem;
+
+	GTMOAuthAuthentication *myAuth;
+	NSString *twitterHandle;
+	NSString *twitterUserName;
 }
 
 - (IBAction) signInOutClicked: (id) sender;

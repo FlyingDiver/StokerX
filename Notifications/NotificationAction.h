@@ -16,6 +16,8 @@ typedef enum {
 
 @interface NotificationAction : NSObject
 {
+	NSString	*name;
+	ActionTypes	action;
 }
 
 + (NSArray *) actionList;

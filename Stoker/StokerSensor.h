@@ -9,7 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "StokerDevice.h"
 
-@interface StokerSensor : StokerDevice {
+@interface StokerSensor : StokerDevice 
+{
+	NSNumber		*tempCurrent;
+	NSNumber		*tempTarget;
+	Boolean	  		control;
+	StokerDevice 	*blower;
 }
 
 @property (nonatomic, retain) 	NSNumber		*tempCurrent;

@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface StokerDevice : NSObject
+{
+	NSString		*deviceName;
+	NSString		*deviceID;
+	NSMutableArray 	*plotData;
+}
 
 @property (nonatomic, copy)   NSString			*deviceName;
 @property (nonatomic, copy)   NSString			*deviceID;

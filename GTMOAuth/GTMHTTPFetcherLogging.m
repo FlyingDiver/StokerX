@@ -45,7 +45,7 @@
 - (id)objectWithString:(NSString*)jsonrep error:(NSError**)error;
 @end
 
-@interface GTMHTTPFetcher ()
+@interface GTMHTTPFetcher (GTMHTTPFetcherLoggingUtilities)
 + (NSString *)headersStringForDictionary:(NSDictionary *)dict;
 
 - (void)inputStream:(GTMReadMonitorInputStream *)stream
@@ -59,9 +59,9 @@
 + (BOOL)createSymbolicLinkAtPath:(NSString *)newPath
              withDestinationPath:(NSString *)targetPath;
 
-+ (NSString *)snipSubtringOfString:(NSString *)originalStr
-                betweenStartString:(NSString *)startStr
-                         endString:(NSString *)endStr;
++ (NSString *)snipSubstringOfString:(NSString *)originalStr
+                 betweenStartString:(NSString *)startStr
+                          endString:(NSString *)endStr;
 
 + (id)JSONObjectWithData:(NSData *)data;
 + (id)stringWithJSONObject:(id)obj;
@@ -269,7 +269,9 @@ static NSString* gLoggingProcessName = nil;
   // if logging is enabled, it needs a buffer to accumulate data from any
   // NSInputStream used for uploading.  Logging will wrap the input
   // stream with a stream that lets us keep a copy the data being read.
-  if ([GTMHTTPFetcher isLoggingEnabled] && postStream_ != nil) {
+  if ([GTMHTTPFetcher isLoggingEnabled]
+      && loggedStreamData_ == nil
+      && postStream_ != nil) {
     loggedStreamData_ = [[NSMutableData alloc] init];
 
     BOOL didCapture = [self logCapturePostStream];
@@ -393,8 +395,23 @@ static NSString* gLoggingProcessName = nil;
   NSString *dirName = [NSString stringWithFormat:@"%@_log_%@",
                        processName, dateStamp];
   NSString *logDirectory = [parentDir stringByAppendingPathComponent:dirName];
-  if (gIsLoggingToFile && ![[self class] makeDirectoryUpToPath:logDirectory]) return;
 
+  if (gIsLoggingToFile) {
+    // be sure that the first time this app runs, it's not writing to
+    // a preexisting folder
+    static BOOL shouldReuseFolder = NO;
+    if (!shouldReuseFolder) {
+      shouldReuseFolder = YES;
+      NSString *origLogDir = logDirectory;
+      for (int ctr = 2; ctr < 20; ctr++) {
+        if (![[self class] fileOrDirExistsAtPath:logDirectory]) break;
+
+        // append a digit
+        logDirectory = [origLogDir stringByAppendingFormat:@"_%d", ctr];
+      }
+    }
+    if (![[self class] makeDirectoryUpToPath:logDirectory]) return;
+  }
   // each response's NSData goes into its own xml or txt file, though all
   // responses for this run of the app share a main html file.  This
   // counter tracks all fetch responses for this run of the app.
@@ -405,7 +422,7 @@ static NSString* gLoggingProcessName = nil;
   int responseCounter = ++zResponseCounter;
 
   // file name for an image data file
-  NSString *responseImageFileName = nil;
+  NSString *responseDataFileName = nil;
   NSUInteger responseDataLength;
   if (downloadFileHandle_) {
     responseDataLength = (NSUInteger) [downloadFileHandle_ offsetInFile];
@@ -422,6 +439,10 @@ static NSString* gLoggingProcessName = nil;
 
   // if there's response data, decide what kind of file to put it in based
   // on the first bytes of the file or on the mime type supplied by the server
+  NSString *responseMIMEType = [response MIMEType];
+  BOOL isResponseImage = NO;
+  NSData *dataToWrite = nil;
+
   if (responseDataLength > 0) {
     NSString *responseDataExtn = nil;
 
@@ -435,29 +456,40 @@ static NSString* gLoggingProcessName = nil;
                                                JSON:&responseJSON];
     if (responseDataStr) {
       // we were able to make a UTF-8 string from the response data
-    } else if ([[response MIMEType] isEqual:@"image/jpeg"]) {
+      if ([responseMIMEType isEqual:@"application/atom+xml"]
+          || [responseMIMEType hasSuffix:@"/xml"]) {
+        responseDataExtn = @"xml";
+        dataToWrite = [responseDataStr dataUsingEncoding:NSUTF8StringEncoding];
+      }
+    } else if ([responseMIMEType isEqual:@"image/jpeg"]) {
       responseDataExtn = @"jpg";
-    } else if ([[response MIMEType] isEqual:@"image/gif"]) {
+      dataToWrite = downloadedData_;
+      isResponseImage = YES;
+    } else if ([responseMIMEType isEqual:@"image/gif"]) {
       responseDataExtn = @"gif";
-    } else if ([[response MIMEType] isEqual:@"image/png"]) {
+      dataToWrite = downloadedData_;
+      isResponseImage = YES;
+    } else if ([responseMIMEType isEqual:@"image/png"]) {
       responseDataExtn = @"png";
+      dataToWrite = downloadedData_;
+      isResponseImage = YES;
     } else {
      // add more non-text types here
     }
 
     // if we have an extension, save the raw data in a file with that
     // extension
-    if (responseDataExtn && downloadedData_) {
-      responseImageFileName = [responseBaseName stringByAppendingPathExtension:responseDataExtn];
-      NSString *imageFilePath = [logDirectory stringByAppendingPathComponent:responseImageFileName];
+    if (responseDataExtn && dataToWrite) {
+      responseDataFileName = [responseBaseName stringByAppendingPathExtension:responseDataExtn];
+      NSString *responseDataFilePath = [logDirectory stringByAppendingPathComponent:responseDataFileName];
 
       NSError *downloadedError = nil;
       if (gIsLoggingToFile
-          && ![downloadedData_ writeToFile:imageFilePath
-                                   options:0
-                                     error:&downloadedError]) {
+          && ![dataToWrite writeToFile:responseDataFilePath
+                               options:0
+                                 error:&downloadedError]) {
             NSLog(@"%@ logging write error:%@ (%@)",
-                  [self class], downloadedError, responseImageFileName);
+                  [self class], downloadedError, responseDataFileName);
           }
     }
   }
@@ -543,9 +575,13 @@ static NSString* gLoggingProcessName = nil;
   }
 
   // write the request post data, toggleable
-  NSData *postData = postData_;
+  NSData *postData;
   if (loggedStreamData_) {
     postData = loggedStreamData_;
+  } else if (postData_) {
+    postData = postData_;
+  } else {
+    postData = [request_ HTTPBody];
   }
 
   NSString *postDataStr = nil;
@@ -560,18 +596,18 @@ static NSString* gLoggingProcessName = nil;
                                  contentType:postType];
     if (postDataStr) {
       // remove OAuth 2 client secret and refresh token
-      postDataStr = [[self class] snipSubtringOfString:postDataStr
-                                    betweenStartString:@"client_secret="
-                                             endString:@"&"];
+      postDataStr = [[self class] snipSubstringOfString:postDataStr
+                                     betweenStartString:@"client_secret="
+                                              endString:@"&"];
 
-      postDataStr = [[self class] snipSubtringOfString:postDataStr
-                                    betweenStartString:@"refresh_token="
-                                             endString:@"&"];
+      postDataStr = [[self class] snipSubstringOfString:postDataStr
+                                     betweenStartString:@"refresh_token="
+                                              endString:@"&"];
 
       // remove ClientLogin password
-      postDataStr = [[self class] snipSubtringOfString:postDataStr
-                                    betweenStartString:@"&Passwd="
-                                             endString:@"&"];
+      postDataStr = [[self class] snipSubstringOfString:postDataStr
+                                     betweenStartString:@"&Passwd="
+                                              endString:@"&"];
     }
   } else {
     // no post data
@@ -614,14 +650,14 @@ static NSString* gLoggingProcessName = nil;
     NSURL *responseURL = [response URL];
 
     if (responseURL && ![responseURL isEqual:[request URL]]) {
-      NSString *responseURLFormat = @"<br><FONT COLOR='#FF00FF'>response URL:"
-        "</FONT> <code>%@</code>";
+      NSString *responseURLFormat = @"<FONT COLOR='#FF00FF'>response URL:"
+        "</FONT> <code>%@</code><br>\n";
       responseURLStr = [NSString stringWithFormat:responseURLFormat,
         [responseURL absoluteString]];
     }
 
-    [outputHTML appendFormat:@"<b>response:</b>&nbsp;&nbsp;status %@<br>\n",
-      statusString];
+    [outputHTML appendFormat:@"<b>response:</b>&nbsp;&nbsp;status %@<br>\n%@",
+      statusString, responseURLStr];
 
     // Write the response headers
     NSUInteger numberOfResponseHeaders = [responseHeaders count];
@@ -649,19 +685,28 @@ static NSString* gLoggingProcessName = nil;
   }
 
   // Write the response data
-  if (responseImageFileName) {
-    // Make a small inline image that links to the full image file
-    NSString *escapedResponseFile = [responseImageFileName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    [outputHTML appendFormat:@"&nbsp;&nbsp; data: %d bytes, <code>%@</code><br>",
-     (int)responseDataLength, [response MIMEType]];
-    NSString *imgFormat = @"<a href=\"%@\"><img src='%@' alt='image'"
-      " style='border:solid thin;max-height:32'></a>\n";
-    [outputHTML appendFormat:imgFormat,
-     escapedResponseFile, escapedResponseFile];
+  if (responseDataFileName) {
+    NSString *escapedResponseFile = [responseDataFileName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    if (isResponseImage) {
+      // Make a small inline image that links to the full image file
+      [outputHTML appendFormat:@"&nbsp;&nbsp; data: %d bytes, <code>%@</code><br>",
+       (int)responseDataLength, responseMIMEType];
+      NSString *fmt = @"<a href=\"%@\"><img src='%@' alt='image'"
+        " style='border:solid thin;max-height:32'></a>\n";
+      [outputHTML appendFormat:fmt,
+       escapedResponseFile, escapedResponseFile];
+    } else {
+      // The response data was XML; link to the xml file
+      NSString *fmt = @"&nbsp;&nbsp; data: %d bytes, <code>"
+        "%@</code>&nbsp;&nbsp;&nbsp;<i><a href=\"%@\">%@</a></i>\n";
+      [outputHTML appendFormat:fmt,
+       (int)responseDataLength, responseMIMEType,
+       escapedResponseFile, [escapedResponseFile pathExtension]];
+    }
   } else {
     // The response data was not an image; just show the length and MIME type
     [outputHTML appendFormat:@"&nbsp;&nbsp; data: %d bytes, <code>%@</code>\n",
-      (int)responseDataLength, [response MIMEType]];
+     (int)responseDataLength, responseMIMEType];
   }
 
   // Make a single string of the request and response, suitable for copying
@@ -751,6 +796,14 @@ static NSString* gLoggingProcessName = nil;
     [[self class] removeItemAtPath:symlinkPath];
     [[self class] createSymbolicLinkAtPath:symlinkPath
                        withDestinationPath:htmlPath];
+
+#if GTM_IPHONE
+    static BOOL gReportedLoggingPath = NO;
+    if (!gReportedLoggingPath) {
+      gReportedLoggingPath = YES;
+      NSLog(@"GTMHTTPFetcher logging to \"%@\"", parentDir);
+    }
+#endif
   }
 }
 
@@ -781,6 +834,10 @@ static NSString* gLoggingProcessName = nil;
 
   return YES;
 }
+
+@end
+
+@implementation GTMHTTPFetcher (GTMHTTPFetcherLoggingUtilities)
 
 - (void)inputStream:(GTMReadMonitorInputStream *)stream
      readIntoBuffer:(void *)buffer
@@ -828,11 +885,11 @@ static NSString* gLoggingProcessName = nil;
   return (result == 0);
 }
 
-#pragma mark Formatting utilities
+#pragma mark Fomatting Utilities
 
-+ (NSString *)snipSubtringOfString:(NSString *)originalStr
-                betweenStartString:(NSString *)startStr
-                         endString:(NSString *)endStr {
++ (NSString *)snipSubstringOfString:(NSString *)originalStr
+                 betweenStartString:(NSString *)startStr
+                          endString:(NSString *)endStr {
 
   if (originalStr == nil) return nil;
 
@@ -879,22 +936,22 @@ static NSString* gLoggingProcessName = nil;
     NSString *value = [dict valueForKey:key];
     if ([key isEqual:@"Authorization"]) {
       // Remove OAuth 1 token
-      value = [[self class] snipSubtringOfString:value
-                              betweenStartString:@"oauth_token=\""
-                                       endString:@"\""];
+      value = [[self class] snipSubstringOfString:value
+                               betweenStartString:@"oauth_token=\""
+                                        endString:@"\""];
 
       // Remove OAuth 2 bearer token (draft 16, and older form)
-      value = [[self class] snipSubtringOfString:value
-                              betweenStartString:@"Bearer "
-                                       endString:@"\n"];
-      value = [[self class] snipSubtringOfString:value
-                              betweenStartString:@"OAuth "
-                                       endString:@"\n"];
+      value = [[self class] snipSubstringOfString:value
+                               betweenStartString:@"Bearer "
+                                        endString:@"\n"];
+      value = [[self class] snipSubstringOfString:value
+                               betweenStartString:@"OAuth "
+                                        endString:@"\n"];
 
       // Remove Google ClientLogin
-      value = [[self class] snipSubtringOfString:value
-                              betweenStartString:@"GoogleLogin auth="
-                                       endString:@"\n"];
+      value = [[self class] snipSubstringOfString:value
+                               betweenStartString:@"GoogleLogin auth="
+                                        endString:@"\n"];
     }
     [str appendFormat:@"  %@: %@\n", key, value];
   }

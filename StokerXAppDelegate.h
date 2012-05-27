@@ -19,6 +19,8 @@
 
 @interface StokerXAppDelegate : NSObject <NSApplicationDelegate, FRFeedbackReporterDelegate, NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
 {
+	IBOutlet NSWindow				*mainWindow;
+
     IBOutlet NSButton				*startStopButton;
 	IBOutlet NSTextField			*statusField;
 	IBOutlet NSTextField			*totalBlowerActivityField;
@@ -36,6 +38,12 @@
 	Stoker							*theStoker;
 	    
 	NSInvocation					*updateInvocation;
+	
+	Boolean					loggingActive;
+	NSTimeInterval			startTime;
+	CPTXYGraph				*graph;
+	MiniTwitter				*tweetController;
+	PreferencesController		*preferencesController;
 }
 
 - (IBAction) showReadMe:(id)sender;

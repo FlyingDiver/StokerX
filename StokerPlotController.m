@@ -56,8 +56,8 @@
 	graph.paddingRight = 10.0;
 	graph.paddingBottom = 10.0;
 	
-	graph.plotAreaFrame.paddingTop = 20.0;
-	graph.plotAreaFrame.paddingBottom = 70.0;
+	graph.plotAreaFrame.paddingTop = 40.0;
+	graph.plotAreaFrame.paddingBottom = 50.0;
 	graph.plotAreaFrame.paddingLeft = 50.0;
 	graph.plotAreaFrame.paddingRight = 20.0;
 	graph.plotAreaFrame.cornerRadius = 10.0;
@@ -211,8 +211,8 @@
 	graph.legend.textStyle = axisSet.xAxis.titleTextStyle;
 	graph.legend.numberOfRows = 1;
 	graph.legend.swatchSize = CGSizeMake(25.0, 25.0);
-	graph.legendAnchor = CPTRectAnchorBottom;
-	graph.legendDisplacement = CGPointMake(0.0, 15.0);
+	graph.legendAnchor = CPTRectAnchorTop;
+	graph.legendDisplacement = CGPointMake(0.0, -15.0);
 }
 
 // Called via timer to update the UI
@@ -433,8 +433,8 @@
 
 -(CGPoint)plotSpace:(CPTPlotSpace *)space willDisplaceBy:(CGPoint)proposedDisplacementVector
 {
-	NSLog(@"StokerPlotController - plotSpace: %@ willDisplaceBy: %f,%f", 
-		  space.identifier, (double) proposedDisplacementVector.x, (double) proposedDisplacementVector.y);
+//	NSLog(@"StokerPlotController - plotSpace: %@ willDisplaceBy: %f,%f", 
+//		  space.identifier, (double) proposedDisplacementVector.x, (double) proposedDisplacementVector.y);
 	
 	CGPoint newVector;
 	newVector.x = proposedDisplacementVector.x;
@@ -444,8 +444,8 @@
 
 -(CPTPlotRange *)plotSpace:(CPTPlotSpace *)space willChangePlotRangeTo:(CPTPlotRange *)newRange forCoordinate:(CPTCoordinate)coordinate
 {
-	NSLog(@"StokerPlotController - plotSpace: %@ willChangePlotRangeTo: %@ forCoordinate: %d", 
-		  space.identifier, [newRange description], (int) coordinate);
+//	NSLog(@"StokerPlotController - plotSpace: %@ willChangePlotRangeTo: %@ forCoordinate: %d", 
+//		  space.identifier, [newRange description], (int) coordinate);
 	
 	return newRange;
 }

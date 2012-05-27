@@ -19,6 +19,12 @@
 	CPTXYPlotSpace					*blowerGraphPlotSpace; 
 	
 	NSTimeInterval					plotRange;
+
+	CPTXYGraph			*graph;
+	NSTimeInterval		startTime;
+	double				plotMinTemp;
+	double				plotMaxTemp;
+	Stoker				*stoker;
 }
 
 @property (nonatomic, retain) CPTXYGraph			*graph;

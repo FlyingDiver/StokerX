@@ -22,6 +22,11 @@
 	IBOutlet NSPopUpButton	*testPopup;
 	IBOutlet NSPopUpButton	*actionPopup;
 	IBOutlet NSTextField	*valueTextField;
+	
+	NSMutableArray		*ruleList;	
+	NSMutableArray		*sensorList;	
+	NSMutableDictionary	*sensorDict;
+	MiniTwitter			*tweetController;
 }
 
 - (IBAction) editRuleList: (NSSegmentedControl *) sender;

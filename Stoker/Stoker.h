@@ -18,6 +18,22 @@
 @class GTMHTTPFetcher;
 @interface Stoker : NSObject <GCDAsyncSocketDelegate> {
 @private
+	id						delegate;
+	NSString				*stokerVersion;
+	NSString				*ipAddress;
+	NSTimer					*jsonTimer;
+	Boolean					isLogging;
+	Boolean					httpOnlyMode;
+	Boolean					stokerAvailable;
+	NSNumber				*lastTemp;					// last remembered temp for lid off detection
+	Boolean					lidOffHold;
+	
+	NSString				*blowerControlSensor;		// the sensor that controls the blower, for lid-off control
+	NSNumber				*lastTempTarget;			// the temp to restore after lid-off
+	
+	void (^shutdownCompletionBlock_)(void);
+	void (^connectCompletionBlock_)(void);
+	
 	GCDAsyncSocket 			*socket;
 	dispatch_queue_t		socketQueue;
 	SendExpect				*mySendExpect;				// send-expect sequence for telnet interface

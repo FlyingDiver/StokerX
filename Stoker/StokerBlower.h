@@ -9,7 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "StokerDevice.h"
 
-@interface StokerBlower : StokerDevice {
+@interface StokerBlower : StokerDevice 
+{
+	NSInteger			onCount;
+	Boolean			state;
+	StokerDevice		*sensor;
 }
 
 

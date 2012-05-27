@@ -14,6 +14,12 @@
 
 @interface NotificationRule : NSObject
 {
+	NSString		*sensorID;
+	NSNumber		*value;
+	NSNumber		*lastNotified;
+	Boolean			enabled;
+	TestTypes		test;
+	ActionTypes		action;
 }
 
 + (NSMutableArray *)	ruleList;
