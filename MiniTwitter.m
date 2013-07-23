@@ -65,9 +65,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 {	
 	[self signOut];			// make sure we're not already signed in
 	
-	NSURL *requestURL =   [NSURL URLWithString: @"http://twitter.com/oauth/request_token"];
-	NSURL *accessURL =    [NSURL URLWithString: @"http://twitter.com/oauth/access_token"];
-	NSURL *authorizeURL = [NSURL URLWithString: @"http://twitter.com/oauth/authorize"];
+	NSURL *requestURL =   [NSURL URLWithString: @"https://twitter.com/oauth/request_token"];
+	NSURL *accessURL =    [NSURL URLWithString: @"https://twitter.com/oauth/access_token"];
+	NSURL *authorizeURL = [NSURL URLWithString: @"https://twitter.com/oauth/authorize"];
 	NSString *scope = @"https://api.twitter.com/";
 	
 	GTMOAuthAuthentication *auth = [self authForTwitter];
@@ -120,7 +120,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	} 
 	else 
 	{			
-		// Authentication successful.  Do another Twitter request to confirm and get the user info (not really needed at this time)
+		// Authentication successful.  Do another Twitter request to confirm and get the user info
 		
 		self.myAuth = auth;
 		[self getTwitterInfo];
@@ -131,7 +131,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 - (void) getTwitterInfo
 {
-	NSURL *url = [NSURL URLWithString: @"http://api.twitter.com/1/account/verify_credentials.json"];		
+	NSURL *url = [NSURL URLWithString: @"https://api.twitter.com/1.1/account/verify_credentials.json"];		
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	[myAuth authorizeRequest: request];
 	GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
@@ -269,7 +269,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		
 		NSString *body = [NSString stringWithFormat: @"status=%@", trimmedText];
 		
-		NSString *urlStr = @"http://api.twitter.com/1/statuses/update.json";
+		NSString *urlStr = @"https://api.twitter.com/1.1/statuses/update.json";
 		NSURL *url = [NSURL URLWithString:urlStr];
 		
 		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];

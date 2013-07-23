@@ -152,9 +152,9 @@
 	{
 		elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
 
-		NSInteger seconds = fmod(elapsedTime , 60);	
-		NSInteger minutes = fmod(elapsedTime / 60, 60);
-		NSInteger hours =   elapsedTime / 60 / 60;
+		int seconds = fmod(elapsedTime , 60);
+		int minutes = fmod(elapsedTime / 60, 60);
+		int hours =   elapsedTime / 60 / 60;
 		NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
 		[elapsedTimeField setStringValue: elapsedTimeString];
 		

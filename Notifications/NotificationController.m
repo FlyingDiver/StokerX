@@ -372,7 +372,7 @@
 	}
 
 	NSInteger sensorNum = [[sensorPopup selectedItem] tag];
-	NSAssert1((sensorNum < [sensorList count]), @"SensorPopup tag out of range: %ld", sensorNum);
+	NSAssert1((sensorNum < [sensorList count]), @"SensorPopup tag out of range: %ld", (long)sensorNum);
 	
 	NSMutableDictionary *sensor = [sensorList objectAtIndex: [[sensorPopup selectedItem] tag]];
 								   
