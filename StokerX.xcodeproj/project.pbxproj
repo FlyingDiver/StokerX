@@ -24,14 +24,14 @@
 		C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94BED88140B293D00CA06F8 /* SystemConfiguration.framework */; };
 		C9503CE213FED6F8008B794F /* EmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C9503CE113FED6F8008B794F /* EmailSender.m */; };
 		C967349013E46DD70042841B /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C967348F13E46DD70042841B /* PreferencesController.m */; };
+		C9712B7817A9F65600246238 /* GTMOAuthAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = C9712B7517A9F65600246238 /* GTMOAuthAuthentication.m */; };
+		C9712B7917A9F65600246238 /* GTMOAuthSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = C9712B7717A9F65600246238 /* GTMOAuthSignIn.m */; };
+		C9712B7D17A9F81400246238 /* GTMOAuthWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9712B7A17A9F81300246238 /* GTMOAuthWindow.xib */; };
+		C9712B7E17A9F81400246238 /* GTMOAuthWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9712B7C17A9F81400246238 /* GTMOAuthWindowController.m */; };
+		C9712B8517A9F84B00246238 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9712B8017A9F84B00246238 /* GTMHTTPFetcher.m */; };
+		C9712B8617A9F84B00246238 /* GTMHTTPFetcherLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = C9712B8217A9F84B00246238 /* GTMHTTPFetcherLogging.m */; };
+		C9712B8717A9F84B00246238 /* GTMHTTPFetchHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = C9712B8417A9F84B00246238 /* GTMHTTPFetchHistory.m */; };
 		C977AE8314389F83005E0138 /* ReadMe.html in Resources */ = {isa = PBXBuildFile; fileRef = C94149B714059CDF006BDCE0 /* ReadMe.html */; };
-		C9849182142A4F1B001CEF85 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849176142A4F1B001CEF85 /* GTMHTTPFetcher.m */; };
-		C9849183142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849178142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m */; };
-		C9849184142A4F1B001CEF85 /* GTMHTTPFetchHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = C984917A142A4F1B001CEF85 /* GTMHTTPFetchHistory.m */; };
-		C9849185142A4F1B001CEF85 /* GTMOAuthAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = C984917C142A4F1B001CEF85 /* GTMOAuthAuthentication.m */; };
-		C9849186142A4F1B001CEF85 /* GTMOAuthSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = C984917E142A4F1B001CEF85 /* GTMOAuthSignIn.m */; };
-		C9849187142A4F1B001CEF85 /* GTMOAuthWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C984917F142A4F1B001CEF85 /* GTMOAuthWindow.xib */; };
-		C9849188142A4F1B001CEF85 /* GTMOAuthWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849181142A4F1B001CEF85 /* GTMOAuthWindowController.m */; };
 		C984918D142A5328001CEF85 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C984918C142A5328001CEF85 /* GCDAsyncSocket.m */; };
 		C98491BA142A6C33001CEF85 /* StokerSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = C98491B9142A6C33001CEF85 /* StokerSensor.m */; };
 		C98491BD142A6CAF001CEF85 /* StokerBlower.m in Sources */ = {isa = PBXBuildFile; fileRef = C98491BC142A6CAF001CEF85 /* StokerBlower.m */; };
@@ -139,19 +139,19 @@
 		C9503CE113FED6F8008B794F /* EmailSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailSender.m; sourceTree = "<group>"; };
 		C967348E13E46DD10042841B /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = StokerX.xcodeproj/../PreferencesController.h; sourceTree = SOURCE_ROOT; };
 		C967348F13E46DD70042841B /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = StokerX.xcodeproj/../PreferencesController.m; sourceTree = SOURCE_ROOT; };
-		C9849175142A4F1B001CEF85 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcher.h; sourceTree = "<group>"; };
-		C9849176142A4F1B001CEF85 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcher.m; sourceTree = "<group>"; };
-		C9849177142A4F1B001CEF85 /* GTMHTTPFetcherLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherLogging.h; sourceTree = "<group>"; };
-		C9849178142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherLogging.m; sourceTree = "<group>"; };
-		C9849179142A4F1B001CEF85 /* GTMHTTPFetchHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetchHistory.h; sourceTree = "<group>"; };
-		C984917A142A4F1B001CEF85 /* GTMHTTPFetchHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetchHistory.m; sourceTree = "<group>"; };
-		C984917B142A4F1B001CEF85 /* GTMOAuthAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthAuthentication.h; sourceTree = "<group>"; };
-		C984917C142A4F1B001CEF85 /* GTMOAuthAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthAuthentication.m; sourceTree = "<group>"; };
-		C984917D142A4F1B001CEF85 /* GTMOAuthSignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthSignIn.h; sourceTree = "<group>"; };
-		C984917E142A4F1B001CEF85 /* GTMOAuthSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthSignIn.m; sourceTree = "<group>"; };
-		C984917F142A4F1B001CEF85 /* GTMOAuthWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuthWindow.xib; sourceTree = "<group>"; };
-		C9849180142A4F1B001CEF85 /* GTMOAuthWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthWindowController.h; sourceTree = "<group>"; };
-		C9849181142A4F1B001CEF85 /* GTMOAuthWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthWindowController.m; sourceTree = "<group>"; };
+		C9712B7417A9F65600246238 /* GTMOAuthAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthAuthentication.h; sourceTree = SOURCE_ROOT; };
+		C9712B7517A9F65600246238 /* GTMOAuthAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthAuthentication.m; sourceTree = SOURCE_ROOT; };
+		C9712B7617A9F65600246238 /* GTMOAuthSignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthSignIn.h; sourceTree = SOURCE_ROOT; };
+		C9712B7717A9F65600246238 /* GTMOAuthSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthSignIn.m; sourceTree = SOURCE_ROOT; };
+		C9712B7A17A9F81300246238 /* GTMOAuthWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuthWindow.xib; sourceTree = SOURCE_ROOT; };
+		C9712B7B17A9F81300246238 /* GTMOAuthWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuthWindowController.h; sourceTree = SOURCE_ROOT; };
+		C9712B7C17A9F81400246238 /* GTMOAuthWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuthWindowController.m; sourceTree = SOURCE_ROOT; };
+		C9712B7F17A9F84B00246238 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcher.h; sourceTree = "<group>"; };
+		C9712B8017A9F84B00246238 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcher.m; sourceTree = "<group>"; };
+		C9712B8117A9F84B00246238 /* GTMHTTPFetcherLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcherLogging.h; sourceTree = "<group>"; };
+		C9712B8217A9F84B00246238 /* GTMHTTPFetcherLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcherLogging.m; sourceTree = "<group>"; };
+		C9712B8317A9F84B00246238 /* GTMHTTPFetchHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetchHistory.h; sourceTree = "<group>"; };
+		C9712B8417A9F84B00246238 /* GTMHTTPFetchHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetchHistory.m; sourceTree = "<group>"; };
 		C984918B142A5328001CEF85 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = Socket/GCDAsyncSocket.h; sourceTree = "<group>"; };
 		C984918C142A5328001CEF85 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = Socket/GCDAsyncSocket.m; sourceTree = "<group>"; };
 		C98491B8142A6C33001CEF85 /* StokerSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StokerSensor.h; path = Stoker/StokerSensor.h; sourceTree = "<group>"; };
@@ -366,19 +366,19 @@
 		C9849174142A4F1B001CEF85 /* GTMOAuth */ = {
 			isa = PBXGroup;
 			children = (
-				C9849175142A4F1B001CEF85 /* GTMHTTPFetcher.h */,
-				C9849176142A4F1B001CEF85 /* GTMHTTPFetcher.m */,
-				C9849177142A4F1B001CEF85 /* GTMHTTPFetcherLogging.h */,
-				C9849178142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m */,
-				C9849179142A4F1B001CEF85 /* GTMHTTPFetchHistory.h */,
-				C984917A142A4F1B001CEF85 /* GTMHTTPFetchHistory.m */,
-				C984917B142A4F1B001CEF85 /* GTMOAuthAuthentication.h */,
-				C984917C142A4F1B001CEF85 /* GTMOAuthAuthentication.m */,
-				C984917D142A4F1B001CEF85 /* GTMOAuthSignIn.h */,
-				C984917E142A4F1B001CEF85 /* GTMOAuthSignIn.m */,
-				C984917F142A4F1B001CEF85 /* GTMOAuthWindow.xib */,
-				C9849180142A4F1B001CEF85 /* GTMOAuthWindowController.h */,
-				C9849181142A4F1B001CEF85 /* GTMOAuthWindowController.m */,
+				C9712B7F17A9F84B00246238 /* GTMHTTPFetcher.h */,
+				C9712B8017A9F84B00246238 /* GTMHTTPFetcher.m */,
+				C9712B8117A9F84B00246238 /* GTMHTTPFetcherLogging.h */,
+				C9712B8217A9F84B00246238 /* GTMHTTPFetcherLogging.m */,
+				C9712B8317A9F84B00246238 /* GTMHTTPFetchHistory.h */,
+				C9712B8417A9F84B00246238 /* GTMHTTPFetchHistory.m */,
+				C9712B7A17A9F81300246238 /* GTMOAuthWindow.xib */,
+				C9712B7B17A9F81300246238 /* GTMOAuthWindowController.h */,
+				C9712B7C17A9F81400246238 /* GTMOAuthWindowController.m */,
+				C9712B7417A9F65600246238 /* GTMOAuthAuthentication.h */,
+				C9712B7517A9F65600246238 /* GTMOAuthAuthentication.m */,
+				C9712B7617A9F65600246238 /* GTMOAuthSignIn.h */,
+				C9712B7717A9F65600246238 /* GTMOAuthSignIn.m */,
 			);
 			path = GTMOAuth;
 			sourceTree = "<group>";
@@ -518,7 +518,6 @@
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */,
 				C9A3616813FCB87500D98912 /* Notifications.xib in Resources */,
-				C9849187142A4F1B001CEF85 /* GTMOAuthWindow.xib in Resources */,
 				C9D5550913FEDCBF0066BB27 /* Mail.app in Resources */,
 				C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */,
 				C99B85C014002FB000E27494 /* Credits.rtf in Resources */,
@@ -528,6 +527,7 @@
 				C9C83DE51412B2C300AB8261 /* To-Do.rtf in Resources */,
 				C9B084971416B4B800F1C567 /* Help.rtf in Resources */,
 				C9B0849C1416BB8B00F1C567 /* Help.xib in Resources */,
+				C9712B7D17A9F81400246238 /* GTMOAuthWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,18 +587,18 @@
 				C91ADC631402ACF600A6472E /* NotificationTest.m in Sources */,
 				C91ADC661402B1D700A6472E /* NotificationAction.m in Sources */,
 				C9B0849A1416BB6100F1C567 /* HelpController.m in Sources */,
-				C9849182142A4F1B001CEF85 /* GTMHTTPFetcher.m in Sources */,
-				C9849183142A4F1B001CEF85 /* GTMHTTPFetcherLogging.m in Sources */,
-				C9849184142A4F1B001CEF85 /* GTMHTTPFetchHistory.m in Sources */,
-				C9849185142A4F1B001CEF85 /* GTMOAuthAuthentication.m in Sources */,
-				C9849186142A4F1B001CEF85 /* GTMOAuthSignIn.m in Sources */,
-				C9849188142A4F1B001CEF85 /* GTMOAuthWindowController.m in Sources */,
 				C984918D142A5328001CEF85 /* GCDAsyncSocket.m in Sources */,
 				C98491BA142A6C33001CEF85 /* StokerSensor.m in Sources */,
 				C98491BD142A6CAF001CEF85 /* StokerBlower.m in Sources */,
 				C9EAC342142A7C1B00CCA1EB /* StokerPlotController.m in Sources */,
 				C9EAC343142A841600CCA1EB /* MiniTwitter.m in Sources */,
 				C9E852E5142E55410030C87A /* StokerDevice.m in Sources */,
+				C9712B7817A9F65600246238 /* GTMOAuthAuthentication.m in Sources */,
+				C9712B7917A9F65600246238 /* GTMOAuthSignIn.m in Sources */,
+				C9712B7E17A9F81400246238 /* GTMOAuthWindowController.m in Sources */,
+				C9712B8517A9F84B00246238 /* GTMHTTPFetcher.m in Sources */,
+				C9712B8617A9F84B00246238 /* GTMHTTPFetcherLogging.m in Sources */,
+				C9712B8717A9F84B00246238 /* GTMHTTPFetchHistory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -659,10 +659,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = StokerX;
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -684,10 +686,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = StokerX_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = StokerX;
+				SDKROOT = macosx;
 				SKIP_INSTALL = NO;
 			};
 			name = Release;

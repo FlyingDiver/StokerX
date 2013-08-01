@@ -13,8 +13,8 @@
 
 // These are the keys for the callback version
 
-#define kOAuthConsumerKey		@"yF1oP08RQhPGrFvUbEkNQ"
-#define kOAuthConsumerSecret	@"tT2eVOidKDhwuP5RJoj5Rf9CQPHfyd2c9wAcAKOOE"
+#define kOAuthConsumerKey		@"kyL5j7Ba5cxhgW89xueCGg"
+#define kOAuthConsumerSecret	@"IMoG4ycflD9OhFFBrmi8UtjBcOdIRFmxsNdrYVao"
 
 #define MAX_MESSAGE_LENGTH		140		// twitter max
 

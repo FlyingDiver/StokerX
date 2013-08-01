@@ -65,9 +65,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 {	
 	[self signOut];			// make sure we're not already signed in
 	
-	NSURL *requestURL =   [NSURL URLWithString: @"https://twitter.com/oauth/request_token"];
-	NSURL *accessURL =    [NSURL URLWithString: @"https://twitter.com/oauth/access_token"];
-	NSURL *authorizeURL = [NSURL URLWithString: @"https://twitter.com/oauth/authorize"];
+	NSURL *requestURL =   [NSURL URLWithString: @"https://api.twitter.com/oauth/request_token"];
+	NSURL *accessURL =    [NSURL URLWithString: @"https://api.twitter.com/oauth/access_token"];
+	NSURL *authorizeURL = [NSURL URLWithString: @"https://api.twitter.com/oauth/authorize"];
 	NSString *scope = @"https://api.twitter.com/";
 	
 	GTMOAuthAuthentication *auth = [self authForTwitter];
@@ -147,6 +147,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 			 self.twitterUserName = [results objectForKey: @"name"];
 			 self.twitterHandle   = [results objectForKey: @"screen_name"];
 			 NSLog(@"StokerXTwitter Verification Successful for %@ (@%@)", twitterUserName, twitterHandle);
+			 [self sendTweet: @"StokerXTwitter Verification Successful"];
 		 }
 		 [self updateUI];
 	 }];
@@ -267,11 +268,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 			trimmedText = [trimmedText substringToIndex:MAX_MESSAGE_LENGTH];
 		}
 		
-		NSString *body = [NSString stringWithFormat: @"status=%@", trimmedText];
-		
-		NSString *urlStr = @"https://api.twitter.com/1.1/statuses/update.json";
-		NSURL *url = [NSURL URLWithString:urlStr];
-		
+		NSString *body = [[NSString stringWithFormat: @"status=%@", trimmedText] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+
+		NSURL *url = [NSURL URLWithString: @"https://api.twitter.com/1.1/statuses/update.json"];
 		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 		[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
 		[request setHTTPMethod:@"POST"]; 
@@ -284,7 +283,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 			 if (error != nil) 
 			 {
 				 NSLog(@"StokerXTwitter sendTweet error: %@", error);
-			 } 
+				 NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
+				 NSLog(@"StokerXTwitter sendTweet results: %@", results);
+			 }
 		 }];
 		
 	}
