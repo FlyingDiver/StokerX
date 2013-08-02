@@ -26,6 +26,7 @@
 	GTMOAuthAuthentication *myAuth;
 	NSString *twitterHandle;
 	NSString *twitterUserName;
+	NSString *directMessageSinceId;
 }
 
 - (IBAction) signInOutClicked: (id) sender;
@@ -36,6 +37,8 @@
 - (void) signOut;
 - (BOOL) isSignedIn;
 - (void) getTwitterInfo;
+
+- (void) getDirectMessages: (NSTimer *) theTimer;
 
 - (GTMOAuthAuthentication *) authForTwitter;
 
@@ -49,5 +52,5 @@
 @property (nonatomic, retain) GTMOAuthAuthentication *myAuth;
 @property (nonatomic, copy) NSString *twitterHandle;
 @property (nonatomic, copy) NSString *twitterUserName;
-
+@property (nonatomic, copy) NSString *directMessageSinceId;
 @end

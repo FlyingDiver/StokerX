@@ -34,6 +34,9 @@
 	[defaultValues setObject:[NSNumber numberWithInt: 86400] forKey:@"SUScheduledCheckInterval"];
 	[defaultValues setObject:[NSNumber numberWithInt: 1]     forKey:@"SUEnableAutomaticChecks"];
 	[defaultValues setObject:[NSNumber numberWithInt: 1]     forKey:@"SUSendProfileInfo"];
+	
+	[defaultValues setObject:[NSNumber numberWithInt: 0]     forKey:@"DirectMessageSinceId"];
+
 
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }

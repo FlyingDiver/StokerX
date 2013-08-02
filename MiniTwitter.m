@@ -13,7 +13,7 @@
 static NSString *const kTwitterKeychainItemName = @"StokerX: Twitter";
 static NSString *const kTwitterServiceName = @"Twitter";
 
-@synthesize myAuth, twitterHandle, twitterUserName;
+@synthesize myAuth, twitterHandle, twitterUserName, directMessageSinceId;
 
 - (void)dealloc 
 {
@@ -39,8 +39,15 @@ static NSString *const kTwitterServiceName = @"Twitter";
 											authentication: auth];
 	
 	if (self.isSignedIn)
+	{
 		[self getTwitterInfo];
-	
+		
+		if ([[NSUserDefaults standardUserDefaults] stringForKey: @"DirectMessageSinceId"])
+			directMessageSinceId = [[NSUserDefaults standardUserDefaults] stringForKey: @"DirectMessageSinceId"];
+		
+		[NSTimer scheduledTimerWithTimeInterval: 60 target:self selector:@selector(getDirectMessages:) userInfo: nil repeats:YES];
+
+	}
 	[self updateUI];
 }
 
@@ -147,11 +154,12 @@ static NSString *const kTwitterServiceName = @"Twitter";
 			 self.twitterUserName = [results objectForKey: @"name"];
 			 self.twitterHandle   = [results objectForKey: @"screen_name"];
 			 NSLog(@"StokerXTwitter Verification Successful for %@ (@%@)", twitterUserName, twitterHandle);
-			 [self sendTweet: @"StokerXTwitter Verification Successful"];
+//			 [self sendTweet: @"StokerXTwitter Verification Successful"];
 		 }
 		 [self updateUI];
 	 }];
 }
+
 
 - (void)updateUI 
 {	
@@ -290,5 +298,40 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		
 	}
 }
+
+- (void) getDirectMessages:(NSTimer *) theTimer
+{
+	NSString *query = [[NSString stringWithFormat: @"https://api.twitter.com/1.1/direct_messages.json?since_id=%@", self.directMessageSinceId]
+						stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+	
+	NSURL *url = [NSURL URLWithString: query];
+	
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+	[myAuth authorizeRequest: request];
+	GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+	[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error)
+	 {
+		 if (error != nil)
+		 {
+			 NSLog(@"StokerXTwitter getDirectMessages error: %@", error);
+		 }
+		 else
+		 {
+			 NSArray *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
+			 for (int msgNum = [results count] - 1; msgNum >= 0; msgNum--)
+			 {
+				 self.directMessageSinceId = [[results objectAtIndex: msgNum] objectForKey: @"id_str"];
+				 [[NSUserDefaults standardUserDefaults] setObject: self.directMessageSinceId forKey: @"DirectMessageSinceId"];
+
+				 NSLog(@"StokerXTwitter getDirectMessage Successful (%@), sender = %@ (%@), message: %@",
+					   self.directMessageSinceId,
+					   [[results objectAtIndex: msgNum] objectForKey: @"sender_screen_name"],
+					   [[results objectAtIndex: msgNum] objectForKey: @"sender_id"],
+					   [[results objectAtIndex: msgNum] objectForKey: @"text"]);
+			 }
+		 }
+	 }];}
+
+
 
 @end

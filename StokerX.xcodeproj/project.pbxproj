@@ -662,9 +662,9 @@
 				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = StokerX;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -689,9 +689,9 @@
 				GTM_OAUTH_SKIP_GOOGLE_SUPPORT = 1;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = StokerX;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
 				SKIP_INSTALL = NO;
 			};
 			name = Release;
