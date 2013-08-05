@@ -155,7 +155,7 @@
 		NSInteger seconds = fmod(elapsedTime , 60);	
 		NSInteger minutes = fmod(elapsedTime / 60, 60);
 		NSInteger hours =   elapsedTime / 60 / 60;
-		NSString* elapsedTimeString = [NSString stringWithFormat: @"%02d:%02d:%02d", hours, minutes, seconds];
+		NSString* elapsedTimeString = [NSString stringWithFormat: @"%02ld:%02ld:%02ld", (long)hours, (long)minutes, (long)seconds];
 		[elapsedTimeField setStringValue: elapsedTimeString];
 		
 		[totalBlowerActivityField  setStringValue: [NSString stringWithFormat:@"%3.0f%%", [theStoker totalBlowerRatio] * 100.0]];

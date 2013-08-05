@@ -13,7 +13,7 @@
 static NSString *const kTwitterKeychainItemName = @"StokerX: Twitter";
 static NSString *const kTwitterServiceName = @"Twitter";
 
-@synthesize myAuth, twitterHandle, twitterUserName;
+@synthesize myAuth, twitterHandle, twitterUserName, directMessageSinceId;
 
 - (void)dealloc 
 {
@@ -39,8 +39,17 @@ static NSString *const kTwitterServiceName = @"Twitter";
 											authentication: auth];
 	
 	if (self.isSignedIn)
+	{
 		[self getTwitterInfo];
 	
+		if ([[NSUserDefaults standardUserDefaults] stringForKey: @"DirectMessageSinceId"])
+			directMessageSinceId = [[NSUserDefaults standardUserDefaults] stringForKey: @"DirectMessageSinceId"];
+		else
+			directMessageSinceId = @"0";
+		
+		[NSTimer scheduledTimerWithTimeInterval: 60 target:self selector:@selector(getDirectMessages:) userInfo: nil repeats:YES];
+	}
+		
 	[self updateUI];
 }
 
@@ -65,9 +74,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 {	
 	[self signOut];			// make sure we're not already signed in
 	
-	NSURL *requestURL =   [NSURL URLWithString: @"http://twitter.com/oauth/request_token"];
-	NSURL *accessURL =    [NSURL URLWithString: @"http://twitter.com/oauth/access_token"];
-	NSURL *authorizeURL = [NSURL URLWithString: @"http://twitter.com/oauth/authorize"];
+	NSURL *requestURL =   [NSURL URLWithString: @"https://twitter.com/oauth/request_token"];
+	NSURL *accessURL =    [NSURL URLWithString: @"https://twitter.com/oauth/access_token"];
+	NSURL *authorizeURL = [NSURL URLWithString: @"https://twitter.com/oauth/authorize"];
 	NSString *scope = @"https://api.twitter.com/";
 	
 	GTMOAuthAuthentication *auth = [self authForTwitter];
@@ -131,7 +140,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 - (void) getTwitterInfo
 {
-	NSURL *url = [NSURL URLWithString: @"http://api.twitter.com/1/account/verify_credentials.json"];		
+	NSURL *url = [NSURL URLWithString: @"https://api.twitter.com/1.1/account/verify_credentials.json"];		
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	[myAuth authorizeRequest: request];
 	GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
@@ -267,9 +276,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 			trimmedText = [trimmedText substringToIndex:MAX_MESSAGE_LENGTH];
 		}
 		
-		NSString *body = [NSString stringWithFormat: @"status=%@", trimmedText];
-		
-		NSString *urlStr = @"http://api.twitter.com/1/statuses/update.json";
+		NSString *body = [[NSString stringWithFormat: @"status=%@", trimmedText] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+						  
+		NSString *urlStr = @"https://api.twitter.com/1.1/statuses/update.json";
 		NSURL *url = [NSURL URLWithString:urlStr];
 		
 		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -289,5 +298,39 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		
 	}
 }
+
+- (void) getDirectMessages:(NSTimer *) theTimer
+{
+	NSString *query = [[NSString stringWithFormat: @"https://api.twitter.com/1.1/direct_messages.json?since_id=%@", self.directMessageSinceId]
+					   stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+	
+	NSURL *url = [NSURL URLWithString: query];
+	
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+	[myAuth authorizeRequest: request];
+	GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+	[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error)
+	 {
+		 if (error != nil)
+		 {
+			 NSLog(@"StokerXTwitter getDirectMessages error: %@", error);
+		 }
+		 else
+		 {
+			 NSArray *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
+			 for (int msgNum = [results count] - 1; msgNum >= 0; msgNum--)
+			 {
+				 self.directMessageSinceId = [[results objectAtIndex: msgNum] objectForKey: @"id_str"];
+				 [[NSUserDefaults standardUserDefaults] setObject: self.directMessageSinceId forKey: @"DirectMessageSinceId"];
+				 
+				 NSLog(@"StokerXTwitter getDirectMessage Successful (%@), sender = %@ (%@), message: %@",
+					   self.directMessageSinceId,
+					   [[results objectAtIndex: msgNum] objectForKey: @"sender_screen_name"],
+					   [[results objectAtIndex: msgNum] objectForKey: @"sender_id"],
+					   [[results objectAtIndex: msgNum] objectForKey: @"text"]);
+			 }
+		 }
+	 }];}
+
 
 @end
