@@ -1,6 +1,5 @@
 //
-//  StokerTwitter.h
-//  StokerX
+//  MiniTwitter
 //
 //  Created by Joe Keenan on 8/13/11.
 //  Copyright 2011 Joseph P Keenan Jr. All rights reserved.
@@ -11,10 +10,12 @@
 #import "PreferencesController.h"
 #import "JSON.h"
 
-// These are the keys for the callback version
+// These are the keys for the callback version, they are specific to each application using MiniTwitter
 
 #define kOAuthConsumerKey		@"kyL5j7Ba5cxhgW89xueCGg"
 #define kOAuthConsumerSecret	@"IMoG4ycflD9OhFFBrmi8UtjBcOdIRFmxsNdrYVao"
+
+#define MiniTwitter_DirectMessage	@"MiniTwitter_DirectMessage"
 
 #define MAX_MESSAGE_LENGTH		140		// twitter max
 
@@ -27,6 +28,8 @@
 	NSString *twitterHandle;
 	NSString *twitterUserName;
 	NSString *directMessageSinceId;
+	NSError *lastError;
+	int lastErrorCount;
 }
 
 - (IBAction) signInOutClicked: (id) sender;
@@ -47,10 +50,12 @@
 
 - (void) updateUI;
 - (void) signInNetworkLost:(NSNotification *)note;
+- (void) reportError: (NSError *) error fromQuery: (NSString *) query;
 
 @property (nonatomic, retain) GTMOAuthAuthentication *myAuth;
 @property (nonatomic, copy) NSString *twitterHandle;
 @property (nonatomic, copy) NSString *twitterUserName;
 @property (nonatomic, copy) NSString *directMessageSinceId;
-
+@property (nonatomic, copy) NSError *lastError;
+@property (nonatomic) int lastErrorCount;
 @end
