@@ -13,7 +13,8 @@
 @implementation Stoker
 
 @synthesize delegate, stokerVersion, jsonTimer, ipAddress, isLogging;
-@synthesize httpOnlyMode, stokerAvailable, mySendExpect, lastTemp, lidOffHold, blowerControlSensor, lastTempTarget;
+//@synthesize httpOnlyMode, stokerAvailable, mySendExpect, lastTemp, lidOffHold, blowerControlSensor, lastTempTarget;
+@synthesize httpOnlyMode, stokerAvailable, mySendExpect;
 @synthesize shutdownCompletionBlock = shutdownCompletionBlock_;
 @synthesize connectCompletionBlock  = connectCompletionBlock_;
 
@@ -402,10 +403,10 @@
 	theSensor.tempTarget  = [NSNumber numberWithDouble: target];			
 	[theSensor.plotData addObject: [NSArray arrayWithObjects: currentTime, theSensor.tempCurrent, theSensor.tempTarget, nil]];	
 		
-	if (theSensor.control && lidDetectionEnabled)		// only check for lid off on control blower
-	{
-		[self checkLidOffForSensor: theSensor];
-	}
+//	if (theSensor.control && lidDetectionEnabled)		// only check for lid off on control blower
+//	{
+//		[self checkLidOffForSensor: theSensor];
+//	}
 }
 
 - (void) updateBlower: (NSString *) blowerID withState: (Boolean) state
@@ -717,6 +718,7 @@
 	return [result autorelease];
 }
 
+/*
 #pragma mark -
 #pragma mark Lid Detection Methods
 
@@ -784,6 +786,7 @@
 
 	}
 }
+*/
 
 #pragma mark -
 #pragma mark SendExpect Delegate Methods

@@ -14,10 +14,10 @@ NSString * const kHTTPOnlyModeKey    = @"HTTPOnlyMode";
 NSString * const kMinGraphTempKey    = @"MinGraphTemp";
 NSString * const kMaxGraphTempKey    = @"MaxGraphTemp";
 NSString * const kEmailAddressKey    = @"EmailAddress";
-NSString * const kLidOffEnabledKey   = @"LidOffEnabled";
-NSString * const kLidOffDropKey      = @"LidOffDrop";
-NSString * const kLidOffWaitKey      = @"LidOffWait";
 NSString * const kSendTweetsKey      = @"SendTweets";
+//NSString * const kLidOffEnabledKey   = @"LidOffEnabled";
+//NSString * const kLidOffDropKey      = @"LidOffDrop";
+//NSString * const kLidOffWaitKey      = @"LidOffWait";
 
 #define MIN_TEMP_AXIS			0.0
 #define MAX_TEMP_AXIS			500.0

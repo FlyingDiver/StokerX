@@ -14,10 +14,10 @@ extern NSString * const kMinGraphTempKey;
 extern NSString * const kMaxGraphTempKey;
 extern NSString * const kHTTPOnlyModeKey;
 extern NSString * const kEmailAddressKey;
-extern NSString * const kLidOffEnabledKey;
-extern NSString * const kLidOffDropKey;
-extern NSString * const kLidOffWaitKey;
 extern NSString * const kSendTweetsKey;
+//extern NSString * const kLidOffEnabledKey;
+//extern NSString * const kLidOffDropKey;
+//extern NSString * const kLidOffWaitKey;
 
 @interface PreferencesController : NSWindowController
 {

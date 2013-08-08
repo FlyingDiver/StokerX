@@ -570,8 +570,7 @@ static NSString* gLoggingProcessName = nil;
     [outputHTML appendFormat:@"&nbsp;&nbsp; headers: %d  %@<br>",
      (int)numberOfRequestHeaders, headerDetails];
   } else {
-    [outputHTML appendFormat:@"&nbsp;&nbsp; headers: none<br>",
-     (int)numberOfRequestHeaders];
+    [outputHTML appendFormat:@"&nbsp;&nbsp; headers: none<br>"];
   }
 
   // write the request post data, toggleable

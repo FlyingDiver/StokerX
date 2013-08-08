@@ -258,8 +258,11 @@
 			
 		case kTwitterNotification:
 		{
-			[self.tweetController sendTweet: message];
+			NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setDateFormat:@"HH:mm:ss"];
+			NSString *formattedMessage = [NSString stringWithFormat: @"%@ \nTime: %@", message, [dateFormatter stringFromDate: [NSDate date]]];
 			
+			[self.tweetController sendTweet: formattedMessage];
 			break;
 		}
 			

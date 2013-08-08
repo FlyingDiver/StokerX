@@ -26,10 +26,10 @@
 	
 	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kMinGraphTempKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kMaxGraphTempKey];
-	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kLidOffDropKey];
-	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kLidOffWaitKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kHTTPOnlyModeKey];
-	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kLidOffEnabledKey];
+//	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kLidOffDropKey];
+//	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kLidOffWaitKey];
+//	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kLidOffEnabledKey];
 
 	[defaultValues setObject:[NSNumber numberWithInt: 86400] forKey:@"SUScheduledCheckInterval"];
 	[defaultValues setObject:[NSNumber numberWithInt: 1]     forKey:@"SUEnableAutomaticChecks"];
@@ -87,7 +87,11 @@
 	plotController.plotMinTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMinGraphTempKey] doubleValue];
 	plotController.plotMaxTemp = [[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey] doubleValue];
 	[plotController setupGraph];
+
+	// Set up to get text commands via twitter
 	
+	[[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(receiveTwitterDirectMessage:) name: MiniTwitter_DirectMessage object: nil];
+
 	notificationController.tweetController = tweetController;
 	
 	// Use saved position of main window, and show it.
@@ -195,6 +199,66 @@
 
 
 #pragma mark -
+#pragma mark Text Command Methods
+
+- (void) receiveTwitterDirectMessage: (NSNotification *) notification
+{
+	NSMutableArray *tokenList = [self parseDirectMessage: [notification object]];
+	NSLog(@"StokerXAppDelegate receiveTwitterDirectMessage: %@", tokenList);
+	
+	if ([[tokenList objectAtIndex: 0] caseInsensitiveCompare: @"status"] == NSOrderedSame)
+	{
+		[tweetController sendTweet: @"StokerX status:\n"];
+	}
+	else if ([[tokenList objectAtIndex: 0] caseInsensitiveCompare: @"set"] == NSOrderedSame)
+	{
+		[tweetController sendTweet: [NSString stringWithFormat: @"Set command received, sensor = \"%@\", temperature = %@",
+									 [tokenList objectAtIndex: 1], [tokenList objectAtIndex: 2]]];
+	}
+	else
+	{
+		[tweetController sendTweet: [NSString stringWithFormat: @"Unknown Direct Message command received: %@", [notification object]]];
+	}
+}
+
+- (NSMutableArray *) parseDirectMessage: (NSString *) message
+{
+	NSString *token = nil;
+	NSMutableArray *tokenList = [[NSMutableArray alloc] initWithCapacity: 10];
+	
+	NSScanner *scanner = [NSScanner scannerWithString: message];
+	
+	//	NSLog(@"MiniTwitter parseDirectMessage: message = %@", message);
+	
+	while (scanner.scanLocation < message.length)
+	{
+		// test if the next character is a quote
+		unichar character = [message characterAtIndex:scanner.scanLocation];
+		if (character == '"')
+		{
+			// skip the first quote and scan everything up to the next quote into the token
+			[scanner setScanLocation:(scanner.scanLocation + 1)];
+			[scanner scanUpToString:@"\"" intoString: &token];
+			[scanner setScanLocation:(scanner.scanLocation + 1)];  // skip the second quote too
+		}
+		else
+		{
+			// scan everything up to the next space into the token
+			[scanner scanUpToString:@" " intoString: &token];
+		}
+		
+		//		NSLog(@"MiniTwitter parseDirectMessage: token = %@", token);
+		[tokenList addObject: token];
+		
+		//if not at the end, skip the space character before continuing the loop
+		if (scanner.scanLocation < message.length) [scanner setScanLocation:(scanner.scanLocation + 1)];
+	}
+	
+	return tokenList;
+}
+
+
+#pragma mark -
 #pragma mark UI Action Methods
 
 - (IBAction) startLogging: (id) sender
@@ -216,11 +280,6 @@
 		}
 				
 		theStoker.httpOnlyMode = [[[NSUserDefaults standardUserDefaults] stringForKey: kHTTPOnlyModeKey] boolValue];
-		
-		[theStoker enableLidDetection: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffEnabledKey] boolValue] 
-							 withDrop: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey] doubleValue]
-							  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
-
 		
 		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];					// reset on actual start of logging
 		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
@@ -286,14 +345,6 @@
 	[[FRFeedbackReporter sharedReporter] reportFeedback];
 }
 
-- (IBAction)lidDetectOnOff:(NSButtonCell *)sender 
-{
-	[[NSUserDefaults standardUserDefaults] setBool:[sender state] forKey: kLidOffEnabledKey];
-	[theStoker enableLidDetection: [sender state] 
-						 withDrop: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffDropKey] doubleValue]
-						  andWait: [[[NSUserDefaults standardUserDefaults] stringForKey: kLidOffWaitKey] doubleValue]];
-
-}
 
 #pragma mark -
 #pragma mark Table View Methods

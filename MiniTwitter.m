@@ -1,6 +1,5 @@
 //
-//  StokerTwitter.m
-//  StokerX
+//  MiniTwitter.m
 //
 //  Created by Joe Keenan on 8/13/11.
 //  Copyright 2011 Joseph P Keenan Jr. All rights reserved.
@@ -13,7 +12,7 @@
 static NSString *const kTwitterKeychainItemName = @"StokerX: Twitter";
 static NSString *const kTwitterServiceName = @"Twitter";
 
-@synthesize myAuth, twitterHandle, twitterUserName, directMessageSinceId;
+@synthesize myAuth, twitterHandle, twitterUserName, directMessageSinceId, lastError, lastErrorCount;
 
 - (void)dealloc 
 {
@@ -47,7 +46,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		else
 			directMessageSinceId = @"0";
 		
-		[NSTimer scheduledTimerWithTimeInterval: 60 target:self selector:@selector(getDirectMessages:) userInfo: nil repeats:YES];
+		// Twitter has a limit of 15 DM queries per 15 minutes (avg 60 sec), so  do them slower than that
+		
+		[NSTimer scheduledTimerWithTimeInterval: 90 target:self selector:@selector(getDirectMessages:) userInfo: nil repeats:YES];
 	}
 		
 	[self updateUI];
@@ -124,7 +125,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 			// show the body of the server's authentication failure response
 			NSString *str = [[[NSString alloc] initWithData: responseData
 												   encoding: NSUTF8StringEncoding] autorelease];
-			NSLog(@"StokerXTwitter Authentication error: %@", str);
+			NSLog(@"MiniTwitter Authentication error: %@", str);
 		}
 	} 
 	else 
@@ -140,22 +141,22 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 - (void) getTwitterInfo
 {
-	NSURL *url = [NSURL URLWithString: @"https://api.twitter.com/1.1/account/verify_credentials.json"];		
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+	NSString *query = [@"https://api.twitter.com/1.1/account/verify_credentials.json" stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: [NSURL URLWithString: query]];
 	[myAuth authorizeRequest: request];
 	GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
 	[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
 	 {
 		 if (error != nil) 
 		 {
-			 NSLog(@"StokerXTwitter Verification error: %@", error);
-		 } 
+			 [self reportError: error fromQuery: query];
+		 }
 		 else 
 		 {
 			 NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
 			 self.twitterUserName = [results objectForKey: @"name"];
 			 self.twitterHandle   = [results objectForKey: @"screen_name"];
-			 NSLog(@"StokerXTwitter Verification Successful for %@ (@%@)", twitterUserName, twitterHandle);
+			 NSLog(@"MiniTwitter Verification Successful for %@ (@%@)", twitterUserName, twitterHandle);
 		 }
 		 [self updateUI];
 	 }];
@@ -207,7 +208,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 - (void)signInNetworkLost:(NSNotification *)note 
 {
-	NSLog(@"StokerXTwitter signInNetworkLost: %@, %@", [note name], [[note userInfo] objectForKey:kGTMOAuthFetchTypeKey]);
+	NSLog(@"MiniTwitter signInNetworkLost: %@, %@", [note name], [[note userInfo] objectForKey:kGTMOAuthFetchTypeKey]);
 
 	// the network dropped for 30 seconds
 	//
@@ -248,7 +249,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		[[NSUserDefaults standardUserDefaults] setBool: NO forKey: kSendTweetsKey];	
 	}
 	else
-		NSLog(@"StokerXTwitter enableTwitter: unknown state");
+		NSLog(@"MiniTwitter enableTwitter: unknown state");
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *) item 
@@ -267,33 +268,33 @@ static NSString *const kTwitterServiceName = @"Twitter";
 
 
 - (void) sendTweet: (NSString *) tweet
-{	
+{
 	if ([self isSignedIn])
-	{		
+	{
 		NSString *trimmedText = [tweet precomposedStringWithCanonicalMapping];
 		
 		if ([trimmedText length] > MAX_MESSAGE_LENGTH) {
 			trimmedText = [trimmedText substringToIndex:MAX_MESSAGE_LENGTH];
 		}
 		
-		NSString *body = [[NSString stringWithFormat: @"status=%@", trimmedText] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-						  
-		NSString *urlStr = @"https://api.twitter.com/1.1/statuses/update.json";
-		NSURL *url = [NSURL URLWithString:urlStr];
+		NSString *encodedText = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) trimmedText, NULL,(CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
+		NSString *body = [NSString stringWithFormat: @"status=%@", encodedText];
 		
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+		NSString *query = [@"https://api.twitter.com/1.1/statuses/update.json" stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:query]];
+		
 		[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-		[request setHTTPMethod:@"POST"]; 
+		[request setHTTPMethod:@"POST"];
 		[request setHTTPBody: [body dataUsingEncoding:NSUTF8StringEncoding]];
 		[myAuth authorizeRequest: request];
 		
-		GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];	
-		[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) 
+		GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+		[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error)
 		 {
-			 if (error != nil) 
+			 if (error != nil)
 			 {
-				 NSLog(@"StokerXTwitter sendTweet error: %@", error);
-			 } 
+				 [self reportError: error fromQuery: query];
+			 }
 		 }];
 		
 	}
@@ -302,18 +303,17 @@ static NSString *const kTwitterServiceName = @"Twitter";
 - (void) getDirectMessages:(NSTimer *) theTimer
 {
 	NSString *query = [[NSString stringWithFormat: @"https://api.twitter.com/1.1/direct_messages.json?since_id=%@", self.directMessageSinceId]
-					   stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+					   stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];	
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: [NSURL URLWithString: query]];
 	
-	NSURL *url = [NSURL URLWithString: query];
-	
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	[myAuth authorizeRequest: request];
+	
 	GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
 	[myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error)
 	 {
 		 if (error != nil)
 		 {
-			 NSLog(@"StokerXTwitter getDirectMessages error: %@", error);
+			 [self reportError: error fromQuery: query];
 		 }
 		 else
 		 {
@@ -322,15 +322,98 @@ static NSString *const kTwitterServiceName = @"Twitter";
 			 {
 				 self.directMessageSinceId = [[results objectAtIndex: msgNum] objectForKey: @"id_str"];
 				 [[NSUserDefaults standardUserDefaults] setObject: self.directMessageSinceId forKey: @"DirectMessageSinceId"];
+				 				 				 
+				 NSNumber *senderID = [[results objectAtIndex: msgNum] objectForKey: @"sender_id"];
+				 NSNumber *senderName = [[results objectAtIndex: msgNum] objectForKey: @"sender_screen_name"];
+				 NSString *message = [[results objectAtIndex: msgNum] objectForKey: @"text"];
 				 
-				 NSLog(@"StokerXTwitter getDirectMessage Successful (%@), sender = %@ (%@), message: %@",
-					   self.directMessageSinceId,
-					   [[results objectAtIndex: msgNum] objectForKey: @"sender_screen_name"],
-					   [[results objectAtIndex: msgNum] objectForKey: @"sender_id"],
-					   [[results objectAtIndex: msgNum] objectForKey: @"text"]);
+				 // Get a list of my friends (the users I'm following)
+				 
+				 NSString *query = [[NSString stringWithFormat: @"https://api.twitter.com/1.1/friends/ids.json?screen_name=%@", self.twitterHandle]
+									stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+				 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: [NSURL URLWithString: query]];
+				 
+				 [myAuth authorizeRequest: request];
+				 
+				 GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+				 [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error)
+				  {
+					  if (error != nil)
+					  {
+						  [self reportError: error fromQuery: query];
+					  }
+					  else
+					  {
+						  NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
+						  
+						  // check that sender is in the friends list						  
+						  for (NSNumber *userID in [results objectForKey: @"ids"])
+						  {
+							  if ([userID isEqualTo: senderID])
+							  {
+								  // Process message, and acknowledge it to sender
+								  [[NSNotificationCenter defaultCenter] postNotificationName: MiniTwitter_DirectMessage object: message];
+								
+								  NSString *replyMessage = [NSString stringWithFormat: @"Thank you %@ for your message \"%@\".\nI'll think about it.", senderName, message];
+								  NSString *encodedText = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) replyMessage, NULL,(CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
+								  NSString *body = [NSString stringWithFormat: @"text=%@&user_id=%@", encodedText, senderID];
+								  
+								  NSString *query = [@"https://api.twitter.com/1.1/direct_messages/new.json" stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+								  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:query]];
+								  
+								  [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+								  [request setHTTPMethod:@"POST"];
+								  [request setHTTPBody: [body dataUsingEncoding:NSUTF8StringEncoding]];
+								  [myAuth authorizeRequest: request];
+								  
+								  GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+								  [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error)
+								   {
+									   if (error != nil)
+									   {
+										   [self reportError: error fromQuery: query];
+									   }
+								   }];
+
+								  return;
+							  }
+
+						  }
+						  // Only get here if user not found.  This should not happen per Twitter Direct Message policy
+						  NSLog(@"MiniTwitter getDirectMessages error got Direct Message from unknown user: %@ (%@)", senderName, senderID);
+
+					  }
+				  }];
 			 }
 		 }
-	 }];}
+	 }];
+}
 
+- (void) reportError: (NSError *) error fromQuery: (NSString *) query
+{
+	if ((error.code == self.lastError.code) && ([error.domain isEqualTo: self.lastError.domain]) && ([error.userInfo isEqualTo: self.lastError.userInfo]))
+	{
+		self.lastErrorCount++;
+		
+//		if (self.lastErrorCount >= 10)
+//		{
+//			NSLog(@"MiniTwitter API error: last error repeated %d times", lastErrorCount);
+//			self.lastErrorCount = 0;
+//		}
+	}
+	else
+	{
+		if (self.lastErrorCount > 0)
+		{
+			NSLog(@"MiniTwitter API error: last error repeated %d times", lastErrorCount);
+			self.lastErrorCount = 0;
+		}
+		self.lastError = error;
+		NSDictionary *results = [[[[NSString alloc] initWithData: [error.userInfo objectForKey: @"data"] encoding:NSUTF8StringEncoding] autorelease] JSONValue];
+		NSDictionary *errorDict = [[results objectForKey: @"errors"] objectAtIndex: 0];
+		NSLog(@"MiniTwitter API error: code = %ld, domain = %@\n\tAPI call = %@\n\tAPI Error code = %@, API Error Message = \"%@\"\n",
+			  (long)error.code, error.domain, query, [errorDict objectForKey: @"code"], [errorDict objectForKey: @"message"]);
+	}
 
+}
 @end

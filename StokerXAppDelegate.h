@@ -39,10 +39,10 @@
 	    
 	NSInvocation					*updateInvocation;
 	
-	Boolean					loggingActive;
-	NSTimeInterval			startTime;
-	CPTXYGraph				*graph;
-	MiniTwitter				*tweetController;
+	Boolean						loggingActive;
+	NSTimeInterval				startTime;
+	CPTXYGraph					*graph;
+	MiniTwitter					*tweetController;
 	PreferencesController		*preferencesController;
 }
 
@@ -52,7 +52,9 @@
 - (IBAction) showPreferencePanel:(id)sender;
 - (IBAction) showNotificationsWindow:(id)sender;
 - (IBAction) startLogging: (id) sender;
-- (IBAction) lidDetectOnOff:(id)sender;
+
+- (void) receiveTwitterDirectMessage: (NSNotification *) message;
+- (NSMutableArray *) parseDirectMessage: (NSString *) message;
 
 - (void) setStatusText: (NSString *) status;
 - (void) updateUI;
