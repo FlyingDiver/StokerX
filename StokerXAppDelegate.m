@@ -128,6 +128,7 @@
 {				
 	BOOL shutdownNow = [theStoker shutdownWithCompletionHandler:^(void) 
 	{
+		NSLog(@"applicationShouldTerminate: completionHandler called");
 		[NSApp replyToApplicationShouldTerminate:YES];
 	}];
 
