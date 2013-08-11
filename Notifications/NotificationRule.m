@@ -69,7 +69,7 @@ static NSMutableArray *_RuleList = nil;
 			
 			if ([@"1.0" isEqualTo: [restoreObject objectForKey: @"version"]])
 			{
-				NSLog(@"NotificationRule Restoring Dictionary object, version = %@", [restoreObject objectForKey: @"version"]);
+//				NSLog(@"NotificationRule Restoring Dictionary object, version = %@", [restoreObject objectForKey: @"version"]);
 
 				_RuleList = [restoreObject objectForKey: @"rules"];
 				return  _RuleList;

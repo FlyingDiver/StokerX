@@ -1,0 +1,145 @@
+<html>
+<head>
+    <title>{{ReportTitle}}</title>
+	<style type="text/css">
+		body {
+			font-family:  "Times New Roman";
+			color: black;
+			background-color: white;
+			}
+  
+		h1 {
+			font-family: Helvetica; 
+			text-align:center;
+			font-size:1.5em;
+			}
+		h2 {
+			font-family: Helvetica; 
+			font-size:1em;
+			}
+
+		p {
+			margin: 0.0px 0.0px 0.0px 0.0px;
+			min-height: 16.0px;
+		}
+			
+		table.sensorTable {
+			border-collapse:	collapse;
+			width:			100%;
+			height:			100%
+		}
+	
+		table.sensorTable td {
+			padding:		5px;
+		}
+
+		table.sensorTable th {
+			padding:		5px;
+			background-color: #cc6600;
+		}
+	
+		table.sensorTable tr:nth-child(odd) {
+			background-color: rgba(0, 0, 200, 0.3);
+		}
+		table.sensorTable tr:nth-child(even) {
+			background-color: rgba(0, 200, 200, 0.3);
+		}
+
+ 		#allcontent {
+			width:			800px;
+			padding-top:	5px;
+			padding-bottom:	5px;
+		}
+		
+		#graph {
+		}	
+		
+		div#topTableContainer {
+			display: 	table;
+			width: 		100%;
+		}
+		
+		div#topTableRow {
+			display: table-row;
+		}
+		
+		#times {
+			display: 	table-cell;
+			width: 		40%;
+			padding: 	15px;
+		}
+		
+		#sensors {
+			display: 	table-cell;
+			width: 		60%;
+			padding: 	15px;
+		}
+
+		.left {
+  			text-align:       left;
+		}
+
+		.center {
+  			text-align:       center;
+		}
+
+		.right {
+  			text-align:       right;
+		}
+
+	</style>
+</head>
+<body>
+<div id="allcontent">
+	<div id="header">
+		<h1>StokerX Session Report</h1>
+	</div>	
+	<div id="topTableContainer">
+		<div id="topTableRow">
+			<div id="times">
+				<table class="timeTable">
+					<tr>
+						<td class="right">Start:</td>
+						<td class="left">{{StartTime}}</td>
+					</tr>
+					<tr>
+						<td class="right">End:</td>
+						<td class="left">{{EndTime}}</td>
+					</tr>	
+					<tr>
+						<td class="right">Elapsed:</td>
+						<td class="left">{{ElapsedTime}}</td>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<table class="sensorTable">
+					<tr>
+						<th>Sensor Name</th>
+						<th>Sensor Type</th>
+						<th>Target Temp</th>
+						<th>Blower Name</th>
+					</tr>
+					{{#Sensors}}
+					<tr>
+						<td class="left">{{name}}</td>
+						<td class="center">{{type}}</td>
+						<td class="center">{{target}}</td>
+						<td class="left">{{blower}}</td>
+					</tr>
+					{{/Sensors}}
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="graph">
+		<img width="100%" src="{{GraphURL}}"/>
+	</div>
+	
+	<div id="notes">
+		<h2>Notes</h2>	
+		{{{NotesText}}}
+	</div>
+</div>
+</body>
+</html>

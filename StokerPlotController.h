@@ -11,23 +11,35 @@
 #import "Stoker.h"
 #import "nsColorSupport.h"
 
-@interface StokerPlotController : NSObject <CPTPlotSpaceDelegate, CPTPlotDataSource, CPTAxisDelegate>
+@interface CPTGraphHostingView(rightMouseSupport)
+- (void)rightMouseDown:(NSEvent *)theEvent;
+- (void)rightMouseDragged:(NSEvent *)theEvent;
+- (void)rightMouseUp:(NSEvent *)theEvent;
+@end
+
+@class StokerXAppDelegate;
+
+@interface StokerPlotController : NSObject <CPTPlotSpaceDelegate, CPTPlotDataSource, CPTScatterPlotDataSource, CPTAxisDelegate>
 {
     IBOutlet CPTGraphHostingView	*graphView;
-	
-	CPTXYPlotSpace					*tempGraphPlotSpace; 
-	CPTXYPlotSpace					*blowerGraphPlotSpace; 
-	
-	NSTimeInterval					plotRange;
 
+	IBOutlet StokerXAppDelegate		*appDelegate;
+	
+	CPTXYPlotSpace		*tempGraphPlotSpace; 
+	CPTXYPlotSpace		*blowerGraphPlotSpace; 
 	CPTXYGraph			*graph;
+	
+	NSMutableArray		*annotationList;
+	NSTimeInterval		plotRange;
 	NSTimeInterval		startTime;
 	double				plotMinTemp;
 	double				plotMaxTemp;
 	Stoker				*stoker;
 }
 
+@property (nonatomic, retain) CPTGraphHostingView	*graphView;
 @property (nonatomic, retain) CPTXYGraph			*graph;
+@property (nonatomic, retain) NSMutableArray		*annotationList;
 @property (nonatomic, assign) NSTimeInterval		startTime;
 @property (nonatomic, assign) double				plotMinTemp;
 @property (nonatomic, assign) double				plotMaxTemp;
@@ -39,6 +51,5 @@
 
 // PDF / image export
 -(IBAction) exportToPDF:(id)sender;
--(IBAction) exportToPNG:(id)sender;
 
 @end

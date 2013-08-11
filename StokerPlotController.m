@@ -14,26 +14,29 @@
 
 #define BLOWER_PLOT_RESERVE		0.10	// 10%, more or less
 
+@implementation CPTGraphHostingView(rightMouseSupport)
+
+- (void)rightMouseDown:(NSEvent *)theEvent
+{
+	[self mouseDown: theEvent];
+}
+
+- (void)rightMouseDragged:(NSEvent *)theEvent
+{
+	[self mouseDragged: theEvent];
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent
+{
+	[self mouseUp: theEvent];
+}
+
+@end
+
+
 @implementation StokerPlotController
 
-@synthesize graph, startTime,plotMaxTemp, plotMinTemp, stoker;
-
-- (id)init 
-{
-    self = [super init];
-    if (self) 
-	{
-//        stokerData = [NSMutableDictionary dictionaryWithCapacity: 10];
-    }
-    return self;
-}
-
-- (void)dealloc 
-{
-//    [stokerData release];
-	
-    [super dealloc];
-}
+@synthesize graph, graphView, annotationList, startTime,plotMaxTemp, plotMinTemp, stoker;
 
 -(void)setupGraph
 {	    
@@ -340,7 +343,7 @@
 }
 
 #pragma mark -
-#pragma mark Scatter Plot delegate method
+#pragma mark Scatter Plot delegate methods
 
 -(void)scatterPlot:(CPTScatterPlot *)plot plotSymbolWasSelectedAtRecordIndex:(NSUInteger)index
 {   							   
@@ -365,11 +368,12 @@
     CPTPlotSpaceAnnotation *annotation = [[[CPTPlotSpaceAnnotation alloc] initWithPlotSpace:tempGraphPlotSpace anchorPlotPoint:anchorPoint] autorelease];
     annotation.contentLayer = [[[CPTTextLayer alloc] initWithText:tempString style:hitAnnotationTextStyle] autorelease];
     annotation.displacement = CGPointMake(0.0f, 20.0f);
-    [graph.plotAreaFrame.plotArea addAnnotation: annotation];   
+    annotation.rotation = (45.0 * M_PI)/180.0;
+    [graph.plotAreaFrame.plotArea addAnnotation: annotation];
 	
 	// Now set up a timer to make it go away after a few seconds
 	
-	 [NSTimer  scheduledTimerWithTimeInterval:(NSTimeInterval) 5.0  
+	 [NSTimer  scheduledTimerWithTimeInterval:(NSTimeInterval) 10.0
 									   target: self 
 									 selector: @selector(removeAnnotation:)
 									 userInfo: annotation  
@@ -384,57 +388,70 @@
 }
 
 #pragma mark -
-#pragma mark Plot Space delegate methods
-
-- (BOOL) plotSpace:(CPTPlotSpace*)space shouldScaleBy:(CGFloat)interactionScale aboutPoint:(CGPoint)interactionPoint
+#pragma mark Scatter Plot Data Source methods
+/*
+- (CPTPlotSymbol *)symbolForScatterPlot:(CPTScatterPlot *)plot recordIndex:(NSUInteger)index;
 {
-	NSLog(@"StokerPlotController - plotSpace: %@ shouldScaleBy: %f aboutPoint: %f,%f", 
-		  space.identifier, (double) interactionScale, (double) interactionPoint.x, (double) interactionPoint.y);
-	
-	return YES;
+	if ((index % 100) == 0)
+		return [CPTPlotSymbol diamondPlotSymbol];
+
+	return nil;
 }
+*/
+
+#pragma mark -
+#pragma mark Plot Space delegate methods
 
 -(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceDownEvent:(id)event atPoint:(CGPoint)point
 {
-/*	NSEvent *theEvent = (NSEvent *) event;
+	NSEvent *theEvent = (NSEvent *) event;
+	NSDecimal plotPoint[2];
 	
-	if (theEvent.modifierFlags & NSShiftKeyMask)
-		NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent:atPoint:, NSShiftKeyMask", space.identifier);
-	if (theEvent.modifierFlags & NSControlKeyMask)
-		NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent:atPoint:, NSControlKeyMask", space.identifier);
-	if (theEvent.modifierFlags & NSAlternateKeyMask)
-		NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent:atPoint:, NSAlternateKeyMask", space.identifier);
-	if (theEvent.modifierFlags & NSCommandKeyMask)
-		NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent:atPoint:, NSCommandKeyMask", space.identifier);
-*/
-	return YES;
+	if ((theEvent.type == NSRightMouseDown) || (theEvent.modifierFlags & NSControlKeyMask))
+	{
+		// make sure we have an annotation list
+		
+		if (!self.annotationList)
+			annotationList = [[NSMutableArray alloc] initWithCapacity: 20];
+			
+		// set up the anchor point for the annotation
+		
+		CGPoint plotAreaPoint = [graph convertPoint:point toLayer:graph.plotAreaFrame.plotArea];
+		[tempGraphPlotSpace plotPoint: plotPoint forPlotAreaViewPoint:plotAreaPoint];
+		NSArray *anchorPoint = [NSArray arrayWithObjects: [NSDecimalNumber decimalNumberWithDecimal: plotPoint[0]], [NSDecimalNumber decimalNumberWithDecimal: plotPoint[1]], nil];
+
+		// Setup a style for the annotation
+		CPTMutableTextStyle *hitAnnotationTextStyle = [CPTMutableTextStyle textStyle];
+		hitAnnotationTextStyle.color = [CPTColor whiteColor];
+		hitAnnotationTextStyle.fontSize = 14.0f;
+		hitAnnotationTextStyle.fontName = @"Helvetica-Bold";
+		
+		// create the annotation
+		
+		CPTPlotSpaceAnnotation *annotation = [[[CPTPlotSpaceAnnotation alloc] initWithPlotSpace:tempGraphPlotSpace anchorPlotPoint:anchorPoint] autorelease];
+		[annotationList addObject: annotation];
+		annotation.contentLayer = [[[CPTTextLayer alloc] initWithText: [NSString stringWithFormat: @"(%ld)", [annotationList count]]
+																style: hitAnnotationTextStyle] autorelease];
+
+		// Now add the annotation to the plot area
+		[graph.plotAreaFrame.plotArea addAnnotation: annotation];
+		
+		// and bring up the notes window
+		[appDelegate addNoteNumber: [annotationList count]];
+		
+		return YES;
+	}
+
+	return NO;
 }
 
--(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceDraggedEvent:(id)event atPoint:(CGPoint)point
-{
-//	NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDraggedEvent: atPoint: %f,%f", space.identifier, (double) point.x, (double) point.y);
-	
-	return YES;
-}
 
--(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceCancelledEvent:(id)event
-{
-//	NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceCancelledEvent:", space.identifier);
-	
-	return YES;
-}
-
--(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceUpEvent:(id)event atPoint:(CGPoint)point
-{
-//	NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceUpEvent: atPoint: %f,%f", space.identifier, (double) point.x, (double) point.y);
-	
-	return YES;
-}
+/*
 
 -(CGPoint)plotSpace:(CPTPlotSpace *)space willDisplaceBy:(CGPoint)proposedDisplacementVector
 {
-//	NSLog(@"StokerPlotController - plotSpace: %@ willDisplaceBy: %f,%f", 
-//		  space.identifier, (double) proposedDisplacementVector.x, (double) proposedDisplacementVector.y);
+	NSLog(@"StokerPlotController - plotSpace: %@ willDisplaceBy: %f,%f",
+		  space.identifier, (double) proposedDisplacementVector.x, (double) proposedDisplacementVector.y);
 	
 	CGPoint newVector;
 	newVector.x = proposedDisplacementVector.x;
@@ -444,8 +461,8 @@
 
 -(CPTPlotRange *)plotSpace:(CPTPlotSpace *)space willChangePlotRangeTo:(CPTPlotRange *)newRange forCoordinate:(CPTCoordinate)coordinate
 {
-//	NSLog(@"StokerPlotController - plotSpace: %@ willChangePlotRangeTo: %@ forCoordinate: %d", 
-//		  space.identifier, [newRange description], (int) coordinate);
+	NSLog(@"StokerPlotController - plotSpace: %@ willChangePlotRangeTo: %@ forCoordinate: %d",
+		  space.identifier, [newRange description], (int) coordinate);
 	
 	return newRange;
 }
@@ -453,13 +470,13 @@
 
 -(void)plotSpace:(CPTPlotSpace *)space didChangePlotRangeForCoordinate:(CPTCoordinate)coordinate
 {
-//	NSLog(@"StokerPlotController - plotSpace: %@ didChangePlotRangeForCoordinate: %d", space.identifier, (int) coordinate);
+	NSLog(@"StokerPlotController - plotSpace: %@ didChangePlotRangeForCoordinate: %d", space.identifier, (int) coordinate);
 }
+*/
 
-/*
 #pragma mark -
 #pragma mark Axis delegate methods
-
+/*
 -(BOOL)axisShouldRelabel:(CPTAxis *)axis
 {
 	NSLog(@"StokerPlotController - axisShouldRelabel: %@", axis.title);
@@ -499,29 +516,6 @@
 		 {
 			 NSData *dataForPDF = [graph dataForPDFRepresentationOfLayer];
 			 [dataForPDF writeToURL: pdfSavingDialog.URL atomically:NO];
-		 }		 
-	 }];
-}
-
--(IBAction)exportToPNG:(id)sender
-{
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	[dateFormatter setDateFormat:@"yyyy-MM-dd"];
-	NSString *formattedDateString = [dateFormatter stringFromDate: [NSDate date]];
-	
-	NSSavePanel *pngSavingDialog = [NSSavePanel savePanel];
-	[pngSavingDialog setAllowedFileTypes: [NSArray arrayWithObject:@"png"]];
-	[pngSavingDialog setNameFieldStringValue: [NSString stringWithFormat: @"StokerX %@", formattedDateString]];
-	
-	[pngSavingDialog beginWithCompletionHandler:^(NSInteger result)
-	{
-		 if (result==NSFileHandlingPanelOKButton)
-		 {
-			 NSImage *image = [graph imageOfLayer];
-			 NSData *tiffData = [image TIFFRepresentation];
-			 NSBitmapImageRep *tiffRep = [NSBitmapImageRep imageRepWithData:tiffData];
-			 NSData *pngData = [tiffRep representationUsingType:NSPNGFileType properties:nil];
-			 [pngData writeToURL: pngSavingDialog.URL atomically:NO];
 		 }		 
 	 }];
 }

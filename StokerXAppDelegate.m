@@ -10,7 +10,7 @@
 
 @implementation StokerXAppDelegate
 
-@synthesize mainWindow, startTime, graph, tweetController, preferencesController, loggingActive;
+@synthesize mainWindow, mainView, notesWindow, notesView, startTime, graph, tweetController, preferencesController, loggingActive;
 
 #define MINUTES	60.0
 #define TIME_RANGE_START		20 * MINUTES    
@@ -27,9 +27,6 @@
 	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kMinGraphTempKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kMaxGraphTempKey];
 	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kHTTPOnlyModeKey];
-//	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kLidOffDropKey];
-//	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kLidOffWaitKey];
-//	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kLidOffEnabledKey];
 
 	[defaultValues setObject:[NSNumber numberWithInt: 86400] forKey:@"SUScheduledCheckInterval"];
 	[defaultValues setObject:[NSNumber numberWithInt: 1]     forKey:@"SUEnableAutomaticChecks"];
@@ -47,7 +44,11 @@
 	[colorCell setColorKey:@"color"];  
 
 	NSTableColumn *colorColumn = [[sensorTable tableColumns] objectAtIndex: [sensorTable columnWithIdentifier:@"color"]];  
-	[colorColumn setDataCell:colorCell]; 
+	[colorColumn setDataCell:colorCell];
+	
+	[notesView setFont: [NSFont fontWithName: @"Times New Roman" size: 14.0]];
+	[notesView setRichText:NO];
+	[notesView setUsesFontPanel:NO];
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notes
@@ -55,7 +56,10 @@
 	[self setStatusText: [NSString stringWithFormat: @"Starting StokerX %@", [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleShortVersionString"]]];
 
 //	Enabling this causes Fetcher logs to be written to the desktop!
-//	[GTMHTTPFetcher setLoggingEnabled:YES];
+	
+	if ([[[NSUserDefaults standardUserDefaults] stringForKey: @"EnableGTMHTTPFetcherLogging"] boolValue])
+		[GTMHTTPFetcher setLoggingEnabled:YES];
+	
 
     [[FRFeedbackReporter sharedReporter] setDelegate:self];
 	[[FRFeedbackReporter sharedReporter] reportIfCrash];
@@ -77,6 +81,27 @@
 											forKeyPath: kMinGraphTempKey
 											   options: NSKeyValueObservingOptionNew
 											   context: NULL];
+	
+	// make sure templates are in the Support Directory
+		
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString *templateDir = [[[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]] stringByAppendingPathComponent: @"Templates"];
+
+	NSFileManager *fileManager = [[NSFileManager alloc] init];
+	if ([fileManager fileExistsAtPath: templateDir] == NO)
+	{
+		[fileManager createDirectoryAtPath: templateDir withIntermediateDirectories:YES attributes:nil error:nil];
+	}
+	
+	NSString *destFile = [templateDir stringByAppendingPathComponent: @"Default.mustache"];
+	NSError *error;
+	
+	[fileManager removeItemAtPath: destFile error: &error];
+	
+	if (![fileManager copyItemAtPath: [[NSBundle mainBundle] pathForResource: @"Default" ofType:@"mustache"] toPath: destFile error: &error])
+	{
+		NSLog(@"StokerXAppDelegate copyItemAtPath error: %@", error);
+	}
 	
 	// get a Stoker object
 	
@@ -195,6 +220,27 @@
 		plotController.plotMinTemp = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
 		[self updateUI];
 	}
+}
+
+- (void) addNoteNumber: (NSInteger) noteNumber
+{
+	NSString *prefix;
+	
+	if (noteNumber == 1)
+		prefix = [NSString stringWithFormat: @"(%ld) ", noteNumber];
+	else
+		prefix = [NSString stringWithFormat: @"\n(%ld) ", noteNumber];
+			
+	
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    [attributes setObject: [NSFont fontWithName: @"Times New Roman" size: 14.0] forKey:NSFontAttributeName];
+	NSAttributedString *string = [[NSAttributedString alloc] initWithString:  prefix attributes: attributes];
+
+	[[notesView textStorage] beginEditing];
+	[[notesView textStorage] appendAttributedString:string];
+	[[notesView textStorage] endEditing];
+	
+	[notesWindow makeKeyAndOrderFront: self];
 }
 
 
@@ -324,12 +370,17 @@
 	[helpController showWindow:self];
 }
 
-- (IBAction)showReadMe:(id)sender 
+- (IBAction)showReadMe:(id)sender
 {
 	NSString *version =  [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleShortVersionString"];
 	NSURL *readMeURL = [NSURL URLWithString: [NSString stringWithFormat: @"http://www.flyingdiver.com/StokerX/StokerX-ReadMe-%@.html", version]];
 	
 	[[NSWorkspace sharedWorkspace] openURL: readMeURL];
+}
+
+- (IBAction)showNotes:(id)sender
+{
+	[notesWindow makeKeyAndOrderFront: self];
 }
 
 
@@ -549,7 +600,186 @@
 	return nil;
 }
 
+#pragma mark -
+#pragma mark Printing methods
 
+- (void)print:(id)sender
+{
+    NSPrintInfo *printInfo = [NSPrintInfo sharedPrintInfo];
+	
+    NSSize paperSize = [printInfo paperSize];
+    NSRect printableRect = [printInfo imageablePageBounds];
+	
+    // calculate page margins
+    float marginL = printableRect.origin.x;
+    float marginR = paperSize.width - (printableRect.origin.x + printableRect.size.width);
+    float marginB = printableRect.origin.y;
+    float marginT = paperSize.height - (printableRect.origin.y + printableRect.size.height);
+	
+    // Make sure margins are symetric and positive
+    float marginLR = MAX(0,MAX(marginL,marginR));
+    float marginTB = MAX(0,MAX(marginT,marginB));
+    
+    // Tell printInfo what the nice new margins are
+    [printInfo setLeftMargin:   marginLR];
+    [printInfo setRightMargin:  marginLR];
+    [printInfo setTopMargin:    marginTB];
+    [printInfo setBottomMargin: marginTB];
+	[printInfo setHorizontalPagination: NSAutoPagination];
+	[printInfo setVerticalPagination: NSAutoPagination];
+	[[printInfo dictionary] setObject: [NSNumber numberWithBool:YES] forKey: NSPrintHeaderAndFooter];
+	
+    NSRect printViewFrame = {};
+    printViewFrame.size.width = paperSize.width - marginLR*2;
+    printViewFrame.size.height = paperSize.height - marginTB*2;
+	
+	WebView *printView = [[WebView alloc] initWithFrame: printViewFrame frameName: nil groupName: nil];
+	[printView setShouldUpdateWhileOffscreen: YES];
+	[printView setUIDelegate: self];
+	[printView setFrameLoadDelegate: self];
+	
+	WebPreferences *webPref = [printView preferences];
+	[webPref setAutosaves: NO];
+	[webPref setShouldPrintBackgrounds:YES];
+	[printView setPreferences:webPref];
+	
+
+	NSData	*plotImageData = [plotController.graph dataForPDFRepresentationOfLayer];
+	NSURL	*tempImageURL = [NSURL fileURLWithPath: [NSTemporaryDirectory() stringByAppendingPathComponent:@"StokerXPlot.pdf" ]];
+	[plotImageData writeToURL: tempImageURL atomically: YES];
+	
+	// Convert the text from the Notes panel to HTML for the printed output
+	
+	NSAttributedString *notes = [notesView textStorage];
+	NSData *htmlData = [notes dataFromRange:NSMakeRange(0, notes.length) documentAttributes:
+						[NSDictionary dictionaryWithObjectsAndKeys:NSHTMLTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
+	NSString *htmlDocString = [[[NSString alloc] initWithData: htmlData encoding:NSUTF8StringEncoding] autorelease];
+
+	// extract the CSS and body HTML from the complete document
+	
+	NSString *notesText = @"";
+	NSString *notesCSS = @"";
+	NSScanner *scanner = [NSScanner scannerWithString: htmlDocString];
+	[scanner scanUpToString: @"<style type=\"text/css\">" intoString: nil];
+	[scanner scanString: @"<style type=\"text/css\">" intoString: nil];
+	[scanner scanUpToString: @"</style>" intoString: &notesCSS];
+	
+	[scanner scanUpToString: @"<body>" intoString: nil];
+	[scanner scanString: @"<body>" intoString: nil];
+	[scanner scanUpToString: @"</body>" intoString: &notesText];
+	   
+	// assemble all the parts of the report into a dictionary for the template engine
+	
+	NSMutableDictionary *reportDict = [[NSMutableDictionary alloc] init];
+	[reportDict setObject: [NSString stringWithFormat: @"%d", (int) printViewFrame.size.width] forKey: @"FrameWidth"];
+	[reportDict setObject: @"StokerX Session Report" forKey: @"ReportTitle"];
+	[reportDict setObject: notesCSS forKey: @"NotesCSS"];
+	[reportDict setObject: notesText forKey: @"NotesText"];
+	[reportDict setObject: [tempImageURL absoluteString] forKey: @"GraphURL"];
+	
+	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+	dateFormatter.dateStyle = NSDateFormatterShortStyle;
+	dateFormatter.timeStyle = NSDateFormatterShortStyle;
+	dateFormatter.locale = [NSLocale currentLocale];
+	[reportDict setObject: [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startTime]]
+				   forKey: @"StartTime"];
+
+	NSTimeInterval elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
+	[reportDict setObject: [NSString stringWithFormat: @"%02ld:%02ld:%02ld", (long)elapsedTime / 60 / 60, (long)fmod(elapsedTime / 60, 60), (long)fmod(elapsedTime , 60)]
+				   forKey: @"ElapsedTime"];
+
+
+	// build an array of dicts for the sensor table
+	
+	NSMutableArray *sensors = [[NSMutableArray alloc] initWithCapacity: 10];
+	for (int i = 0; i < [theStoker numberOfSensors]; i++)
+	{
+		[sensors addObject: [[NSDictionary alloc] initWithObjectsAndKeys:
+							 [theStoker typeForSensor: i], @"type",
+							 [theStoker nameForSensor: i], @"name",
+							 [theStoker targetForSensor: i], @"target",
+							 [theStoker blowerForSensor: i], @"blower",
+							 nil]];
+	}
+	[reportDict setObject: sensors forKey: @"Sensors"];
+	
+	// use the template engine to generate the document HTML
+	
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]];
+	NSString *templatePath = [[supportDir stringByAppendingPathComponent: @"Templates"] stringByAppendingPathComponent: @"Default.mustache"];
+    GRMustacheTemplate *template = [GRMustacheTemplate templateFromContentsOfFile: templatePath error: NULL];
+		
+    NSString *webviewHTMLString = [template renderObject: reportDict error:NULL];
+	
+	// Load the frame, print it in the delegate when the load is complete
+	
+	[[printView mainFrame] loadHTMLString: webviewHTMLString baseURL: tempImageURL];
+	
+}
+
+// WebView delegate methods
+
+//	WebView has completed loading, so it can be printed now.
+
+- (void)webView:(WebView *) printView didFinishLoadForFrame:(WebFrame *)frame
+{
+    NSPrintInfo *printInfo = [NSPrintInfo sharedPrintInfo];
+	
+	NSPrintOperation *printOp = [NSPrintOperation printOperationWithView: [[[printView mainFrame] frameView] documentView] printInfo: printInfo];
+	[printOp setShowsPrintPanel: YES];
+    [printOp runOperation];
+	[printView release];
+}
+
+/*
+- (float)webViewFooterHeight:(WebView *)sender
+{
+	return 18.0;
+}
+
+- (void)webView:(WebView *)sender drawFooterInRect:(NSRect)rect
+{
+	NSMutableParagraphStyle * paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	[paragraphStyle setAlignment: NSCenterTextAlignment];
+	NSDictionary *attributes = [NSDictionary dictionaryWithObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+	
+	[@"Footer!" drawInRect: rect withAttributes: attributes];
+}
+
+// Return the number of pages available for printing
+- (BOOL)knowsPageRange:(NSRangePointer)range 
+{
+	NSRect bounds = [self bounds];
+	float printHeight = [self calculatePrintHeight];
+	range->location = 1;
+	range->length = NSHeight(bounds) / printHeight + 1;
+	return YES;
+}
+ 
+// Return the drawing rectangle for a particular page number
+- (NSRect)rectForPage:(int)page 
+{
+	NSRect bounds = [self bounds];
+	float pageHeight = [self calculatePrintHeight];
+	return NSMakeRect( NSMinX(bounds), NSMaxY(bounds) - page * pageHeight,
+					  NSWidth(bounds), pageHeight );
+}
+// Calculate the vertical size of the view that fits on a single page
+ 
+- (float)calculatePrintHeight 
+{
+	// Obtain the print info object for the current operation
+	NSPrintInfo *pi = [[NSPrintOperation currentOperation] printInfo];
+	// Calculate the page height in points
+	NSSize paperSize = [pi paperSize];
+	float pageHeight = paperSize.height - [pi topMargin] - [pi bottomMargin];
+	// Convert height to the scaled view
+	float scale = [[[pi dictionary] objectForKey:NSPrintScalingFactor]
+				   floatValue];
+	return pageHeight / scale;
+}
+*/
 #pragma mark -
 #pragma mark Feedback Reporter Delegate Methods
 
