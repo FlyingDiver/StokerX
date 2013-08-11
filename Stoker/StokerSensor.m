@@ -16,7 +16,7 @@
 - (NSString *) description
 {
 	return [NSString stringWithFormat: @"StokerSensor: name = %@, id = %@, tc = %@, ta = %@, blower = %@, temp plot count = %ld", 
-			self.deviceName, self.deviceID, self.tempCurrent, self.tempTarget, self.blower.deviceID, (unsigned long)[self.plotData count]];
+			self.deviceName, self.deviceID, self.tempCurrent, self.tempTarget, self.blower.deviceID, [self.plotData count]];
 }
 
 @end

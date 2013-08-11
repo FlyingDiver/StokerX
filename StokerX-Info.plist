@@ -3,11 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBuildDate</key>
-<<<<<<< HEAD
 	<string>Thu Aug  8 11:17:04 EDT 2013</string>
-=======
-	<string>Fri Aug  9 22:52:55 EDT 2013</string>
->>>>>>> a1f70299a9ccb3ebf4490fd6a99411d0ae31cb81
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
@@ -42,11 +38,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-<<<<<<< HEAD
 	<string>217</string>
-=======
-	<string>232</string>
->>>>>>> a1f70299a9ccb3ebf4490fd6a99411d0ae31cb81
 	<key>FRFeedbackReporter.addressbookEmail </key>
 	<string>YES</string>
 	<key>FRFeedbackReporter.sendDetailsIsOptional</key>

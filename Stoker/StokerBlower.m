@@ -17,7 +17,7 @@
 - (NSString *) description
 {
 	return [NSString stringWithFormat: @"StokerBlower: name = %@, id = %@, state = %d, on count = %ld, plot count = %ld", 
-			self.deviceName, self.deviceID, self.state, (long)self.onCount, [self.plotData count]];
+			self.deviceName, self.deviceID, self.state, self.onCount, [self.plotData count]];
 }
 
 @end
