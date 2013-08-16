@@ -73,7 +73,7 @@
 		
 		[self getStokerJSON: nil];		// do it once now to get things started
 	}
-	else 				// for JSON mode, the timer requests the data, and graphs are updated when data is received
+	else 
 	{
 		[self sendStatusUpdate: @"Resetting Stoker for Telnet Logging"];
 		[self startTelnetCapture];
@@ -83,18 +83,10 @@
 - (void) stopLogging
 {
 	self.isLogging = FALSE;
-
-	if (httpOnlyMode)
+	[self shutdownWithCompletionHandler:^(void)
 	{
-        [jsonTimer invalidate];
-        jsonTimer = nil;
-		[self sendStatusUpdate: @"HTTP Logging stopped"];
-	}
-    else
-    {
-		[self sendStatusUpdate: @"Resetting Stoker to stop Logging"];
-		[self stopTelnetCapture];
-    }
+		NSLog(@"stopLogging: completionHandler called");
+	}];
 }
 
 #pragma mark -
@@ -312,6 +304,7 @@
 - (void) stopTelnetCapture 
 {
 	[self sendStatusUpdate: @"Stopping telnet connection"];
+	telnetActive = NO;
 
 	NSArray *sequence = [NSArray arrayWithObjects: 
 						  [NSDictionary dictionaryWithObjectsAndKeys: @"bbq -k\r", @"send", @">", @"expect", nil],
@@ -430,9 +423,7 @@
 
 
 -(void) socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port;
-{
-//	NSLog (@"Stoker: socket:didConnectToHost: %@:%u", host, port);
-	
+{	
 	telnetActive = YES;
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:telnetActive:)]) {
 		[[self delegate] stoker: self telnetActive: YES];
@@ -447,27 +438,25 @@
 
 - (void)socket:(GCDAsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
-	if (err)
-	{
-		NSLog (@"Stoker: socket:willDisconnectWithError: %@", err);    
-	}
+	if (err) NSLog (@"Stoker: socket:willDisconnectWithError: %@", err);    
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
 	connectionReady = NO;
+	telnetActive = NO;
 	
-	if (telnetActive)
+	if (self.isLogging)
 	{
-		telnetActive = NO;	
-	}
-	
-	if (shutdownCompletionBlock_) 
-    {
-        shutdownCompletionBlock_();
-    }
-	else
 		NSLog (@"Stoker: socketDidDisconnect:withError: %@", err);
+		
+		[self sendStatusUpdate: @"Stoker connection lost, attempting to reconnect"];
+		[self startTelnetCapture];
+	}
+	else
+	{
+		NSLog (@"Stoker: telnet session closed");
+	}
 }
 
 -(void) socket:(GCDAsyncSocket *)sock didReadData:(NSData*) sockData withTag:(long)tag
@@ -476,9 +465,7 @@
 	{
 		NSString *send = [mySendExpect nextSend];
 		NSString *expect = [mySendExpect nextExpect];
-				
-//		NSLog(@"Stoker sending \"%@\", expecting \"%@\"", send, expect);
-		
+						
 		[socket writeData: [send dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
 		[socket readDataToData: [expect dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
 				

@@ -56,6 +56,4 @@
 @property (nonatomic, copy) NSString *twitterHandle;
 @property (nonatomic, copy) NSString *twitterUserName;
 @property (nonatomic, copy) NSString *directMessageSinceId;
-@property (nonatomic, copy) NSError *lastError;
-@property (nonatomic) int lastErrorCount;
 @end

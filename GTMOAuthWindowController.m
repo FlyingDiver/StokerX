@@ -56,23 +56,6 @@ const char *kKeychainAccountName = "OAuth";
             signIn = signIn_,
             userData = userData_;
 
-#if !GTM_OAUTH_SKIP_GOOGLE_SUPPORT
-- (id)initWithScope:(NSString *)scope
-           language:(NSString *)language
-     appServiceName:(NSString *)keychainAppServiceName
-     resourceBundle:(NSBundle *)bundle {
-  // convenient entry point for Google authentication
-  return [self initWithScope:scope
-                    language:language
-             requestTokenURL:nil
-           authorizeTokenURL:nil
-              accessTokenURL:nil
-              authentication:nil
-              appServiceName:keychainAppServiceName
-              resourceBundle:bundle];
-}
-#endif
-
 - (id)initWithScope:(NSString *)scope
            language:(NSString *)language
     requestTokenURL:(NSURL *)requestURL
@@ -103,16 +86,7 @@ const char *kKeychainAccountName = "OAuth";
                                                webRequestSelector:@selector(signIn:displayRequest:)
                                                  finishedSelector:@selector(signIn:finishedWithAuth:error:)];
     } else {
-#if !GTM_OAUTH_SKIP_GOOGLE_SUPPORT
-      // use default Google auth and endpoint values
-      signIn_ = [[GTMOAuthSignIn alloc] initWithGoogleAuthenticationForScope:scope
-                                                                      language:language
-                                                                      delegate:self
-                                                            webRequestSelector:@selector(signIn:displayRequest:)
-                                                              finishedSelector:@selector(signIn:finishedWithAuth:error:)];
-#else
       NSAssert(0, @"authentication object required");
-#endif
     }
 
     // the display name defaults to the bundle's name, falling back on the
@@ -296,6 +270,8 @@ const char *kKeychainAccountName = "OAuth";
 - (void)destroyWindow {
   // no request; close the window (but not immediately, in case
   // we're called in response to some window event)
+  [[self webView] stopLoading:nil];
+
   if (sheetModalForWindow_) {
     [NSApp endSheet:[self window]];
   } else {
@@ -372,14 +348,6 @@ const char *kKeychainAccountName = "OAuth";
 #endif
   }
 }
-
-#pragma mark Token Revocation
-
-#if !GTM_OAUTH_SKIP_GOOGLE_SUPPORT
-+ (void)revokeTokenForGoogleAuthentication:(GTMOAuthAuthentication *)auth {
-  [GTMOAuthSignIn revokeTokenForGoogleAuthentication:auth];
-}
-#endif
 
 #pragma mark WebView methods
 
@@ -535,27 +503,6 @@ decisionListener:(id<WebPolicyDecisionListener>)listener {
     return (err == noErr);
   }
 }
-
-#if !GTM_OAUTH_SKIP_GOOGLE_SUPPORT
-+ (GTMOAuthAuthentication *)authForGoogleFromKeychainForName:(NSString *)appServiceName {
-  GTMOAuthAuthentication *newAuth = [GTMOAuthAuthentication authForInstalledApp];
-  [self authorizeFromKeychainForName:appServiceName
-                      authentication:newAuth];
-  return newAuth;
-}
-
-+ (GTMOAuthAuthentication *)authForGoogleFromKeychainForName:(NSString *)appServiceName
-                                                 consumerKey:(NSString *)consumerKey
-                                                  privateKey:(NSString *)privateKey {
-  GTMOAuthAuthentication *auth;
-  auth = [[[GTMOAuthAuthentication alloc] initWithSignatureMethod:kGTMOAuthSignatureMethodHMAC_SHA1
-                                                      consumerKey:consumerKey
-                                                       privateKey:privateKey] autorelease];
-  [GTMOAuthWindowController authorizeFromKeychainForName:appServiceName
-                                          authentication:auth];
-  return auth;
-}
-#endif
 
 + (BOOL)authorizeFromKeychainForName:(NSString *)appServiceName
                       authentication:(GTMOAuthAuthentication *)newAuth {

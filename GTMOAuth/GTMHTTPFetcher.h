@@ -77,6 +77,35 @@
 //        Status codes are at <http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html>
 //
 //
+// Threading and queue support:
+//
+// Callbacks require either that the thread used to start the fetcher have a run
+// loop spinning (typically the main thread), or that an NSOperationQueue be
+// provided upon which the delegate callbacks will be called.  Starting with
+// iOS 6 and Mac OS X 10.7, clients may simply create an operation queue for
+// callbacks on a background thread:
+//
+//   NSOperationQueue *queue = [[[NSOperationQueue alloc] init] autorelease];
+//   [queue setMaxConcurrentOperationCount:1];
+//   fetcher.delegateQueue = queue;
+//
+// or specify the main queue for callbacks on the main thread:
+//
+//   fetcher.delegateQueue = [NSOperationQueue mainQueue];
+//
+// The client may also re-dispatch from the callbacks and notifications to
+// a known dispatch queue:
+//
+//  [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
+//    if (error == nil) {
+//      dispatch_async(myDispatchQueue, ^{
+//        ...
+//     });
+//    }
+//  }];
+//
+//
+//
 // Downloading to disk:
 //
 // To have downloaded data saved directly to disk, specify either a path for the
@@ -234,33 +263,27 @@
   #define GTM_BACKGROUND_FETCHING 1
 #endif
 
-#undef _EXTERN
-#undef _INITIALIZE_AS
-#ifdef GTMHTTPFETCHER_DEFINE_GLOBALS
-  #define _EXTERN
-  #define _INITIALIZE_AS(x) =x
-#else
-  #if defined(__cplusplus)
-    #define _EXTERN extern "C"
-  #else
-    #define _EXTERN extern
-  #endif
-  #define _INITIALIZE_AS(x)
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 // notifications
 //
 // fetch started and stopped, and fetch retry delay started and stopped
-_EXTERN NSString* const kGTMHTTPFetcherStartedNotification           _INITIALIZE_AS(@"kGTMHTTPFetcherStartedNotification");
-_EXTERN NSString* const kGTMHTTPFetcherStoppedNotification           _INITIALIZE_AS(@"kGTMHTTPFetcherStoppedNotification");
-_EXTERN NSString* const kGTMHTTPFetcherRetryDelayStartedNotification _INITIALIZE_AS(@"kGTMHTTPFetcherRetryDelayStartedNotification");
-_EXTERN NSString* const kGTMHTTPFetcherRetryDelayStoppedNotification _INITIALIZE_AS(@"kGTMHTTPFetcherRetryDelayStoppedNotification");
+extern NSString *const kGTMHTTPFetcherStartedNotification;
+extern NSString *const kGTMHTTPFetcherStoppedNotification;
+extern NSString *const kGTMHTTPFetcherRetryDelayStartedNotification;
+extern NSString *const kGTMHTTPFetcherRetryDelayStoppedNotification;
 
 // callback constants
-_EXTERN NSString* const kGTMHTTPFetcherErrorDomain       _INITIALIZE_AS(@"com.google.GTMHTTPFetcher");
-_EXTERN NSString* const kGTMHTTPFetcherStatusDomain      _INITIALIZE_AS(@"com.google.HTTPStatus");
-_EXTERN NSString* const kGTMHTTPFetcherErrorChallengeKey _INITIALIZE_AS(@"challenge");
-_EXTERN NSString* const kGTMHTTPFetcherStatusDataKey     _INITIALIZE_AS(@"data");  // data returned with a kGTMHTTPFetcherStatusDomain error
+extern NSString *const kGTMHTTPFetcherErrorDomain;
+extern NSString *const kGTMHTTPFetcherStatusDomain;
+extern NSString *const kGTMHTTPFetcherErrorChallengeKey;
+extern NSString *const kGTMHTTPFetcherStatusDataKey;  // data returned with a kGTMHTTPFetcherStatusDomain error
+
+#ifdef __cplusplus
+}
+#endif
 
 enum {
   kGTMHTTPFetcherErrorDownloadFailed = -1,
@@ -287,6 +310,10 @@ enum {
   kGTMHTTPFetcherCookieStorageMethodNone = 3
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void GTMAssertSelectorNilOrImplementedWithArgs(id obj, SEL sel, ...);
 
 // Utility functions for applications self-identifying to servers via a
@@ -305,6 +332,10 @@ NSString *GTMSystemVersionString(void);
 // CFBundleShortVersionString or CFBundleVersion.  If no bundle ID
 // is available, the process name preceded by "proc_" is used.
 NSString *GTMApplicationIdentifier(NSBundle *bundle);
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
 
 @class GTMHTTPFetcher;
 
@@ -335,6 +366,9 @@ NSString *GTMApplicationIdentifier(NSBundle *bundle);
 @protocol GTMHTTPFetcherServiceProtocol <NSObject>
 // This protocol allows us to call into the service without requiring
 // GTMHTTPFetcherService sources in this project
+
+@property (retain) NSOperationQueue *delegateQueue;
+
 - (BOOL)fetcherShouldBeginFetching:(GTMHTTPFetcher *)fetcher;
 - (void)fetcherDidStop:(GTMHTTPFetcher *)fetcher;
 
@@ -345,23 +379,40 @@ NSString *GTMApplicationIdentifier(NSBundle *bundle);
 @protocol GTMFetcherAuthorizationProtocol <NSObject>
 @required
 // This protocol allows us to call the authorizer without requiring its sources
-// in this project
+// in this project.
 - (void)authorizeRequest:(NSMutableURLRequest *)request
                 delegate:(id)delegate
        didFinishSelector:(SEL)sel;
 
 - (void)stopAuthorization;
 
+- (void)stopAuthorizationForRequest:(NSURLRequest *)request;
+
 - (BOOL)isAuthorizingRequest:(NSURLRequest *)request;
 
 - (BOOL)isAuthorizedRequest:(NSURLRequest *)request;
 
-- (NSString *)userEmail;
+@property (retain, readonly) NSString *userEmail;
 
 @optional
+
+// Indicate if authorization may be attempted. Even if this succeeds,
+// authorization may fail if the user's permissions have been revoked.
+@property (readonly) BOOL canAuthorize;
+
+// For development only, allow authorization of non-SSL requests, allowing
+// transmission of the bearer token unencrypted.
+@property (assign) BOOL shouldAuthorizeAllRequests;
+
+#if NS_BLOCKS_AVAILABLE
+- (void)authorizeRequest:(NSMutableURLRequest *)request
+       completionHandler:(void (^)(NSError *error))handler;
+#endif
+
 @property (assign) id <GTMHTTPFetcherServiceProtocol> fetcherService; // WEAK
 
 - (BOOL)primeForRefresh;
+
 @end
 
 // GTMHTTPFetcher objects are used for async retrieval of an http get or post
@@ -408,11 +459,12 @@ NSString *GTMApplicationIdentifier(NSBundle *bundle);
 #endif
   id userData_;                     // retained, if set by caller
   NSMutableDictionary *properties_; // more data retained for caller
-  NSArray *runLoopModes_;           // optional, for 10.5 and later
+  NSArray *runLoopModes_;           // optional
+  NSOperationQueue *delegateQueue_; // optional; available iOS 6/10.7 and later
   id <GTMHTTPFetchHistoryProtocol> fetchHistory_; // if supplied by the caller, used for Last-Modified-Since checks and cookies
   NSInteger cookieStorageMethod_;   // constant from above
   id <GTMCookieStorageProtocol> cookieStorage_;
-  
+
   id <GTMFetcherAuthorizationProtocol> authorizer_;
 
   // the service object that created and monitors this fetcher, if any
@@ -433,6 +485,12 @@ NSString *GTMApplicationIdentifier(NSBundle *bundle);
 
   NSString *comment_;               // comment for log
   NSString *log_;
+#if !STRIP_GTM_FETCH_LOGGING
+  NSURL *redirectedFromURL_;
+  NSString *logRequestBody_;
+  NSString *logResponseBody_;
+  BOOL shouldDeferResponseBodyLogging_;
+#endif
 }
 
 // Create a fetcher
@@ -494,7 +552,8 @@ NSString *GTMApplicationIdentifier(NSBundle *bundle);
 // fetchers that are being delayed by a fetcher service.
 @property (assign) NSInteger servicePriority;
 
-// The thread used to run this fetcher in the fetcher service
+// The thread used to run this fetcher in the fetcher service when no operation
+// queue is provided.
 @property (retain) NSThread *thread;
 
 // The delegate is retained during the connection
@@ -664,10 +723,15 @@ NSString *GTMApplicationIdentifier(NSBundle *bundle);
 // Comments are useful for logging
 @property (copy) NSString *comment;
 
-- (void)setCommentWithFormat:(id)format, ...;
+- (void)setCommentWithFormat:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 
 // Log of request and response, if logging is enabled
 @property (copy) NSString *log;
+
+// Callbacks can be invoked on an operation queue rather than via the run loop,
+// starting on 10.7 and iOS 6.  If a delegate queue is supplied. the run loop
+// modes are ignored.
+@property (retain) NSOperationQueue *delegateQueue;
 
 // Using the fetcher while a modal dialog is displayed requires setting the
 // run-loop modes to include NSModalPanelRunLoopMode
