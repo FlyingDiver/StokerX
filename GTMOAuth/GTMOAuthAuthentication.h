@@ -17,7 +17,7 @@
 // requests. http://oauth.net/core/1.0a/
 //
 // Users can rely on +authForInstalledApp for creating a complete authentication
-// object.
+// object for use with Google's OAuth protocol.
 //
 // The user (typically the GTMOAuthSignIn object) can call the methods
 //  - (void)setKeysForResponseData:(NSData *)data;
@@ -45,6 +45,8 @@
 #define _EXTERN extern
 #define _INITIALIZE_AS(x)
 #endif
+
+_EXTERN NSString* const kGTMOAuthServiceProviderGoogle _INITIALIZE_AS(@"Google");
 
 _EXTERN NSString* const kGTMOAuthSignatureMethodHMAC_SHA1 _INITIALIZE_AS(@"HMAC-SHA1");
 
@@ -126,7 +128,7 @@ _EXTERN NSString* const kGTMOAuthSignatureMethodRSA_SHA1  _INITIALIZE_AS(@"RSA-S
 @property (nonatomic, copy) NSString *realm;
 @property (nonatomic, copy) NSString *privateKey;
 
-// service identifier, like "Twitter"; not used for authentication or signing
+// service identifier, like "Google"; not used for authentication or signing
 @property (nonatomic, copy) NSString *serviceProvider;
 
 // user email and verified status; not used for authentication or signing
@@ -134,8 +136,8 @@ _EXTERN NSString* const kGTMOAuthSignatureMethodRSA_SHA1  _INITIALIZE_AS(@"RSA-S
 // The verified string can be checked with -boolValue. If the result is false,
 // then the email address is listed with the account on the server, but the
 // address has not been confirmed as belonging to the owner of the account.
-@property (retain) NSString *userEmail;
-@property (retain) NSString *userEmailIsVerified;
+@property (nonatomic, copy) NSString *userEmail;
+@property (nonatomic, copy) NSString *userEmailIsVerified;
 
 // property for using a previously-authorized access token
 @property (nonatomic, copy) NSString *accessToken;
@@ -146,7 +148,7 @@ _EXTERN NSString* const kGTMOAuthSignatureMethodRSA_SHA1  _INITIALIZE_AS(@"RSA-S
 
 // property indicating if this auth has an access token so is suitable for
 // authorizing a request. This does not guarantee that the token is valid.
-@property (readonly) BOOL canAuthorize;
+@property (nonatomic, readonly) BOOL canAuthorize;
 
 // userData is retained for the convenience of the caller
 @property (nonatomic, retain) id userData;

@@ -684,11 +684,7 @@ static NSString *const kUserEmailIsVerifiedKey    = @"isVerified";
 }
 
 - (void)stopAuthorization {
-  // nothing to do, since OAuth 1 authorization is synchronous
-}
-
-- (void)stopAuthorizationForRequest:(NSURLRequest *)request {
-  // nothing to do, since OAuth 1 authorization is synchronous
+ // nothing to do, since OAuth 1 authorization is synchronous
 }
 
 - (BOOL)isAuthorizingRequest:(NSURLRequest *)request {

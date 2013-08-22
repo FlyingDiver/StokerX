@@ -42,17 +42,29 @@
 
 #import "GTMHTTPFetcher.h"
 
-// default data cache size for when we're caching responses to handle "not
-// modified" errors for the client
-
-#ifdef __cplusplus
-extern "C" {
+#undef _EXTERN
+#undef _INITIALIZE_AS
+#ifdef GTMHTTPFETCHHISTORY_DEFINE_GLOBALS
+  #define _EXTERN
+  #define _INITIALIZE_AS(x) =x
+#else
+  #if defined(__cplusplus)
+    #define _EXTERN extern "C"
+  #else
+    #define _EXTERN extern
+  #endif
+  #define _INITIALIZE_AS(x)
 #endif
 
-extern const NSUInteger kGTMDefaultETaggedDataCacheMemoryCapacity;
 
-#ifdef __cplusplus
-}
+// default data cache size for when we're caching responses to handle "not
+// modified" errors for the client
+#if GTM_IPHONE
+// iPhone: up to 1MB memory
+_EXTERN const NSUInteger kGTMDefaultETaggedDataCacheMemoryCapacity _INITIALIZE_AS(1*1024*1024);
+#else
+// Mac OS X: up to 15MB memory
+_EXTERN const NSUInteger kGTMDefaultETaggedDataCacheMemoryCapacity _INITIALIZE_AS(15*1024*1024);
 #endif
 
 // forward declarations
