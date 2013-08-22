@@ -15,17 +15,16 @@ extern NSString * const kMaxGraphTempKey;
 extern NSString * const kHTTPOnlyModeKey;
 extern NSString * const kEmailAddressKey;
 extern NSString * const kSendTweetsKey;
-//extern NSString * const kLidOffEnabledKey;
-//extern NSString * const kLidOffDropKey;
-//extern NSString * const kLidOffWaitKey;
+extern NSString * const kReportTemplateKey;
 
 @interface PreferencesController : NSWindowController
 {
-	IBOutlet NSTextField *ipAddress;
-	IBOutlet NSButton    *httpOnlyModeCheckBox;
-	IBOutlet NSTextField *minGraphTemp;
-	IBOutlet NSTextField *maxGraphTemp;
-	IBOutlet NSTextField *emailAddress;
+	IBOutlet NSTextField	*ipAddress;
+	IBOutlet NSButton		*httpOnlyModeCheckBox;
+	IBOutlet NSTextField	*minGraphTemp;
+	IBOutlet NSTextField	*maxGraphTemp;
+	IBOutlet NSTextField	*emailAddress;
+	IBOutlet NSPopUpButton	*templatePopup;
 }
 
 - (IBAction)changeStokeripAddressField:(id)sender;
@@ -33,5 +32,6 @@ extern NSString * const kSendTweetsKey;
 - (IBAction)changeMinGraphTempField:(id)sender;
 - (IBAction)changeMaxGraphTempField:(id)sender;
 - (IBAction)changeEmailAddressField:(id)sender;
+- (IBAction)changeTemplatePopup:(id)sender;
 
 @end

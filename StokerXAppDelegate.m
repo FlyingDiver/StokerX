@@ -10,7 +10,7 @@
 
 @implementation StokerXAppDelegate
 
-@synthesize mainWindow, mainView, notesWindow, notesView, startTime, graph, tweetController, preferencesController, loggingActive;
+@synthesize mainWindow, mainView, notesWindow, notesView, startTime, endTime, graph, tweetController, preferencesController, loggingActive;
 
 #define MINUTES	60.0
 #define TIME_RANGE_START		20 * MINUTES    
@@ -24,9 +24,10 @@
 {
 	NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
 	
-	[defaultValues setObject:[NSNumber numberWithInt: 50]  forKey:kMinGraphTempKey];
-	[defaultValues setObject:[NSNumber numberWithInt: 300] forKey:kMaxGraphTempKey];
-	[defaultValues setObject:[NSNumber numberWithInt: 0]   forKey:kHTTPOnlyModeKey];
+	[defaultValues setObject: [NSNumber numberWithInt: 50]  forKey:kMinGraphTempKey];
+	[defaultValues setObject: [NSNumber numberWithInt: 300] forKey:kMaxGraphTempKey];
+	[defaultValues setObject: [NSNumber numberWithInt: 0]   forKey:kHTTPOnlyModeKey];
+	[defaultValues setObject: @"Default"					forKey:kReportTemplateKey];
 
 	[defaultValues setObject:[NSNumber numberWithInt: 86400] forKey:@"SUScheduledCheckInterval"];
 	[defaultValues setObject:[NSNumber numberWithInt: 1]     forKey:@"SUEnableAutomaticChecks"];
@@ -55,7 +56,7 @@
 {	
 	[self setStatusText: [NSString stringWithFormat: @"Starting StokerX %@", [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleShortVersionString"]]];
 
-//	Enabling this causes Fetcher logs to be written to the desktop!
+	//	Enabling this causes Fetcher logs to be written to the desktop!
 	
 	if ([[[NSUserDefaults standardUserDefaults] stringForKey: @"EnableGTMHTTPFetcherLogging"] boolValue])
 		[GTMHTTPFetcher setLoggingEnabled:YES];
@@ -90,19 +91,23 @@
 	NSFileManager *fileManager = [[NSFileManager alloc] init];
 	if ([fileManager fileExistsAtPath: templateDir] == NO)
 	{
-		[fileManager createDirectoryAtPath: templateDir withIntermediateDirectories:YES attributes:nil error:nil];
+		NSError *error;
+		
+		// No Template directory, so copy the one from the app bundle to the support directory
+		
+		[fileManager createDirectoryAtPath: templateDir withIntermediateDirectories:YES attributes:nil error: &error];
+		
+		NSArray *templateList = [[NSBundle mainBundle] pathsForResourcesOfType: @"html" inDirectory: @"Templates"];
+
+		for (NSString *template in templateList)
+		{
+			NSLog(@"Copying %@", template);
+			if (![fileManager copyItemAtPath: template toPath: [NSString stringWithFormat: @"%@/%@", templateDir, [template lastPathComponent]] error: &error])
+
+				NSLog(@"StokerXAppDelegate copyItemAtPath error.  Source = %@, Dest = %@, error = %@\n", template, templateDir, error);
+		}
 	}
-	
-	NSString *destFile = [templateDir stringByAppendingPathComponent: @"Default.mustache"];
-	NSError *error;
-	
-	[fileManager removeItemAtPath: destFile error: &error];
-	
-	if (![fileManager copyItemAtPath: [[NSBundle mainBundle] pathForResource: @"Default" ofType:@"mustache"] toPath: destFile error: &error])
-	{
-		NSLog(@"StokerXAppDelegate copyItemAtPath error: %@", error);
-	}
-	
+
 	// get a Stoker object
 	
 	theStoker = [[Stoker alloc] init];
@@ -154,6 +159,7 @@
 {				
 	BOOL shutdownNow = [theStoker shutdownWithCompletionHandler:^(void) 
 	{
+		NSLog(@"applicationShouldTerminate: completionHandler called");
 		[NSApp replyToApplicationShouldTerminate:YES];
 	}];
 
@@ -194,6 +200,7 @@
 	{
 		elapsedTime = 0.0;
 		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
+		endTime  = [[NSDate date] timeIntervalSinceReferenceDate];
 
 		[totalBlowerActivityField  setStringValue: @"0%"];
 		[recentBlowerActivityField setStringValue: @"0%"];
@@ -227,9 +234,9 @@
 	NSString *prefix;
 	
 	if (noteNumber == 1)
-		prefix = [NSString stringWithFormat: @"(%ld) ", noteNumber];
+		prefix = [NSString stringWithFormat: @"(%ld) ", (long) noteNumber];
 	else
-		prefix = [NSString stringWithFormat: @"\n(%ld) ", noteNumber];
+		prefix = [NSString stringWithFormat: @"\n(%ld) ", (long) noteNumber];
 			
 	
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
@@ -243,6 +250,12 @@
 	[notesWindow makeKeyAndOrderFront: self];
 }
 
+- (void) findNoteString: (NSString *) string
+{
+	NSRange ptr = [[[notesView textStorage] string] rangeOfString: string];
+	[notesView setSelectedRange: NSMakeRange(ptr.location, 0)];
+	[notesWindow makeKeyAndOrderFront: self];
+}
 
 #pragma mark -
 #pragma mark Text Command Methods
@@ -340,6 +353,7 @@
 	}
 	else if ([[sender title] isEqualToString: @"Stop"])
 	{			
+		endTime  = [[NSDate date] timeIntervalSinceReferenceDate];
 		[theStoker stopLogging];
 		[sender setTitle: @"Start"];
 	}
@@ -643,7 +657,6 @@
 	[webPref setShouldPrintBackgrounds:YES];
 	[printView setPreferences:webPref];
 	
-
 	NSData	*plotImageData = [plotController.graph dataForPDFRepresentationOfLayer];
 	NSURL	*tempImageURL = [NSURL fileURLWithPath: [NSTemporaryDirectory() stringByAppendingPathComponent:@"StokerXPlot.pdf" ]];
 	[plotImageData writeToURL: tempImageURL atomically: YES];
@@ -651,30 +664,16 @@
 	// Convert the text from the Notes panel to HTML for the printed output
 	
 	NSAttributedString *notes = [notesView textStorage];
-	NSData *htmlData = [notes dataFromRange:NSMakeRange(0, notes.length) documentAttributes:
-						[NSDictionary dictionaryWithObjectsAndKeys:NSHTMLTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
-	NSString *htmlDocString = [[[NSString alloc] initWithData: htmlData encoding:NSUTF8StringEncoding] autorelease];
+	NSData *textData = [notes dataFromRange:NSMakeRange(0, notes.length) documentAttributes:
+							 [NSDictionary dictionaryWithObjectsAndKeys:NSPlainTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
+	NSString *textString = [[[[NSString alloc] initWithData: textData encoding:NSUTF8StringEncoding] autorelease] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br />"];
 
-	// extract the CSS and body HTML from the complete document
-	
-	NSString *notesText = @"";
-	NSString *notesCSS = @"";
-	NSScanner *scanner = [NSScanner scannerWithString: htmlDocString];
-	[scanner scanUpToString: @"<style type=\"text/css\">" intoString: nil];
-	[scanner scanString: @"<style type=\"text/css\">" intoString: nil];
-	[scanner scanUpToString: @"</style>" intoString: &notesCSS];
-	
-	[scanner scanUpToString: @"<body>" intoString: nil];
-	[scanner scanString: @"<body>" intoString: nil];
-	[scanner scanUpToString: @"</body>" intoString: &notesText];
-	   
 	// assemble all the parts of the report into a dictionary for the template engine
 	
 	NSMutableDictionary *reportDict = [[NSMutableDictionary alloc] init];
 	[reportDict setObject: [NSString stringWithFormat: @"%d", (int) printViewFrame.size.width] forKey: @"FrameWidth"];
 	[reportDict setObject: @"StokerX Session Report" forKey: @"ReportTitle"];
-	[reportDict setObject: notesCSS forKey: @"NotesCSS"];
-	[reportDict setObject: notesText forKey: @"NotesText"];
+	[reportDict setObject: textString forKey: @"NotesText"];
 	[reportDict setObject: [tempImageURL absoluteString] forKey: @"GraphURL"];
 	
 	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
@@ -684,7 +683,19 @@
 	[reportDict setObject: [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startTime]]
 				   forKey: @"StartTime"];
 
-	NSTimeInterval elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
+	NSTimeInterval reportEndTime;
+	if ([theStoker isLogging])
+	{
+		reportEndTime = [[NSDate date] timeIntervalSinceReferenceDate];
+	}
+	else
+	{
+		reportEndTime = endTime;
+	}
+	[reportDict setObject: [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: reportEndTime]]
+				   forKey: @"EndTime"];
+	
+	NSTimeInterval elapsedTime = reportEndTime - startTime;
 	[reportDict setObject: [NSString stringWithFormat: @"%02ld:%02ld:%02ld", (long)elapsedTime / 60 / 60, (long)fmod(elapsedTime / 60, 60), (long)fmod(elapsedTime , 60)]
 				   forKey: @"ElapsedTime"];
 
@@ -707,7 +718,8 @@
 	
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]];
-	NSString *templatePath = [[supportDir stringByAppendingPathComponent: @"Templates"] stringByAppendingPathComponent: @"Default.mustache"];
+	NSString *defaultTemplate = [NSString stringWithFormat: @"%@.html", [[NSUserDefaults standardUserDefaults] stringForKey: kReportTemplateKey]];
+	NSString *templatePath = [[supportDir stringByAppendingPathComponent: @"Templates"] stringByAppendingPathComponent: defaultTemplate];
     GRMustacheTemplate *template = [GRMustacheTemplate templateFromContentsOfFile: templatePath error: NULL];
 		
     NSString *webviewHTMLString = [template renderObject: reportDict error:NULL];

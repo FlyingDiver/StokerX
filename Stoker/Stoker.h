@@ -25,11 +25,8 @@
 	Boolean					isLogging;
 	Boolean					httpOnlyMode;
 	Boolean					stokerAvailable;
-//	NSNumber				*lastTemp;					// last remembered temp for lid off detection
-//	Boolean					lidOffHold;
 	
 	NSString				*blowerControlSensor;		// the sensor that controls the blower, for lid-off control
-//	NSNumber				*lastTempTarget;			// the temp to restore after lid-off
 	
 	void (^shutdownCompletionBlock_)(void);
 	void (^connectCompletionBlock_)(void);
@@ -44,11 +41,6 @@
 	NSMutableArray			*blowerArray;				// array of sensor objects, in graphing order
 	NSMutableDictionary		*deviceDict;				// combined dictionary to make plot lookup easier
 	
-//	double					lidOffWait;
-//	double					lidOffDrop;
-//	NSTimeInterval			lastTempTime;				// time of last sample for lid off detection
-	
-//	Boolean					connectionReady, lidDetectionEnabled, telnetActive;
 	Boolean					connectionReady, telnetActive;
 }
 
@@ -60,11 +52,6 @@
 @property (nonatomic, assign) Boolean			httpOnlyMode;
 @property (nonatomic, assign) Boolean			stokerAvailable;
 @property (nonatomic, retain) SendExpect		*mySendExpect;
-//@property (nonatomic, retain) NSNumber			*lastTemp;					// last remembered temp for lid off detection
-//@property (nonatomic, assign) Boolean			lidOffHold;
-
-//@property (nonatomic, copy)   NSString			*blowerControlSensor;		// the sensor that controls the blower, for lid-off control
-//@property (nonatomic, retain) NSNumber			*lastTempTarget;			// the temp to restore after lid-off
 
 @property (copy) void (^shutdownCompletionBlock)(void);
 @property (copy) void (^connectCompletionBlock)(void);
@@ -100,9 +87,6 @@
 
 - (NSString *) nameForBlower: (int) blowerNo;
 - (NSString *) idForBlower:   (int) blowerNo;
-
-//- (void) enableLidDetection: (Boolean) enabled withDrop: (double) drop andWait: (double) wait;
-//- (void) checkLidOffForSensor: (StokerSensor *) theSensor;
 
 - (void) setName:   (NSString *) name   forSensor: (int) sensorNo;
 - (void) setTarget: (NSNumber *) target forSensor: (int) sensorNo;

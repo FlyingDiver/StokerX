@@ -224,7 +224,7 @@
 
 
 - (void) doNotification: (NotificationRule *) rule withMessage: (NSString *) message
-{	
+{
 	NSNumber *lastNotification = [rule lastNotified];
 	
 	// check to see if this notification has been done in the last minute.  Alerts are never repeated sooner than that

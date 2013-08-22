@@ -15,13 +15,10 @@ NSString * const kMinGraphTempKey    = @"MinGraphTemp";
 NSString * const kMaxGraphTempKey    = @"MaxGraphTemp";
 NSString * const kEmailAddressKey    = @"EmailAddress";
 NSString * const kSendTweetsKey      = @"SendTweets";
-//NSString * const kLidOffEnabledKey   = @"LidOffEnabled";
-//NSString * const kLidOffDropKey      = @"LidOffDrop";
-//NSString * const kLidOffWaitKey      = @"LidOffWait";
+NSString * const kReportTemplateKey  = @"ReportTemplate";
 
 #define MIN_TEMP_AXIS			0.0
 #define MAX_TEMP_AXIS			500.0
-
 
 @implementation PreferencesController
 
@@ -77,6 +74,12 @@ NSString * const kSendTweetsKey      = @"SendTweets";
 	[[NSUserDefaults standardUserDefaults] setObject:[emailAddress stringValue] forKey: kEmailAddressKey];
 }
 
+- (IBAction)changeTemplatePopup:(id)sender
+{
+	NSLog(@"PreferencesController - saving ReportTemplate: %@", [[templatePopup selectedItem] title]);
+	[[NSUserDefaults standardUserDefaults] setObject:[[templatePopup selectedItem] title] forKey: kReportTemplateKey];
+}
+
 - (void)windowDidLoad
 {
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey])
@@ -92,7 +95,28 @@ NSString * const kSendTweetsKey      = @"SendTweets";
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey])
 		[emailAddress setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey]];
+	
+	// build list of template files for selection pop-up
+	
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]];
 
+	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];	
+	NSArray *templateList = [fileManager contentsOfDirectoryAtPath: [NSString stringWithFormat: @"%@/Templates/", supportDir] error: nil];
+	for (NSString *template in templateList)
+	{
+		if ([template rangeOfString: @".html"].location != NSNotFound)
+		{
+			NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: [[template lastPathComponent] stringByDeletingPathExtension] action: NULL keyEquivalent: @""];
+			[newItem setTarget:self];
+			[[templatePopup menu] addItem: newItem];
+			[newItem release];
+		}
+	}
+	[templatePopup selectItemWithTitle: [[NSUserDefaults standardUserDefaults] stringForKey: kReportTemplateKey]];
+
+	// Show the window
+	
 	[[self window] setFrameAutosaveName:@"Prefs Window"];
 	[[self window] makeKeyAndOrderFront: self];
 	

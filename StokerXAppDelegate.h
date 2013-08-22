@@ -49,6 +49,7 @@
 	
 	Boolean						loggingActive;
 	NSTimeInterval				startTime;
+	NSTimeInterval				endTime;
 	CPTXYGraph					*graph;
 	MiniTwitter					*tweetController;
 	PreferencesController		*preferencesController;
@@ -67,8 +68,8 @@
 - (NSMutableArray *) parseDirectMessage: (NSString *) message;
 
 - (void) addNoteNumber: (NSInteger) noteNumber;
+- (void) findNoteString: (NSString *) string;
 
-- (void) setStatusText: (NSString *) status;
 - (void) updateUI;
 
 @property (nonatomic, retain) IBOutlet NSWindow			*mainWindow;
@@ -77,6 +78,7 @@
 @property (nonatomic, retain) IBOutlet NSTextView		*notesView;
 @property (assign)			  Boolean					loggingActive;
 @property (nonatomic, assign) NSTimeInterval			startTime;
+@property (nonatomic, assign) NSTimeInterval			endTime;
 @property (nonatomic, retain) CPTXYGraph				*graph;
 @property (nonatomic, retain) MiniTwitter				*tweetController;
 @property (nonatomic, retain) PreferencesController		*preferencesController;

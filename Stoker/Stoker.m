@@ -13,7 +13,6 @@
 @implementation Stoker
 
 @synthesize delegate, stokerVersion, jsonTimer, ipAddress, isLogging;
-//@synthesize httpOnlyMode, stokerAvailable, mySendExpect, lastTemp, lidOffHold, blowerControlSensor, lastTempTarget;
 @synthesize httpOnlyMode, stokerAvailable, mySendExpect;
 @synthesize shutdownCompletionBlock = shutdownCompletionBlock_;
 @synthesize connectCompletionBlock  = connectCompletionBlock_;
@@ -402,11 +401,6 @@
 	theSensor.tempCurrent = [NSNumber numberWithDouble: temp];
 	theSensor.tempTarget  = [NSNumber numberWithDouble: target];			
 	[theSensor.plotData addObject: [NSArray arrayWithObjects: currentTime, theSensor.tempCurrent, theSensor.tempTarget, nil]];	
-		
-//	if (theSensor.control && lidDetectionEnabled)		// only check for lid off on control blower
-//	{
-//		[self checkLidOffForSensor: theSensor];
-//	}
 }
 
 - (void) updateBlower: (NSString *) blowerID withState: (Boolean) state
@@ -453,22 +447,25 @@
 	}
 }
 
+
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
 	connectionReady = NO;
+	telnetActive = NO;
 	
-	if (telnetActive)
+	if (self.isLogging)
 	{
-		telnetActive = NO;	
-	}
-	
-	if (shutdownCompletionBlock_) 
-    {
-        shutdownCompletionBlock_();
-    }
-	else
 		NSLog (@"Stoker: socketDidDisconnect:withError: %@", err);
+		
+		[self sendStatusUpdate: @"Stoker connection lost, attempting to reconnect"];
+		[self startTelnetCapture];
+	}
+	else
+	{
+		NSLog (@"Stoker: telnet session closed");
+	}
 }
+
 
 -(void) socket:(GCDAsyncSocket *)sock didReadData:(NSData*) sockData withTag:(long)tag
 {		
@@ -718,75 +715,6 @@
 	return [result autorelease];
 }
 
-/*
-#pragma mark -
-#pragma mark Lid Detection Methods
-
-
-- (void) enableLidDetection: (Boolean) enabled withDrop: (double) drop andWait: (double) wait
-{	
-	NSLog(@"Stoker enableLidDetection: %@ withDrop: %lf andWait: %lf", enabled ? @"On" : @"Off", drop, wait);
-
-	if (enabled)
-	{
-		lidDetectionEnabled = TRUE;
-		lidOffDrop = drop;
-		lidOffWait = wait;
-	}
-	else {
-		lidDetectionEnabled = FALSE;
-	}
-}
-
-- (void) checkLidOffForSensor: (StokerSensor *) theSensor
-{
-	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
-
-	if (!lastTemp)		// first time, get a last temp to use going forward
-	{
-		self.lastTemp = theSensor.tempCurrent;
-		lastTempTime = currentTime;
-	}
-	
-	NSTimeInterval interval = currentTime - lastTempTime;
-	
-	if (!lidOffHold &&  (interval > 15.0))				// not on hold, looking for a drop, check every 15 sec
-	{
-		double tempDrop = [lastTemp doubleValue] - [theSensor.tempCurrent doubleValue];
-	
-		if (tempDrop > lidOffDrop)
-		{
- 			NSLog(@"checkLidOffSensor:withTemp: holding - change = %f, interval = %f ", tempDrop, interval);
-			[self sendStatusUpdate: @"Holding Stoker (Lid Off)"];
-			lidOffHold = TRUE;
-			
-			// set the Stoker's target way down to keep the blower off, but don't reset the internal data so we can restore
-			
-			self.lastTempTarget = [theSensor tempTarget];
-			[self setTarget: [NSNumber numberWithFloat: 100.0] forSensorID: blowerControlSensor];
-			theSensor.tempTarget = lastTempTarget;
-					
-		}		
-
-		lastTempTime = currentTime;
-	}
-	else if (lidOffHold && (interval > lidOffWait))		// on hold, waiting for timer
-	{
-		NSLog(@"checkLidOffSensor:withTemp: hold timer elapsed, restarting");
-		[self sendStatusUpdate: @"Enabling Stoker (Lid Off)"];
-
-		lastTempTime = currentTime;
-		self.lastTemp = theSensor.tempCurrent;
-		
-		lidOffHold = FALSE;
-		
-		// restore the Stoker's temp target
-		
-		[self setTarget: lastTempTarget forSensorID: blowerControlSensor];
-
-	}
-}
-*/
 
 #pragma mark -
 #pragma mark SendExpect Delegate Methods
