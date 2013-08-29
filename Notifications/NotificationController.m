@@ -10,10 +10,12 @@
 #import "NotificationController.h"
 #import "PreferencesController.h"
 #import "EmailSender.h"
+#import "MiniTwitter.h"
+#import "Prowl.h"
 
 @implementation NotificationController
 
-@synthesize ruleList, sensorList, sensorDict, tweetController;
+@synthesize ruleList, sensorList, sensorDict, tweetController, pushController;
 
 #pragma mark -
 #pragma mark Constructor/Destructor Methods
@@ -159,6 +161,10 @@
 					[text appendString: @"T"];
 					break;
 					
+				case kProwlNotification:
+					[text appendString: @"P"];
+					break;
+					
 				default:
 					break;
 			}
@@ -263,6 +269,12 @@
 			NSString *formattedMessage = [NSString stringWithFormat: @"%@ \nTime: %@", message, [dateFormatter stringFromDate: [NSDate date]]];
 			
 			[self.tweetController sendTweet: formattedMessage];
+			break;
+		}
+			
+		case kProwlNotification:
+		{
+			[self.pushController sendPushMessage: message];
 			break;
 		}
 			

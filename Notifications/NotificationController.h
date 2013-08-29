@@ -8,10 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Growl/Growl.h"
-#import "MiniTwitter.h"
 #import "NotificationAction.h"
 #import "NotificationRule.h"
 #import "NotificationTest.h"
+
+@class Prowl;
+@class MiniTwitter;
 
 @interface NotificationController : NSWindowController  <NSTableViewDataSource, GrowlApplicationBridgeDelegate>
 {
@@ -27,6 +29,7 @@
 	NSMutableArray		*sensorList;	
 	NSMutableDictionary	*sensorDict;
 	MiniTwitter			*tweetController;
+	Prowl				*pushController;
 }
 
 - (IBAction) editRuleList: (NSSegmentedControl *) sender;
@@ -45,5 +48,6 @@
 @property (nonatomic, retain) NSMutableArray		*sensorList;	
 @property (nonatomic, retain) NSMutableDictionary	*sensorDict;
 @property (nonatomic, retain) MiniTwitter			*tweetController;
+@property (nonatomic, retain) Prowl					*pushController;
 
 @end

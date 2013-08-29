@@ -16,6 +16,8 @@ NSString * const kMaxGraphTempKey    = @"MaxGraphTemp";
 NSString * const kEmailAddressKey    = @"EmailAddress";
 NSString * const kSendTweetsKey      = @"SendTweets";
 NSString * const kReportTemplateKey  = @"ReportTemplate";
+NSString * const kProwlAuthCodeKey   = @"ProwlAuthCode";
+NSString * const kSendPushMessagesKey = @"SendPushMessages";
 
 #define MIN_TEMP_AXIS			0.0
 #define MAX_TEMP_AXIS			500.0
@@ -101,13 +103,16 @@ NSString * const kReportTemplateKey  = @"ReportTemplate";
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]];
 
-	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];	
-	NSArray *templateList = [fileManager contentsOfDirectoryAtPath: [NSString stringWithFormat: @"%@/Templates/", supportDir] error: nil];
+	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+	NSString *templateDir = [NSString stringWithFormat: @"%@/Templates/", supportDir];
+	NSArray *templateList = [fileManager contentsOfDirectoryAtPath: templateDir  error: nil];
+	BOOL isDir;
 	for (NSString *template in templateList)
 	{
-		if ([template rangeOfString: @".html"].location != NSNotFound)
+		[fileManager fileExistsAtPath: [NSString stringWithFormat: @"%@/%@", templateDir, template] isDirectory: &isDir];
+		if (isDir)
 		{
-			NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: [[template lastPathComponent] stringByDeletingPathExtension] action: NULL keyEquivalent: @""];
+			NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle: template action: NULL keyEquivalent: @""];
 			[newItem setTarget:self];
 			[[templatePopup menu] addItem: newItem];
 			[newItem release];

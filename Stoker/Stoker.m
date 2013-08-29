@@ -116,6 +116,8 @@
 	if (error != nil) 
 	{
 		NSLog(@"getStokerJSON GTMHTTPFetcher error: %@", error);
+		[self getStokerJSON: nil];						// try again immediately
+
 		return;
 	} 
 	
@@ -130,7 +132,9 @@
 	if (!results)
 	{
 		NSLog(@"getStokerJSON JSON Parse error");
-		return;		// bad JSON parse, skip this one
+		[self getStokerJSON: nil];						// try again immediately
+		
+		return;	
 	}
 	
 	// now that we have at least set of data from the Stoker, get the data structures set up
@@ -190,7 +194,7 @@
 			StokerBlower *theBlower	= [[StokerBlower alloc] initWithName: [blower objectForKey:@"name"] andID: [blower objectForKey:@"id"]];
 			theBlower.state      	= [[blower objectForKey:@"on"] intValue];
 			
-			NSLog(@"sensorSetup: blower %@ (%@) is %@", theBlower.deviceID, theBlower.deviceName, theBlower.state ? @"On" : @"Off");
+//			NSLog(@"sensorSetup: blower %@ (%@) is %@", theBlower.deviceID, theBlower.deviceName, theBlower.state ? @"On" : @"Off");
 
 			[blowerDict setObject: theBlower forKey: theBlower.deviceID];
 			[deviceDict setObject: theBlower forKey: theBlower.deviceID];
@@ -219,11 +223,11 @@
 						theSensor.blower = blower;
 						blower.sensor = theSensor;
 					
-						NSLog(@"sensorSetup: sensor %@ (%@), current = %@, target = %@, blower = %@ (%@)", 
-							  theSensor.deviceID, theSensor.deviceName, theSensor.tempCurrent, theSensor.tempTarget, blower.deviceID, blower.deviceName);
+//						NSLog(@"sensorSetup: sensor %@ (%@), current = %@, target = %@, blower = %@ (%@)",
+//							  theSensor.deviceID, theSensor.deviceName, theSensor.tempCurrent, theSensor.tempTarget, blower.deviceID, blower.deviceName);
 					}
-					else
-						NSLog(@"sensorSetup: sensor %@ (%@), current = %@, target = %@", theSensor.deviceID, theSensor.deviceName, theSensor.tempCurrent, theSensor.tempTarget);						
+//					else
+//						NSLog(@"sensorSetup: sensor %@ (%@), current = %@, target = %@", theSensor.deviceID, theSensor.deviceName, theSensor.tempCurrent, theSensor.tempTarget);
 				}
 			}
 			
@@ -265,7 +269,7 @@
 
 - (void) startTelnetCapture 
 {		
-	NSLog(@"Stoker: startTelnetCapture");
+// 	NSLog(@"Stoker: startTelnetCapture");
 
 	NSString *telnetAddress;
 	int telnetPort = 23;
@@ -299,7 +303,7 @@
 		telnetAddress = [ipAddress substringToIndex: colon.location];
 	}
 	
-	NSLog(@"startTelnetCapture telnetAddress = %@", telnetAddress);
+//	NSLog(@"startTelnetCapture telnetAddress = %@", telnetAddress);
 	
 	if (![socket connectToHost:telnetAddress onPort: telnetPort error:&err])
 	{
@@ -328,6 +332,8 @@
 - (void) parseTelnetOutput: (NSString *) stokerOutput 
 {	
 	static double lastUpdate = 0;
+	
+//	NSLog(@"Stoker - parseTelnetOutput: %@", stokerOutput);
 	
 	if ([stokerOutput rangeOfString:@":"].location != NSNotFound)		// must have : after device ID or it's garbage
 	{ 			  

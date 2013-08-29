@@ -11,7 +11,8 @@
 typedef enum {
 	kGrowlAlert = 0,
 	kEmailNotification,
-	kTwitterNotification
+	kTwitterNotification,
+	kProwlNotification
 } ActionTypes;
 
 @interface NotificationAction : NSObject

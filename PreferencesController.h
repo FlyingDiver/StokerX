@@ -16,6 +16,8 @@ extern NSString * const kHTTPOnlyModeKey;
 extern NSString * const kEmailAddressKey;
 extern NSString * const kSendTweetsKey;
 extern NSString * const kReportTemplateKey;
+extern NSString * const kSendPushMessagesKey;
+extern NSString * const kProwlAuthCodeKey;
 
 @interface PreferencesController : NSWindowController
 {

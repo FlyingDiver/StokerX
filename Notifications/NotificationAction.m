@@ -22,6 +22,7 @@ static NSArray *_ActionList = nil;
 							[[[NotificationAction alloc] initWithName: @"Growl Alert"			andAction: kGrowlAlert] autorelease],
 							[[[NotificationAction alloc] initWithName: @"Email Notification"	andAction: kEmailNotification] autorelease],
 							[[[NotificationAction alloc] initWithName: @"Twitter Notification"	andAction: kTwitterNotification] autorelease],
+							[[[NotificationAction alloc] initWithName: @"Push Notification"		andAction: kProwlNotification] autorelease],
 					   nil];
 
 	}

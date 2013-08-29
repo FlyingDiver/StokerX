@@ -13,13 +13,14 @@
 #import "FeedbackReporter/FRFeedbackReporter.h"
 #import "GTMOAuth/GTMHTTPFetcherLogging.h"
 #import "Stoker.h"
-#import "HelpController.h"
 #import "PreferencesController.h"
 #import "NotificationController.h"
 #import "LVColorWellCell.h"
-#import "MiniTwitter.h"
 #import "StokerPlotController.h"
 #import "GRMustache/GRMustache.h"
+
+@class Prowl;
+@class MiniTwitter;
 
 @interface StokerXAppDelegate : NSObject <NSApplicationDelegate, FRFeedbackReporterDelegate, NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
 {
@@ -40,18 +41,17 @@
 
 	IBOutlet NSMenuItem				*notificationListMenuItem;
 	IBOutlet NotificationController	*notificationController;	
-	IBOutlet HelpController			*helpController;
 	IBOutlet StokerPlotController	*plotController;
+	IBOutlet MiniTwitter			*tweetController;
+    IBOutlet Prowl					*pushController;
 
 	Stoker							*theStoker;
-	    
 	NSInvocation					*updateInvocation;
 	
 	Boolean						loggingActive;
 	NSTimeInterval				startTime;
 	NSTimeInterval				endTime;
 	CPTXYGraph					*graph;
-	MiniTwitter					*tweetController;
 	PreferencesController		*preferencesController;
 }
 
@@ -81,5 +81,6 @@
 @property (nonatomic, assign) NSTimeInterval			endTime;
 @property (nonatomic, retain) CPTXYGraph				*graph;
 @property (nonatomic, retain) MiniTwitter				*tweetController;
+@property (nonatomic, retain) Prowl						*pushController;
 @property (nonatomic, retain) PreferencesController		*preferencesController;
 @end

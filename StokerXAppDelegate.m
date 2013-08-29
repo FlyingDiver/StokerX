@@ -7,10 +7,12 @@
 //
 
 #import "StokerXAppDelegate.h"
+#import "MiniTwitter.h"
+#import "Prowl.h"
 
 @implementation StokerXAppDelegate
 
-@synthesize mainWindow, mainView, notesWindow, notesView, startTime, endTime, graph, tweetController, preferencesController, loggingActive;
+@synthesize mainWindow, mainView, notesWindow, notesView, startTime, endTime, graph, pushController, tweetController, preferencesController, loggingActive;
 
 #define MINUTES	60.0
 #define TIME_RANGE_START		20 * MINUTES    
@@ -88,23 +90,36 @@
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *templateDir = [[[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]] stringByAppendingPathComponent: @"Templates"];
 
-	NSFileManager *fileManager = [[NSFileManager alloc] init];
+	// make sure there is a Template directory
+	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+	
 	if ([fileManager fileExistsAtPath: templateDir] == NO)
 	{
-		NSError *error;
-		
-		// No Template directory, so copy the one from the app bundle to the support directory
-		
-		[fileManager createDirectoryAtPath: templateDir withIntermediateDirectories:YES attributes:nil error: &error];
-		
-		NSArray *templateList = [[NSBundle mainBundle] pathsForResourcesOfType: @"html" inDirectory: @"Templates"];
-
-		for (NSString *template in templateList)
+		[fileManager createDirectoryAtPath: templateDir withIntermediateDirectories:YES attributes:nil error: nil];
+	}
+	
+	// copy included templates into directory - Deletes old templates first!
+	
+	NSString *bundleTemplatePath = [NSString stringWithFormat: @"%@/Templates", [[NSBundle mainBundle] resourcePath]];
+	NSDirectoryEnumerator *dirEnum = [fileManager enumeratorAtPath: bundleTemplatePath];
+	
+	NSString *file;
+	BOOL isDir;
+	NSString *newTemplateDir;
+	while ((file = [dirEnum nextObject]))
+	{
+		NSString *bundleFile = [NSString stringWithFormat: @"%@/%@", bundleTemplatePath, file];
+		[fileManager fileExistsAtPath: bundleFile isDirectory: &isDir];
+		if (isDir)
 		{
-			NSLog(@"Copying %@", template);
-			if (![fileManager copyItemAtPath: template toPath: [NSString stringWithFormat: @"%@/%@", templateDir, [template lastPathComponent]] error: &error])
-
-				NSLog(@"StokerXAppDelegate copyItemAtPath error.  Source = %@, Dest = %@, error = %@\n", template, templateDir, error);
+			newTemplateDir = [NSString stringWithFormat: @"%@/%@", templateDir, file];
+			[fileManager createDirectoryAtPath: newTemplateDir withIntermediateDirectories:YES attributes:nil error: nil];
+		}
+		else
+		{
+			NSString *templateFilePath = [NSString stringWithFormat: @"%@/%@", templateDir, file];
+			[fileManager removeItemAtPath: templateFilePath error:nil];
+			[fileManager copyItemAtPath: bundleFile toPath: templateFilePath error: nil];
 		}
 	}
 
@@ -123,11 +138,15 @@
 	[[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(receiveTwitterDirectMessage:) name: MiniTwitter_DirectMessage object: nil];
 
 	notificationController.tweetController = tweetController;
+	notificationController.pushController = pushController;
 	
 	// Use saved position of main window, and show it.
 	
 	[mainWindow setFrameAutosaveName:@"Main Window"];
     [mainWindow makeKeyAndOrderFront:nil];
+	
+	startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
+	endTime  = [[NSDate date] timeIntervalSinceReferenceDate];
 	
 	// attempt to connect to Stoker if IP address is set, if not show the preference panel
 
@@ -174,7 +193,7 @@
 }
 - (void) updateUI
 {
-//	NSLog(@"StokerXAppDelegate: updateUI:");
+	NSLog(@"StokerXAppDelegate: updateUI:");
 
 	NSTimeInterval elapsedTime;
 
@@ -185,8 +204,9 @@
 	
 	if (theStoker.isLogging) 
 	{
-		elapsedTime = [[NSDate date] timeIntervalSinceReferenceDate] - startTime;
+		endTime = [[NSDate date] timeIntervalSinceReferenceDate];
 
+		elapsedTime = endTime - startTime;
 		NSInteger seconds = fmod(elapsedTime , 60);	
 		NSInteger minutes = fmod(elapsedTime / 60, 60);
 		NSInteger hours =   elapsedTime / 60 / 60;
@@ -198,15 +218,11 @@
 	}
 	else
 	{
-		elapsedTime = 0.0;
-		startTime  = [[NSDate date] timeIntervalSinceReferenceDate];
-		endTime  = [[NSDate date] timeIntervalSinceReferenceDate];
-
 		[totalBlowerActivityField  setStringValue: @"0%"];
 		[recentBlowerActivityField setStringValue: @"0%"];
 	}
 	
-	[sensorTable reloadData];	
+	[sensorTable reloadData];
 	[plotController updateGraphWithStartTime: startTime andElapsedTime: elapsedTime];
 }
 
@@ -378,18 +394,12 @@
 
 - (IBAction)showHelpWindow:(id)sender 
 {
-	if (!helpController) 
-		helpController = [[HelpController alloc] init];
-	
-	[helpController showWindow:self];
+	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://stokerx.com/user-guide"]];
 }
 
 - (IBAction)showReadMe:(id)sender
 {
-	NSString *version =  [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleShortVersionString"];
-	NSURL *readMeURL = [NSURL URLWithString: [NSString stringWithFormat: @"http://www.flyingdiver.com/StokerX/StokerX-ReadMe-%@.html", version]];
-	
-	[[NSWorkspace sharedWorkspace] openURL: readMeURL];
+	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://stokerx.com/release-notes"]];
 }
 
 - (IBAction)showNotes:(id)sender
@@ -619,7 +629,11 @@
 
 - (void)print:(id)sender
 {
+	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
     NSPrintInfo *printInfo = [NSPrintInfo sharedPrintInfo];
+	
+	NSMutableDictionary *reportDict = [[NSMutableDictionary alloc] init];
+	[reportDict setObject: @"StokerX Session Report" forKey: @"ReportTitle"];
 	
     NSSize paperSize = [printInfo paperSize];
     NSRect printableRect = [printInfo imageablePageBounds];
@@ -645,7 +659,10 @@
 	
     NSRect printViewFrame = {};
     printViewFrame.size.width = paperSize.width - marginLR*2;
+	[reportDict setObject: [NSString stringWithFormat: @"%d", (int) printViewFrame.size.width] forKey: @"FrameWidth"];
     printViewFrame.size.height = paperSize.height - marginTB*2;
+	[reportDict setObject: [NSString stringWithFormat: @"%d", (int) printViewFrame.size.height] forKey: @"FrameHeight"];
+	
 	
 	WebView *printView = [[WebView alloc] initWithFrame: printViewFrame frameName: nil groupName: nil];
 	[printView setShouldUpdateWhileOffscreen: YES];
@@ -657,9 +674,31 @@
 	[webPref setShouldPrintBackgrounds:YES];
 	[printView setPreferences:webPref];
 	
+	// Get the graph image and put it in the temp directory
+	
+	NSString *tempDir = NSTemporaryDirectory();
+	NSString *graphPath = [tempDir stringByAppendingPathComponent:@"StokerXPlot.pdf"];
 	NSData	*plotImageData = [plotController.graph dataForPDFRepresentationOfLayer];
-	NSURL	*tempImageURL = [NSURL fileURLWithPath: [NSTemporaryDirectory() stringByAppendingPathComponent:@"StokerXPlot.pdf" ]];
-	[plotImageData writeToURL: tempImageURL atomically: YES];
+	[plotImageData writeToURL: [NSURL fileURLWithPath: graphPath] atomically: YES];
+	[reportDict setObject: graphPath forKey: @"GraphURL"];
+	
+	// set up Support Directory paths
+	
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]];
+	NSString *templateDir = [NSString stringWithFormat: @"%@/Templates/%@", supportDir, [[NSUserDefaults standardUserDefaults] stringForKey: kReportTemplateKey]];
+
+	// copy template resources into temp dir, if there are any, creating dictionary keys while doing so
+	
+	NSArray *resourceList = [fileManager contentsOfDirectoryAtPath: templateDir error: nil];
+	for (NSString *resource in resourceList)
+	{		
+		NSString *resourcePath = [NSString stringWithFormat: @"%@/%@", templateDir, resource];
+		NSString *destPath = [NSString stringWithFormat: @"%@%@", tempDir, resource];
+		[fileManager removeItemAtPath: destPath error:nil];
+		[fileManager copyItemAtPath: resourcePath toPath: destPath error: nil];
+		[reportDict setObject: destPath forKey: [resource stringByDeletingPathExtension]];
+	}
 	
 	// Convert the text from the Notes panel to HTML for the printed output
 	
@@ -667,14 +706,7 @@
 	NSData *textData = [notes dataFromRange:NSMakeRange(0, notes.length) documentAttributes:
 							 [NSDictionary dictionaryWithObjectsAndKeys:NSPlainTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
 	NSString *textString = [[[[NSString alloc] initWithData: textData encoding:NSUTF8StringEncoding] autorelease] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br />"];
-
-	// assemble all the parts of the report into a dictionary for the template engine
-	
-	NSMutableDictionary *reportDict = [[NSMutableDictionary alloc] init];
-	[reportDict setObject: [NSString stringWithFormat: @"%d", (int) printViewFrame.size.width] forKey: @"FrameWidth"];
-	[reportDict setObject: @"StokerX Session Report" forKey: @"ReportTitle"];
 	[reportDict setObject: textString forKey: @"NotesText"];
-	[reportDict setObject: [tempImageURL absoluteString] forKey: @"GraphURL"];
 	
 	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 	dateFormatter.dateStyle = NSDateFormatterShortStyle;
@@ -713,20 +745,21 @@
 							 nil]];
 	}
 	[reportDict setObject: sensors forKey: @"Sensors"];
-	
+		
 	// use the template engine to generate the document HTML
 	
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString *supportDir = [[paths objectAtIndex:0] stringByAppendingPathComponent: [[NSProcessInfo processInfo] processName]];
-	NSString *defaultTemplate = [NSString stringWithFormat: @"%@.html", [[NSUserDefaults standardUserDefaults] stringForKey: kReportTemplateKey]];
-	NSString *templatePath = [[supportDir stringByAppendingPathComponent: @"Templates"] stringByAppendingPathComponent: defaultTemplate];
-    GRMustacheTemplate *template = [GRMustacheTemplate templateFromContentsOfFile: templatePath error: NULL];
-		
-    NSString *webviewHTMLString = [template renderObject: reportDict error:NULL];
+	NSString *selectedTemplate = [[NSUserDefaults standardUserDefaults] stringForKey: kReportTemplateKey];
+	NSString *templateFilePath = [NSString stringWithFormat: @"%@/Templates/%@/%@.html", supportDir, selectedTemplate, selectedTemplate];
 	
+    GRMustacheTemplate *template = [GRMustacheTemplate templateFromContentsOfFile: templateFilePath error: NULL];
+
+//	NSLog(@"ReportDict = %@\n", reportDict);
+    NSString *webviewHTMLString = [template renderObject: reportDict error:NULL];
+//	NSLog(@"webviewHTMLString = %@\n", webviewHTMLString);
+
 	// Load the frame, print it in the delegate when the load is complete
 	
-	[[printView mainFrame] loadHTMLString: webviewHTMLString baseURL: tempImageURL];
+	[[printView mainFrame] loadHTMLString: webviewHTMLString baseURL: [NSURL URLWithString: graphPath]];
 	
 }
 
@@ -744,54 +777,6 @@
 	[printView release];
 }
 
-/*
-- (float)webViewFooterHeight:(WebView *)sender
-{
-	return 18.0;
-}
-
-- (void)webView:(WebView *)sender drawFooterInRect:(NSRect)rect
-{
-	NSMutableParagraphStyle * paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	[paragraphStyle setAlignment: NSCenterTextAlignment];
-	NSDictionary *attributes = [NSDictionary dictionaryWithObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
-	
-	[@"Footer!" drawInRect: rect withAttributes: attributes];
-}
-
-// Return the number of pages available for printing
-- (BOOL)knowsPageRange:(NSRangePointer)range 
-{
-	NSRect bounds = [self bounds];
-	float printHeight = [self calculatePrintHeight];
-	range->location = 1;
-	range->length = NSHeight(bounds) / printHeight + 1;
-	return YES;
-}
- 
-// Return the drawing rectangle for a particular page number
-- (NSRect)rectForPage:(int)page 
-{
-	NSRect bounds = [self bounds];
-	float pageHeight = [self calculatePrintHeight];
-	return NSMakeRect( NSMinX(bounds), NSMaxY(bounds) - page * pageHeight,
-					  NSWidth(bounds), pageHeight );
-}
-// Calculate the vertical size of the view that fits on a single page
- 
-- (float)calculatePrintHeight 
-{
-	// Obtain the print info object for the current operation
-	NSPrintInfo *pi = [[NSPrintOperation currentOperation] printInfo];
-	// Calculate the page height in points
-	NSSize paperSize = [pi paperSize];
-	float pageHeight = paperSize.height - [pi topMargin] - [pi bottomMargin];
-	// Convert height to the scaled view
-	float scale = [[[pi dictionary] objectForKey:NSPrintScalingFactor]
-				   floatValue];
-	return pageHeight / scale;
-}
-*/
 #pragma mark -
 #pragma mark Feedback Reporter Delegate Methods
 
