@@ -116,8 +116,7 @@
 	if (error != nil) 
 	{
 		NSLog(@"getStokerJSON GTMHTTPFetcher error: %@", error);
-		[self getStokerJSON: nil];						// try again immediately
-
+		[self performSelector:@selector(getStokerJSON:) withObject:self afterDelay: 5.0 ];	// try again almost immediately
 		return;
 	} 
 	
@@ -132,8 +131,7 @@
 	if (!results)
 	{
 		NSLog(@"getStokerJSON JSON Parse error");
-		[self getStokerJSON: nil];						// try again immediately
-		
+		[self performSelector:@selector(getStokerJSON:) withObject:self afterDelay: 5.0 ]; // try again almost immediately
 		return;	
 	}
 	
@@ -142,6 +140,13 @@
 	if (nil == sensorDict)
 	{		
 		[self sensorSetup: results];
+	}
+
+	// does the completion block work?
+	if (self.connectCompletionBlock)
+	{
+		self.connectCompletionBlock();
+		self.connectCompletionBlock = nil;
 	}
 
 	// If logging active, read the sensor values from the response and send to the Delegate
@@ -170,7 +175,7 @@
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(stokerSensorUpdate:)]) 
 	{
 		[[self delegate] stokerSensorUpdate: self];
-	}    
+	}
 }
 
 - (void)sensorSetup: (NSDictionary *) jsonResults
@@ -194,8 +199,6 @@
 			StokerBlower *theBlower	= [[StokerBlower alloc] initWithName: [blower objectForKey:@"name"] andID: [blower objectForKey:@"id"]];
 			theBlower.state      	= [[blower objectForKey:@"on"] intValue];
 			
-//			NSLog(@"sensorSetup: blower %@ (%@) is %@", theBlower.deviceID, theBlower.deviceName, theBlower.state ? @"On" : @"Off");
-
 			[blowerDict setObject: theBlower forKey: theBlower.deviceID];
 			[deviceDict setObject: theBlower forKey: theBlower.deviceID];
 			[blowerArray addObject: theBlower];
@@ -223,11 +226,7 @@
 						theSensor.blower = blower;
 						blower.sensor = theSensor;
 					
-//						NSLog(@"sensorSetup: sensor %@ (%@), current = %@, target = %@, blower = %@ (%@)",
-//							  theSensor.deviceID, theSensor.deviceName, theSensor.tempCurrent, theSensor.tempTarget, blower.deviceID, blower.deviceName);
 					}
-//					else
-//						NSLog(@"sensorSetup: sensor %@ (%@), current = %@, target = %@", theSensor.deviceID, theSensor.deviceName, theSensor.tempCurrent, theSensor.tempTarget);
 				}
 			}
 			
@@ -269,8 +268,6 @@
 
 - (void) startTelnetCapture 
 {		
-// 	NSLog(@"Stoker: startTelnetCapture");
-
 	NSString *telnetAddress;
 	int telnetPort = 23;
 
@@ -302,9 +299,7 @@
 	{
 		telnetAddress = [ipAddress substringToIndex: colon.location];
 	}
-	
-//	NSLog(@"startTelnetCapture telnetAddress = %@", telnetAddress);
-	
+		
 	if (![socket connectToHost:telnetAddress onPort: telnetPort error:&err])
 	{
 		NSLog (@"Stoker: Couldn't connect to %@:%u (%@).", ipAddress, telnetPort, err);
@@ -332,53 +327,57 @@
 - (void) parseTelnetOutput: (NSString *) stokerOutput 
 {	
 	static double lastUpdate = 0;
-	
-//	NSLog(@"Stoker - parseTelnetOutput: %@", stokerOutput);
-	
+		
 	if ([stokerOutput rangeOfString:@":"].location != NSNotFound)		// must have : after device ID or it's garbage
 	{ 			  
 		NSString *deviceID = nil;
-		NSString *tempUser = nil;
+		NSString *currentTemp = nil;
+		NSString *currentTarget = nil;
 		NSString *blower = nil;
 		
 		NSScanner *scanner = [NSScanner scannerWithString:stokerOutput];
 		
 		// first string (up to colon) is the Device ID
 		
-		[scanner scanUpToString:@":" intoString:&deviceID];
+		[scanner scanUpToString:@":" intoString: &deviceID];
 		
 		if ([deviceID length] != 16)	// bad deviceID
 			return;
 
-		[scanner scanUpToString:@" " intoString:nil];					// skip past the colon
+		[scanner scanUpToString: @" " intoString: nil];					// skip past the colon
 		
 		for (int i = 0; i < 7; i++)										// skip past the v0-v6 debug variables
 		{
-			[scanner scanUpToString:@" " intoString:nil];
+			[scanner scanUpToString: @" " intoString: nil];
 		}
-		
-		[scanner scanUpToString:@" " intoString:nil];					// skip past the tempC, get the user temp
-		[scanner scanUpToString:@" " intoString:&tempUser];
-		
-		if ([stokerOutput rangeOfString:@"PID"].location != NSNotFound)	// if there's a PID string, then there's blower data
-		{
-			[scanner scanUpToString:@"tgt:" intoString:nil];			// skip past the tgt:
-			[scanner scanString:@"tgt:" intoString:nil];
-			[scanner scanUpToString:@" " intoString:nil];				// skip the value
-
-			[scanner scanUpToString:@"blwr:" intoString:nil];			// skip past the blwr:
-			[scanner scanString:@"blwr:" intoString:nil];
-			[scanner scanUpToString:@" " intoString:&blower];			// get the value
-		}		
-		
-		[self updateSensor: deviceID withTemp: [tempUser doubleValue] andTarget: [[[sensorDict objectForKey: deviceID] tempTarget] doubleValue]];
 		 
-		if (blower)
+		[scanner scanUpToString:@" " intoString:nil];					// skip past the tempC, get the user temp
+		[scanner scanUpToString:@" " intoString: &currentTemp];
+		
+		if ([stokerOutput rangeOfString:@"PID"].location == NSNotFound)	// No PID, no blower, no target temp
 		{
-			StokerDevice *theBlower = [[sensorDict objectForKey: deviceID] blower];
+			[self updateSensor: deviceID
+					  withTemp: [currentTemp doubleValue]
+					 andTarget: [[[sensorDict objectForKey: deviceID] tempTarget] doubleValue]];
+		}
+		else															// if there's a PID string, then there's blower data
+		{
+			[scanner scanUpToString:@"tgt:" intoString: nil];			// skip past the tgt:
+			[scanner scanString:@"tgt:" intoString: nil];
+			[scanner scanUpToString:@" " intoString:  &currentTarget];	// get the current target temp
 
+			[scanner scanUpToString:@"blwr:" intoString: nil];			// skip past the blwr:
+			[scanner scanString:@"blwr:" intoString: nil];
+			[scanner scanUpToString:@" " intoString: &blower];			// get the value
+
+			[self updateSensor: deviceID
+					  withTemp: [currentTemp doubleValue]
+					 andTarget: [currentTarget doubleValue]];
+
+			StokerDevice *theBlower = [[sensorDict objectForKey: deviceID] blower];
+			
 			Boolean state =	([blower compare: @"on" options: NSCaseInsensitiveSearch range: NSMakeRange(0,2)] == NSOrderedSame) ? TRUE : FALSE;
-			[self updateBlower: theBlower.deviceID withState: state];				
+			[self updateBlower: theBlower.deviceID withState: state];
 		}
 	}
 
@@ -397,9 +396,7 @@
 
 
 - (void) updateSensor: (NSString *) sensorID withTemp: (double) temp andTarget: (double) target
-{
-//	NSLog(@"Stoker updateSensor: %@ withTemp %lf andTarget: %lf", sensorID, temp, target);
-	
+{	
 	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
 	
 	StokerSensor *theSensor = [sensorDict objectForKey: sensorID];
@@ -411,8 +408,6 @@
 
 - (void) updateBlower: (NSString *) blowerID withState: (Boolean) state
 {
-//	NSLog(@"Stoker updateBlower: %@ withState: %@", blowerID, state ? @"On" : @"Off");
-
 	NSNumber *currentTime = [NSNumber numberWithDouble: [[NSDate date] timeIntervalSinceReferenceDate]];
 	
 	StokerBlower *theBlower = [blowerDict objectForKey: blowerID];
@@ -430,9 +425,7 @@
 
 
 -(void) socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port;
-{
-//	NSLog (@"Stoker: socket:didConnectToHost: %@:%u", host, port);
-	
+{	
 	telnetActive = YES;
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(stoker:telnetActive:)]) {
 		[[self delegate] stoker: self telnetActive: YES];
@@ -479,9 +472,7 @@
 	{
 		NSString *send = [mySendExpect nextSend];
 		NSString *expect = [mySendExpect nextExpect];
-				
-//		NSLog(@"Stoker sending \"%@\", expecting \"%@\"", send, expect);
-		
+						
 		[socket writeData: [send dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
 		[socket readDataToData: [expect dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
 				
@@ -520,10 +511,8 @@
 }
 
 - (NSString *) typeForSensor: (int) sensorNo
-{
-	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
-	
-	if (theSensor.blower)
+{	
+	if ([(StokerSensor *)[sensorArray objectAtIndex: sensorNo]  blower])
 		return @"Control";
 	else
 		return @"Monitor";
@@ -531,30 +520,22 @@
 
 - (NSString *) nameForSensor: (int) sensorNo
 {
-	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
-
-	return theSensor.deviceName;
+	return [(StokerSensor *)[sensorArray objectAtIndex: sensorNo] deviceName];
 }
 
 - (NSString *) idForSensor: (int) sensorNo
 {
-	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
-
-	return theSensor.deviceID;
+	return [(StokerSensor *)[sensorArray objectAtIndex: sensorNo] deviceID];
 }
 
 - (NSNumber *) tempForSensor: (int) sensorNo
 {
-	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
-	
-	return theSensor.tempCurrent;
+	return [(StokerSensor *)[sensorArray objectAtIndex: sensorNo] tempCurrent];
 }
 
 - (NSNumber *) targetForSensor: (int) sensorNo
 {
-	StokerSensor *theSensor = [sensorArray objectAtIndex: sensorNo];
-	
-	return theSensor.tempTarget;
+	return [(StokerSensor *)[sensorArray objectAtIndex: sensorNo] tempTarget];
 }
 
 - (NSString *) blowerForSensor: (int) sensorNo
@@ -563,8 +544,7 @@
 	
 	if (theSensor.blower)
 	{
-		StokerBlower *theBlower = (StokerBlower *) theSensor.blower;
-		return theBlower.state ? @"On" : @"Off";
+		return [(StokerBlower *) [theSensor blower] state] ? @"On" : @"Off";
 	}
 	else
 		return nil;
@@ -577,26 +557,17 @@
 
 - (NSString *) idForBlower: (int) blowerNo
 {
-	StokerSensor *theBlower = [blowerArray objectAtIndex: blowerNo];
-	return theBlower.deviceID;
+	return [(StokerBlower *)[blowerArray objectAtIndex: blowerNo] deviceID];
 }
 
 - (NSUInteger) numberOfRecordsForPlot:(id <NSCopying, NSObject>)deviceID
 {
-//	NSLog(@"numberOfRecordsForPlot: %@ = %ld", deviceID, [[[deviceDict objectForKey: deviceID] plotData] count]);
-
 	return [[[deviceDict objectForKey: deviceID] plotData] count];
 }
 
 - (NSNumber *) plotValueForPlot:(id <NSCopying, NSObject>) deviceID field: (NSUInteger)fieldEnum recordIndex: (NSUInteger)index
 {
-	NSNumber *value = [[[[deviceDict objectForKey: deviceID] plotData] objectAtIndex: index] objectAtIndex: fieldEnum];
-	
-//	NSLog(@"plotValueForPlot: %@ field: %ld recordIndex: %ld = %@", deviceID, fieldEnum, index, value);
-	
-	return  value;
-	
-//	return [[[deviceDict objectForKey: deviceID] plotData] objectAtIndex: fieldEnum];
+	return [[[[deviceDict objectForKey: deviceID] plotData] objectAtIndex: index] objectAtIndex: fieldEnum];
 }
 
 - (double) totalBlowerRatio
@@ -727,12 +698,16 @@
 
 - (void) sendExpectStarted: (SendExpect *) sequence
 {
-//	NSLog(@"sendExpectStarted: %@", sequence.name);
 }
 
 - (void) sendExpectCompleted: (SendExpect *) sequence
 {
-//	NSLog(@"sendExpectCompleted: %@", sequence.name);
+	// if this was a shutdown, finish it up
+	if (self.shutdownCompletionBlock)
+	{
+		self.shutdownCompletionBlock();
+		self.shutdownCompletionBlock = nil;
+	}
 }
 
 - (void) sendExpectFailed: (SendExpect *) sequence withError: (NSString *) error

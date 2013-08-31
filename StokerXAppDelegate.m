@@ -7,8 +7,6 @@
 //
 
 #import "StokerXAppDelegate.h"
-#import "MiniTwitter.h"
-#import "Prowl.h"
 
 @implementation StokerXAppDelegate
 
@@ -140,6 +138,16 @@
 	notificationController.tweetController = tweetController;
 	notificationController.pushController = pushController;
 	
+	EmailSender *smtpTest = [[EmailSender alloc] init];
+	[smtpTest validateSMTPWithCompletionHandler:^(BOOL valid)
+	{
+		if (!valid)
+			NSLog(@"StokerXAppDelegate: saved SMTP parameters not valid");
+		else
+			NSLog(@"StokerXAppDelegate: saved SMTP parameters validated");
+		[smtpTest release];
+	}];
+	
 	// Use saved position of main window, and show it.
 	
 	[mainWindow setFrameAutosaveName:@"Main Window"];
@@ -155,7 +163,7 @@
 		theStoker.ipAddress = [[NSUserDefaults standardUserDefaults] stringForKey: kStokeripAddressKey];
 		[theStoker connectWithCompletionHandler:^(void) 
 		{
-			NSLog(@"connectWithCompletionHandler called");
+			NSLog(@"StokerXAppDelegate: Initial Stoker connection completed");
 		}];
 		[self updateUI];
 	}
@@ -178,22 +186,22 @@
 {				
 	BOOL shutdownNow = [theStoker shutdownWithCompletionHandler:^(void) 
 	{
-		NSLog(@"applicationShouldTerminate: completionHandler called");
+		NSLog(@"StokerXAppDelegate: App terminating after telnet reset");
 		[NSApp replyToApplicationShouldTerminate:YES];
 	}];
 
 	if (!shutdownNow)
 	{
-		[self setStatusText: @"Waiting for Stoker Reset"];
+		[self setStatusText: @"StokerXAppDelegate: Termination waiting for Stoker Reset"];
 		return NSTerminateLater;   
 	}
 
-	[self setStatusText: @"StokerX Terminating"];
+	[self setStatusText: @"StokerXAppDelegate: Terminating immediately"];
 	return NSTerminateNow;			
 }
 - (void) updateUI
 {
-	NSLog(@"StokerXAppDelegate: updateUI:");
+//	NSLog(@"StokerXAppDelegate: updateUI:");
 
 	NSTimeInterval elapsedTime;
 
@@ -228,7 +236,6 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {	
-	NSLog(@"StokerXAppDelegate - observeValueForKeyPath: %@ change: %@", keyPath, [change objectForKey:NSKeyValueChangeNewKey]);
 	if ([keyPath isEqualTo: kStokeripAddressKey])
 	{
 		theStoker.ipAddress = [change objectForKey:NSKeyValueChangeNewKey];
@@ -243,34 +250,6 @@
 		plotController.plotMinTemp = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
 		[self updateUI];
 	}
-}
-
-- (void) addNoteNumber: (NSInteger) noteNumber
-{
-	NSString *prefix;
-	
-	if (noteNumber == 1)
-		prefix = [NSString stringWithFormat: @"(%ld) ", (long) noteNumber];
-	else
-		prefix = [NSString stringWithFormat: @"\n(%ld) ", (long) noteNumber];
-			
-	
-    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-    [attributes setObject: [NSFont fontWithName: @"Times New Roman" size: 14.0] forKey:NSFontAttributeName];
-	NSAttributedString *string = [[NSAttributedString alloc] initWithString:  prefix attributes: attributes];
-
-	[[notesView textStorage] beginEditing];
-	[[notesView textStorage] appendAttributedString:string];
-	[[notesView textStorage] endEditing];
-	
-	[notesWindow makeKeyAndOrderFront: self];
-}
-
-- (void) findNoteString: (NSString *) string
-{
-	NSRange ptr = [[[notesView textStorage] string] rangeOfString: string];
-	[notesView setSelectedRange: NSMakeRange(ptr.location, 0)];
-	[notesWindow makeKeyAndOrderFront: self];
 }
 
 #pragma mark -
@@ -572,6 +551,38 @@
 	{
 		[self setStatusText: @"Logging stopped"];
 	}
+}
+
+
+#pragma mark -
+#pragma mark Plot Controller Delegate Methods
+
+- (void) plotController: (StokerPlotController *) plotController addedNoteNumber: (NSInteger) noteNumber
+{
+	NSString *prefix;
+	
+	if (noteNumber == 1)
+		prefix = [NSString stringWithFormat: @"(%ld) ", (long) noteNumber];
+	else
+		prefix = [NSString stringWithFormat: @"\n(%ld) ", (long) noteNumber];
+	
+	
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    [attributes setObject: [NSFont fontWithName: @"Times New Roman" size: 14.0] forKey:NSFontAttributeName];
+	NSAttributedString *string = [[NSAttributedString alloc] initWithString:  prefix attributes: attributes];
+	
+	[[notesView textStorage] beginEditing];
+	[[notesView textStorage] appendAttributedString:string];
+	[[notesView textStorage] endEditing];
+	
+	[notesWindow makeKeyAndOrderFront: self];
+}
+
+- (void) plotController: (StokerPlotController *) plotController selectedNoteWithString: (NSString *) string
+{
+	NSRange ptr = [[[notesView textStorage] string] rangeOfString: string];
+	[notesView setSelectedRange: NSMakeRange(ptr.location, 0)];
+	[notesWindow makeKeyAndOrderFront: self];
 }
 
 

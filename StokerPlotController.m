@@ -394,9 +394,6 @@
 {
 	NSEvent *theEvent = (NSEvent *) event;
 	NSDecimal plotPoint[2];
-
-//	NSLog(@"StokerPlotController - plotSpace: %@ shouldHandlePointingDeviceDownEvent: %@ atPoint:  %f,%f ",
-//		  space.identifier, event, (double) point.x, (double) point.y);
 	
 	if (theEvent.type == NSLeftMouseDown)		// check for hitting an existing annotation
 	{
@@ -408,12 +405,10 @@
 		CGPoint plotAreaPoint = [graph convertPoint:point toLayer:graph.plotAreaFrame.plotArea];
 		[tempGraphPlotSpace plotPoint: plotPoint forPlotAreaViewPoint:plotAreaPoint];
 		NSArray *anchorPoint = [NSArray arrayWithObjects: [NSDecimalNumber decimalNumberWithDecimal: plotPoint[0]], [NSDecimalNumber decimalNumberWithDecimal: plotPoint[1]], nil];
-//		NSLog(@"StokerPlotController - anchorPoint = %@", anchorPoint);
 
 		for (CPTPlotSpaceAnnotation *annotation in annotationList)
 		{
 			NSArray *plotPoint = [annotation anchorPlotPoint];
-//			NSLog(@"StokerPlotController - plotPoint = %@", plotPoint);
 			
 			double xdiff = fabs([[anchorPoint objectAtIndex: 0] doubleValue] - [[plotPoint objectAtIndex: 0] doubleValue]);
 			double ydiff = fabs([[anchorPoint objectAtIndex: 1] doubleValue] - [[plotPoint objectAtIndex: 1] doubleValue]);
@@ -421,8 +416,8 @@
 			if ((xdiff < 5.0) && (ydiff < 5.0))
 			{
 				NSLog(@"StokerPlotController - plotPoint diffs = %f,%f, annotation = %@", xdiff, ydiff, [(CPTTextLayer *)[annotation contentLayer] text]);
-				[appDelegate findNoteString: [(CPTTextLayer *)[annotation contentLayer] text]];
-				
+				[appDelegate  plotController: self selectedNoteWithString: [(CPTTextLayer *)[annotation contentLayer] text]];
+		
 			}
 		}
 	}
@@ -449,15 +444,15 @@
 		
 		CPTPlotSpaceAnnotation *annotation = [[[CPTPlotSpaceAnnotation alloc] initWithPlotSpace:tempGraphPlotSpace anchorPlotPoint:anchorPoint] autorelease];
 		[annotationList addObject: annotation];
-		annotation.contentLayer = [[[CPTTextLayer alloc] initWithText: [NSString stringWithFormat: @"(%ld)", [annotationList count]]
+		annotation.contentLayer = [[[CPTTextLayer alloc] initWithText: [NSString stringWithFormat: @"(%ld)", (long) [annotationList count]]
 																style: hitAnnotationTextStyle] autorelease];
 
 		// Now add the annotation to the plot area
 		[graph.plotAreaFrame.plotArea addAnnotation: annotation];
 		
 		// and bring up the notes window
-		[appDelegate addNoteNumber: [annotationList count]];
-		
+		[appDelegate plotController: self addedNoteNumber: [annotationList count]];
+
 		return YES;
 	}
 

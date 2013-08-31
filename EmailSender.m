@@ -8,54 +8,65 @@
 
 #import <CoreServices/CoreServices.h>
 #import "EmailSender.h"
-#import "Mail.h"
+#import "PreferencesController.h"
 
 @implementation EmailSender
 
-- (id)eventDidFail:(const AppleEvent *)event withError:(NSError *)error
-{
-	NSLog(@"Stoker EmailSender Error: %@", [error localizedDescription]);
-
-    return nil;
-}
-
-- (void)sendEmailMessage:(NSString *) messageBody to: (NSString *) recipient;
+- (void)sendEmailMessage:(NSString *) messageBody to: (NSString *) recipient
 {	
-	MailApplication *mail = [SBApplication applicationWithBundleIdentifier:@"com.apple.Mail"];
-    mail.delegate = (id) self;
+	MCOSMTPSession *smtpSession = [[MCOSMTPSession alloc] init];
 	
-	MailOutgoingMessage *emailMessage = [[[mail classForScriptingClass:@"outgoing message"] alloc] initWithProperties:
-                                                [NSDictionary dictionaryWithObjectsAndKeys:
-                                                    @"StokerX Notification", @"subject",
-                                                    messageBody, @"content",
-                                                    nil]];
-				
-	[[mail outgoingMessages] addObject: emailMessage];
+	smtpSession.hostname = [[NSUserDefaults standardUserDefaults] stringForKey: kSMTPServerKey];
+	smtpSession.port = [[NSUserDefaults standardUserDefaults] integerForKey: kSMTPPortKey];
+	smtpSession.connectionType = [[NSUserDefaults standardUserDefaults] integerForKey: kConnectionTypeKey];
+	smtpSession.authType =[[NSUserDefaults standardUserDefaults] integerForKey: kAuthTypeKey];
+	
+	NSArray *smtpAccounts = [SSKeychain accountsForService: kStokerSMTPLogin];
+	smtpSession.username = [[smtpAccounts objectAtIndex: 0] objectForKey: @"acct"];
+	smtpSession.password = [SSKeychain passwordForService: kStokerSMTPLogin account: smtpSession.username];	
 
-	emailMessage.sender = recipient;
-	emailMessage.visible = NO;
-    
-    if ( [mail lastError] != nil )
-	{
-		[emailMessage release];
-		return;
-	}
+	MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
 	
-	MailToRecipient *theRecipient = [[[mail classForScriptingClass:@"to recipient"] alloc] initWithProperties:
-                                        [NSDictionary dictionaryWithObjectsAndKeys:
-                                            recipient, @"address",
-                                            nil]];
-	[emailMessage.toRecipients addObject: theRecipient];
-    [theRecipient release];
-    
-    if ( [mail lastError] != nil )
-	{
-		[emailMessage release];
-		return;
-	}
+	[[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox: recipient]];
+
+	[[builder header] setTo: [NSArray arrayWithObject: [MCOAddress addressWithMailbox: recipient]]];
 	
-	[emailMessage send];
-    [emailMessage release];
+	[[builder header] setSubject: @"StokerX Notification"];
+	
+	[builder setTextBody: messageBody];
+		
+	MCOSMTPSendOperation *sendOperation = [smtpSession sendOperationWithData: [builder data]];
+	[sendOperation start:^(NSError *error)
+	{
+		if(error)
+		{
+			NSLog(@"EmailSender sendEmailMessage: error: code = %ld, domain = %@\nuserInfo = %@",  (long)error.code, error.domain, error.userInfo);
+		}
+	}];
 }
+
+- (void) validateSMTPWithCompletionHandler:(void (^)(BOOL))handler
+{	
+	MCOSMTPSession *smtpSession = [[MCOSMTPSession alloc] init];
+	
+	smtpSession.hostname = [[NSUserDefaults standardUserDefaults] stringForKey: kSMTPServerKey];
+	smtpSession.port = [[NSUserDefaults standardUserDefaults] integerForKey: kSMTPPortKey];
+	smtpSession.connectionType = [[NSUserDefaults standardUserDefaults] integerForKey: kConnectionTypeKey];
+	smtpSession.authType =[[NSUserDefaults standardUserDefaults] integerForKey: kAuthTypeKey];
+	
+	NSArray *smtpAccounts = [SSKeychain accountsForService: kStokerSMTPLogin];
+	smtpSession.username = [[smtpAccounts objectAtIndex: 0] objectForKey: @"acct"];
+	smtpSession.password = [SSKeychain passwordForService: kStokerSMTPLogin account: smtpSession.username];
+	
+	MCOSMTPOperation *checkOperation = [smtpSession checkAccountOperationWithFrom: [MCOAddress addressWithMailbox: @"joe@flyingdiver.com"]];
+	[checkOperation start:^(NSError *error)
+	 {
+		 if(error)
+			 handler(FALSE);
+		 else
+			 handler(TRUE);
+	 }];
+}
+
 
 @end

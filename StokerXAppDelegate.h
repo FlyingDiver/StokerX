@@ -18,11 +18,11 @@
 #import "LVColorWellCell.h"
 #import "StokerPlotController.h"
 #import "GRMustache/GRMustache.h"
+#import "MiniTwitter.h"
+#import "EmailSender.h"
 
-@class Prowl;
-@class MiniTwitter;
-
-@interface StokerXAppDelegate : NSObject <NSApplicationDelegate, FRFeedbackReporterDelegate, NSTableViewDataSource, StokerDelegate, LVColorWellCellDelegate> 
+@interface StokerXAppDelegate : NSObject <NSApplicationDelegate, FRFeedbackReporterDelegate, NSTableViewDataSource,
+											StokerDelegate, StokerPlotControllerDelegate, LVColorWellCellDelegate>
 {
 	IBOutlet NSWindow				*mainWindow;
 	IBOutlet NSView					*mainView;
@@ -66,9 +66,6 @@
 
 - (void) receiveTwitterDirectMessage: (NSNotification *) message;
 - (NSMutableArray *) parseDirectMessage: (NSString *) message;
-
-- (void) addNoteNumber: (NSInteger) noteNumber;
-- (void) findNoteString: (NSString *) string;
 
 - (void) updateUI;
 

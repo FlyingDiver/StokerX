@@ -10,6 +10,7 @@
 #import "XMLReader.h"
 #import "PreferencesController.h"
 #import "StokerXAppDelegate.h"
+#import "SSKeychain.h"
 
 #define kProwlProviderKey		@"3a39c167ce5245449e94ae43a6fb97ae49c25e09"
 

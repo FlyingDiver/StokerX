@@ -7,10 +7,14 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MailCore/MailCore.h"
 
 
 @interface EmailSender: NSObject 
 
-- (void)sendEmailMessage:(NSString *)message to: (NSString *) recipient;
+- (void) sendEmailMessage:(NSString *)message to: (NSString *) recipient;
+- (void) validateSMTPWithCompletionHandler:(void (^)(BOOL))handler;
+
+//@property (copy) void (^validateSMTPCompletionBlock)(BOOL);
 
 @end

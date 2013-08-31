@@ -8,16 +8,26 @@
 #import "Prowl.h"
 #import "MiniTwitter.h"
 
-@implementation Prowl
+static NSString *kStokerXProwlAPIKey  = @"StokerX: Prowl";
+static NSString *kStokerXDefaultProwl = @"StokerXDefaultProwl";
+static NSString *kProwlAuthCodeKey    = @"ProwlAuthCode";
 
+@implementation Prowl
 @synthesize prowlAPIKey;
 
 - (void) awakeFromNib
-{	
+{
+	// convert from Preferences to keychain
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kProwlAuthCodeKey])
 	{
 		self.prowlAPIKey = [[NSUserDefaults standardUserDefaults] stringForKey: kProwlAuthCodeKey];
-		NSLog(@"Prowl awakeFromNib using saved prowlAPIKey = %@", self.prowlAPIKey);
+		[SSKeychain setPassword: self.prowlAPIKey forService: kStokerXProwlAPIKey account: kStokerXDefaultProwl];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey: kProwlAuthCodeKey];
+		[self updateUI];
+	}
+	else if ([SSKeychain passwordForService:kStokerXProwlAPIKey account:kStokerXDefaultProwl])
+	{
+		self.prowlAPIKey = [SSKeychain passwordForService:kStokerXProwlAPIKey account:kStokerXDefaultProwl];
 		[self updateUI];
 	}
 	
@@ -26,10 +36,9 @@
 
 - (void) signInToProwl
 {
-	if ([[NSUserDefaults standardUserDefaults] stringForKey: kProwlAuthCodeKey])
+	if ([SSKeychain passwordForService:kStokerXProwlAPIKey account:kStokerXDefaultProwl])
 	{
-		self.prowlAPIKey = [[NSUserDefaults standardUserDefaults] stringForKey: kProwlAuthCodeKey];
-		NSLog(@"Prowl signInToProwl using saved prowlAPIKey = %@", self.prowlAPIKey);
+		self.prowlAPIKey = [SSKeychain passwordForService:kStokerXProwlAPIKey account:kStokerXDefaultProwl];
 		return;		// got a code, so don't bother trying to get one
 	}
 	
@@ -62,10 +71,8 @@
 			 }
 			 else if (successInfo)
 			 {
-				 int remaining = [[successInfo objectForKey:@"remaining"] intValue];
 				 NSString *token = [[prowlResponse objectForKey:@"retrieve"] objectForKey: @"token"];
 				 NSString *authURL = [[prowlResponse objectForKey:@"retrieve"] objectForKey: @"url"];
-				 NSLog(@"Prowl getToken success - token = %@, URL = %@, remaining = %d", token, authURL, remaining);
 				 
 				 // get the auth token now
 				[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: authURL]];
@@ -121,10 +128,8 @@
 			 else if (successInfo)
 			 {
 				 self.prowlAPIKey = [[prowlResponse objectForKey:@"retrieve"] objectForKey: @"apikey"];
-				 [[NSUserDefaults standardUserDefaults] setObject: self.prowlAPIKey forKey: kProwlAuthCodeKey];
+				 [SSKeychain setPassword: self.prowlAPIKey forService: kStokerXProwlAPIKey account: kStokerXDefaultProwl];
 				 [self updateUI];
-
-//				 NSLog(@"Prowl checkForProwlAuthWithToken: success - apiKey = %@, remaining = %d", self.prowlAPIKey, [[successInfo objectForKey:@"remaining"] intValue]);
 			}
 		 }
 	 }];
@@ -209,7 +214,7 @@
 	} 
 	else 
 	{
-		[[NSUserDefaults standardUserDefaults] setObject: nil forKey: kProwlAuthCodeKey];
+		[SSKeychain setPassword: nil forService: kStokerXProwlAPIKey account: kStokerXDefaultProwl];
 	}
 	[self updateUI];
 }

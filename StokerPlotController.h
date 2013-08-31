@@ -53,3 +53,12 @@
 -(IBAction) exportToPDF:(id)sender;
 
 @end
+
+// Handle mouse down events on the plot
+
+@protocol StokerPlotControllerDelegate <NSObject>
+
+- (void) plotController: (StokerPlotController *) plotController addedNoteNumber: (NSInteger) noteNumber;
+- (void) plotController: (StokerPlotController *) plotController selectedNoteWithString: (NSString *) string;
+
+@end
