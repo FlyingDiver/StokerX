@@ -20,8 +20,8 @@ NSString * const kSendPushMessagesKey = @"SendPushMessages";
 NSString * const kEmailAddressKey   = @"EmailAddress";
 NSString * const kSMTPServerKey		= @"SMTPServer";
 NSString * const kSMTPPortKey		= @"SMTPPort";
-NSString * const kConnectionTypeKey	= @"ConnectionType";
-NSString * const kAuthTypeKey		= @"AuthType";
+NSString * const kConnectionTypeKey	= @"SMTPConnectionType";
+NSString * const kAuthTypeKey		= @"SMTPAuthType";
 
 NSString * const kStokerSMTPLogin	= @"StokerX: SMTP";
 

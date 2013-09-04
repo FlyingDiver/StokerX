@@ -48,7 +48,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		
 		// Twitter has a limit of 15 DM queries per 15 minutes (avg 60 sec), so  do them slower than that
 		
-		[NSTimer scheduledTimerWithTimeInterval: 90 target:self selector:@selector(getDirectMessages:) userInfo: nil repeats:YES];
+		[NSTimer scheduledTimerWithTimeInterval: 75 target:self selector:@selector(getDirectMessages:) userInfo: nil repeats:YES];
 	}
 		
 	[self updateUI];
@@ -324,15 +324,21 @@ static NSString *const kTwitterServiceName = @"Twitter";
 				 [[NSUserDefaults standardUserDefaults] setObject: self.directMessageSinceId forKey: @"DirectMessageSinceId"];
 				 				 				 
 				 NSNumber *senderID = [[results objectAtIndex: msgNum] objectForKey: @"sender_id"];
-				 NSNumber *senderName = [[results objectAtIndex: msgNum] objectForKey: @"sender_screen_name"];
 				 NSString *message = [[results objectAtIndex: msgNum] objectForKey: @"text"];
 				 
-				 // Get a list of my friends (the users I'm following)
+				 // Process message, and acknowledge it to sender
+				 [[NSNotificationCenter defaultCenter] postNotificationName: MiniTwitter_DirectMessage object: message];
 				 
-				 NSString *query = [[NSString stringWithFormat: @"https://api.twitter.com/1.1/friends/ids.json?screen_name=%@", self.twitterHandle]
-									stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-				 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: [NSURL URLWithString: query]];
+				 NSString *replyMessage = [NSString stringWithFormat: @"Message received: \"%@\".", message];
+				 NSString *encodedText = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) replyMessage, NULL,(CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
+				 NSString *body = [NSString stringWithFormat: @"text=%@&user_id=%@", encodedText, senderID];
 				 
+				 NSString *query = [@"https://api.twitter.com/1.1/direct_messages/new.json" stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+				 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:query]];
+				 
+				 [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+				 [request setHTTPMethod:@"POST"];
+				 [request setHTTPBody: [body dataUsingEncoding:NSUTF8StringEncoding]];
 				 [myAuth authorizeRequest: request];
 				 
 				 GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
@@ -342,48 +348,9 @@ static NSString *const kTwitterServiceName = @"Twitter";
 					  {
 						  [self reportError: error fromQuery: query];
 					  }
-					  else
-					  {
-						  NSDictionary *results = [[[[NSString alloc] initWithData: retrievedData encoding:NSUTF8StringEncoding] autorelease] JSONValue];
-						  
-						  // check that sender is in the friends list						  
-						  for (NSNumber *userID in [results objectForKey: @"ids"])
-						  {
-							  if ([userID isEqualTo: senderID])
-							  {
-								  // Process message, and acknowledge it to sender
-								  [[NSNotificationCenter defaultCenter] postNotificationName: MiniTwitter_DirectMessage object: message];
-								
-								  NSString *replyMessage = [NSString stringWithFormat: @"Thank you %@ for your message \"%@\".\nI'll think about it.", senderName, message];
-								  NSString *encodedText = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) replyMessage, NULL,(CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
-								  NSString *body = [NSString stringWithFormat: @"text=%@&user_id=%@", encodedText, senderID];
-								  
-								  NSString *query = [@"https://api.twitter.com/1.1/direct_messages/new.json" stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-								  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:query]];
-								  
-								  [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-								  [request setHTTPMethod:@"POST"];
-								  [request setHTTPBody: [body dataUsingEncoding:NSUTF8StringEncoding]];
-								  [myAuth authorizeRequest: request];
-								  
-								  GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
-								  [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error)
-								   {
-									   if (error != nil)
-									   {
-										   [self reportError: error fromQuery: query];
-									   }
-								   }];
-
-								  return;
-							  }
-
-						  }
-						  // Only get here if user not found.  This should not happen per Twitter Direct Message policy
-						  NSLog(@"MiniTwitter getDirectMessages error got Direct Message from unknown user: %@ (%@)", senderName, senderID);
-
-					  }
 				  }];
+				 
+				 return;
 			 }
 		 }
 	 }];
@@ -394,12 +361,6 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	if ((error.code == self.lastError.code) && ([error.domain isEqualTo: self.lastError.domain]) && ([error.userInfo isEqualTo: self.lastError.userInfo]))
 	{
 		self.lastErrorCount++;
-		
-//		if (self.lastErrorCount >= 10)
-//		{
-//			NSLog(@"MiniTwitter API error: last error repeated %d times", lastErrorCount);
-//			self.lastErrorCount = 0;
-//		}
 	}
 	else
 	{

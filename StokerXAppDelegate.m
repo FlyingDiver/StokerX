@@ -12,10 +12,9 @@
 
 @synthesize mainWindow, mainView, notesWindow, notesView, startTime, endTime, graph, pushController, tweetController, preferencesController, loggingActive;
 
-#define MINUTES	60.0
+#define MINUTES					60.0
 #define TIME_RANGE_START		20 * MINUTES    
 #define PLOT_INTERVAL_START		5 * MINUTES    
-#define GRAPH_UPDATE_INTERVAL	5.0
 
 #pragma mark -
 #pragma mark Application startup and Delegate Methods
@@ -258,20 +257,34 @@
 - (void) receiveTwitterDirectMessage: (NSNotification *) notification
 {
 	NSMutableArray *tokenList = [self parseDirectMessage: [notification object]];
-	NSLog(@"StokerXAppDelegate receiveTwitterDirectMessage: %@", tokenList);
 	
 	if ([[tokenList objectAtIndex: 0] caseInsensitiveCompare: @"status"] == NSOrderedSame)
 	{
-		[tweetController sendTweet: @"StokerX status:\n"];
+		NSMutableString *response = [NSMutableString stringWithString: @"StokerX status:"];
+		for (int i = 0; i < [theStoker numberOfSensors]; i++)
+		{
+			[response appendFormat: @"\n%@ = %@", [theStoker nameForSensor: i], [theStoker tempForSensor: i]];
+		}
+		[tweetController sendTweet: response];
 	}
 	else if ([[tokenList objectAtIndex: 0] caseInsensitiveCompare: @"set"] == NSOrderedSame)
 	{
-		[tweetController sendTweet: [NSString stringWithFormat: @"Set command received, sensor = \"%@\", temperature = %@",
-									 [tokenList objectAtIndex: 1], [tokenList objectAtIndex: 2]]];
+		NSString *sensor = [NSString stringWithString: [tokenList objectAtIndex: 1]];
+		NSString *temp = [NSString stringWithString: [tokenList objectAtIndex: 2]];
+		
+		[tweetController sendTweet: [NSString stringWithFormat: @"Temperature for sensor \"%@\" set to %@", sensor, temp]];
+		for (int i = 0; i < [theStoker numberOfSensors]; i++)
+		{
+			if ([sensor caseInsensitiveCompare: [theStoker nameForSensor: i]] == NSOrderedSame)
+			{
+				[theStoker setTarget: [NSNumber numberWithInt: [temp integerValue]] forSensorID: [theStoker idForSensor: i]];
+				break;
+			}
+		}
 	}
 	else
 	{
-		[tweetController sendTweet: [NSString stringWithFormat: @"Unknown Direct Message command received: %@", [notification object]]];
+		[tweetController sendTweet: [NSString stringWithFormat: @"Unknown Direct Message received: %@", [tokenList objectAtIndex: 0]]];
 	}
 }
 
@@ -794,7 +807,7 @@
 
 - (NSString *) targetUrlForFeedbackReport
 {
-	return @"http://www.flyingdiver.com/submitfeedback.php";
+	return @"http://www.stokerx.com/submitfeedback.php";
 }
 
 #pragma mark -

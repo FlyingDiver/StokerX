@@ -169,7 +169,6 @@
 		C9B9BE8417CAAAC600B87DEB /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = ../Frameworks/Growl.framework; sourceTree = "<group>"; };
 		C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LVColorWellCell.h; path = Color/LVColorWellCell.h; sourceTree = "<group>"; };
 		C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LVColorWellCell.m; path = Color/LVColorWellCell.m; sourceTree = "<group>"; };
-		C9C83DE41412B2C300AB8261 /* To-Do.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "To-Do.rtf"; sourceTree = "<group>"; };
 		C9CC35131402A33900A6227A /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = ../Frameworks/CorePlot.framework; sourceTree = "<group>"; };
 		C9CC35171402A34C00A6227A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		C9D5550A13FEDD4F0066BB27 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
@@ -301,7 +300,6 @@
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
-				C9C83DE41412B2C300AB8261 /* To-Do.rtf */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
