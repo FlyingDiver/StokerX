@@ -137,16 +137,6 @@
 	notificationController.tweetController = tweetController;
 	notificationController.pushController = pushController;
 	
-	EmailSender *smtpTest = [[EmailSender alloc] init];
-	[smtpTest validateSMTPWithCompletionHandler:^(BOOL valid)
-	{
-		if (!valid)
-			NSLog(@"StokerXAppDelegate: saved SMTP parameters not valid");
-		else
-			NSLog(@"StokerXAppDelegate: saved SMTP parameters validated");
-		[smtpTest release];
-	}];
-	
 	// Use saved position of main window, and show it.
 	
 	[mainWindow setFrameAutosaveName:@"Main Window"];
@@ -777,9 +767,7 @@
 	
     GRMustacheTemplate *template = [GRMustacheTemplate templateFromContentsOfFile: templateFilePath error: NULL];
 
-//	NSLog(@"ReportDict = %@\n", reportDict);
     NSString *webviewHTMLString = [template renderObject: reportDict error:NULL];
-//	NSLog(@"webviewHTMLString = %@\n", webviewHTMLString);
 
 	// Load the frame, print it in the delegate when the load is complete
 	

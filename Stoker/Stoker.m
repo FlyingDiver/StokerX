@@ -8,7 +8,7 @@
 
 #import "Stoker.h"
 #import "JSON.h"
-#import "GTMOAuth/GTMHTTPFetcher.h"
+#import "GTMHTTPFetcher.h"
 
 @implementation Stoker
 

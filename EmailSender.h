@@ -14,6 +14,7 @@
 
 - (void) sendEmailMessage:(NSString *)message to: (NSString *) recipient;
 - (void) validateSMTPWithCompletionHandler:(void (^)(BOOL))handler;
+- (BOOL) findProviderForEmail: (NSString *) emailAddress;
 
 //@property (copy) void (^validateSMTPCompletionBlock)(BOOL);
 

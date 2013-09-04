@@ -17,13 +17,15 @@ NSString * const kReportTemplateKey  = @"ReportTemplate";
 NSString * const kSendTweetsKey      = @"SendTweets";
 NSString * const kSendPushMessagesKey = @"SendPushMessages";
 
-NSString * const kEmailAddressKey   = @"EmailAddress";
-NSString * const kSMTPServerKey		= @"SMTPServer";
-NSString * const kSMTPPortKey		= @"SMTPPort";
-NSString * const kConnectionTypeKey	= @"SMTPConnectionType";
-NSString * const kAuthTypeKey		= @"SMTPAuthType";
+NSString * const kEmailAddressKey    = @"EmailAddress";
+NSString * const kSMTPServerKey		 = @"SMTPServer";
+NSString * const kSMTPPortKey		 = @"SMTPPort";
+NSString * const kConnectionTypeKey	 = @"SMTPConnectionType";
+NSString * const kAuthTypeKey		 = @"SMTPAuthType";
 
-NSString * const kStokerSMTPLogin	= @"StokerX: SMTP";
+NSString * const kStokerSMTPService	 = @"StokerX: SMTP";
+NSString * const kStokerSMTPLogin	 = @"SMTPLogin";
+NSString * const kStokerSMTPPassword = @"SMTPPassword";
 
 
 #define MIN_TEMP_AXIS			0.0
@@ -112,16 +114,17 @@ NSString * const kStokerSMTPLogin	= @"StokerX: SMTP";
 	[[NSUserDefaults standardUserDefaults] setObject: [self.smtpPort stringValue]
 											  forKey: kSMTPPortKey];
 	
-	[[NSUserDefaults standardUserDefaults] setInteger: [self.connectionType indexOfSelectedItem]
+	[[NSUserDefaults standardUserDefaults] setInteger: [[self.connectionType selectedItem] tag]
 											   forKey: kConnectionTypeKey];
 	
-	[[NSUserDefaults standardUserDefaults] setInteger: [self.authType indexOfSelectedItem]
+	[[NSUserDefaults standardUserDefaults] setInteger: [[self.authType selectedItem] tag]
 											   forKey: kAuthTypeKey];
 	
-	[SSKeychain setPassword: [self.smtpPassword stringValue]
-				 forService: kStokerSMTPLogin
-					account: [self.smtpUsername stringValue]];
-	
+	[SSKeychain deletePasswordForService: kStokerSMTPService account: kStokerSMTPLogin];
+	[SSKeychain deletePasswordForService: kStokerSMTPService account: kStokerSMTPPassword];
+	[SSKeychain setPassword: [self.smtpUsername stringValue] forService: kStokerSMTPService account: kStokerSMTPLogin];
+	[SSKeychain setPassword: [self.smtpPassword stringValue] forService: kStokerSMTPService account: kStokerSMTPPassword];
+		
 	[self.busyIndicator startAnimation: self];
 	[self.validateButton setEnabled: NO];
 	
@@ -139,7 +142,6 @@ NSString * const kStokerSMTPLogin	= @"StokerX: SMTP";
 			 [self.busyIndicator stopAnimation: self];
 			 [self.validateButton setEnabled: YES];
              [self.messageField setStringValue: @"SMTP settings validation successful - Saved!"];			 
-			 NSLog(@"PreferencesController: SMTP parameters validated");
 		 }
 		 [smtpTest release];
 	 }];
@@ -168,6 +170,7 @@ NSString * const kStokerSMTPLogin	= @"StokerX: SMTP";
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey])
 		[maxGraphTemp setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey: kMaxGraphTempKey]];
+	
 	// build list of template files for selection pop-up
 	
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
@@ -197,28 +200,41 @@ NSString * const kStokerSMTPLogin	= @"StokerX: SMTP";
 		[self.smtpServer setStringValue: [[NSUserDefaults standardUserDefaults] stringForKey: kSMTPServerKey]];
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kSMTPPortKey])
-		[self.smtpPort setIntegerValue: [[NSUserDefaults standardUserDefaults] integerForKey: kSMTPPortKey]];
+		[self.smtpPort setStringValue: [[NSUserDefaults standardUserDefaults] stringForKey: kSMTPPortKey]];
 	
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kAuthTypeKey])
-		[self.authType selectItemAtIndex: [[NSUserDefaults standardUserDefaults] integerForKey: kAuthTypeKey]];	
+		[self.authType selectItemWithTag: [[NSUserDefaults standardUserDefaults] integerForKey: kAuthTypeKey]];
 	
 	if ([[NSUserDefaults standardUserDefaults] stringForKey: kConnectionTypeKey])
-		[self.connectionType selectItemAtIndex: [[NSUserDefaults standardUserDefaults] integerForKey: kConnectionTypeKey]];
+		[self.connectionType selectItemWithTag: [[NSUserDefaults standardUserDefaults] integerForKey: kConnectionTypeKey]];
 	
-	NSArray *smtpAccounts = [SSKeychain accountsForService: kStokerSMTPLogin];
-	if ([smtpAccounts count] > 0)
-	{		
-		NSString *userAccount = [[smtpAccounts objectAtIndex: 0] objectForKey: @"acct"];
-		[self.smtpUsername setStringValue: userAccount];
-		[self.smtpPassword setStringValue: [SSKeychain passwordForService: kStokerSMTPLogin account: userAccount]];
-	}
+	if ([SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPLogin])
+		[self.smtpUsername setStringValue: [SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPLogin]];
 	
+	if ([SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPPassword])
+		[self.smtpPassword setStringValue: [SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPPassword]];
+	
+	[[NSUserDefaults standardUserDefaults] addObserver: self
+											forKeyPath: kEmailAddressKey
+											   options: NSKeyValueObservingOptionNew
+											   context: NULL];
 	// Show the window
 	
 	[[self window] setFrameAutosaveName:@"Prefs Window"];
 	[[self window] makeKeyAndOrderFront: self];
 	
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualTo: kEmailAddressKey])
+	{		
+//		EmailSender *providerCheck = [[EmailSender alloc] init];
+//		[providerCheck findProviderForEmail: [change objectForKey:NSKeyValueChangeNewKey]];
+		
+	}
+}
+
 
 @end

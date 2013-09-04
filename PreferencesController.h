@@ -24,7 +24,9 @@ extern NSString * const kSMTPServerKey;
 extern NSString * const kSMTPPortKey;
 extern NSString * const kConnectionTypeKey;
 extern NSString * const kAuthTypeKey;
+extern NSString * const kStokerSMTPService;
 extern NSString * const kStokerSMTPLogin;
+extern NSString * const kStokerSMTPPassword;
 
 @interface PreferencesController : NSWindowController
 {

@@ -19,11 +19,9 @@
 	smtpSession.hostname = [[NSUserDefaults standardUserDefaults] stringForKey: kSMTPServerKey];
 	smtpSession.port = [[NSUserDefaults standardUserDefaults] integerForKey: kSMTPPortKey];
 	smtpSession.connectionType = [[NSUserDefaults standardUserDefaults] integerForKey: kConnectionTypeKey];
-	smtpSession.authType =[[NSUserDefaults standardUserDefaults] integerForKey: kAuthTypeKey];
-	
-	NSArray *smtpAccounts = [SSKeychain accountsForService: kStokerSMTPLogin];
-	smtpSession.username = [[smtpAccounts objectAtIndex: 0] objectForKey: @"acct"];
-	smtpSession.password = [SSKeychain passwordForService: kStokerSMTPLogin account: smtpSession.username];	
+	smtpSession.authType =[[NSUserDefaults standardUserDefaults] integerForKey: kAuthTypeKey];	
+	smtpSession.username = [SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPLogin];
+	smtpSession.password = [SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPPassword];
 
 	MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
 	
@@ -53,20 +51,45 @@
 	smtpSession.port = [[NSUserDefaults standardUserDefaults] integerForKey: kSMTPPortKey];
 	smtpSession.connectionType = [[NSUserDefaults standardUserDefaults] integerForKey: kConnectionTypeKey];
 	smtpSession.authType =[[NSUserDefaults standardUserDefaults] integerForKey: kAuthTypeKey];
+	smtpSession.username = [SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPLogin];
+	smtpSession.password = [SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPPassword];
+
 	
-	NSArray *smtpAccounts = [SSKeychain accountsForService: kStokerSMTPLogin];
-	smtpSession.username = [[smtpAccounts objectAtIndex: 0] objectForKey: @"acct"];
-	smtpSession.password = [SSKeychain passwordForService: kStokerSMTPLogin account: smtpSession.username];
-	
-	MCOSMTPOperation *checkOperation = [smtpSession checkAccountOperationWithFrom: [MCOAddress addressWithMailbox: @"joe@flyingdiver.com"]];
+	NSString *checkEmail = [[NSUserDefaults standardUserDefaults] stringForKey: kEmailAddressKey];
+	MCOSMTPOperation *checkOperation = [smtpSession checkAccountOperationWithFrom: [MCOAddress addressWithMailbox: checkEmail]];
 	[checkOperation start:^(NSError *error)
 	 {
 		 if(error)
+		 {
+			 NSLog(@"SMTP check error = %@", error);
 			 handler(FALSE);
+		 }
 		 else
+		 {
 			 handler(TRUE);
+		 }
 	 }];
 }
 
+- (BOOL) findProviderForEmail: (NSString *) emailAddress
+{
+	MCOMailProvidersManager *providerManager = [MCOMailProvidersManager sharedManager];
+	
+	MCOMailProvider *provider = [providerManager providerForEmail: emailAddress];
+	if (!provider)
+	{
+		NSLog(@"No Email Provider found for %@", emailAddress);
+		return false;
+	}
+	
+	NSLog(@"Email Providers found for %@:", emailAddress);
+	NSArray *providers = [provider smtpServices];
+	for (MCONetService *i in providers)
+	{
+		NSLog(@"\tHostname = %@, port = %d, connectionType = %u, hostnameWithEmail = %@",
+			  i.hostname, i.port, i.connectionType, [i hostnameWithEmail: emailAddress]);
+	}
+	return true;
+}
 
 @end
