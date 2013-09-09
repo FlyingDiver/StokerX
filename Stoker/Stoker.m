@@ -213,8 +213,8 @@
 		for (NSDictionary *sensor in sensors)
 		{			
 			StokerSensor *theSensor	= [[StokerSensor alloc] initWithName: [sensor objectForKey:@"name"] andID: [sensor objectForKey:@"id"]];
-			theSensor.tempTarget 	= [sensor objectForKey:@"ta"];
-			theSensor.tempCurrent 	= [sensor objectForKey:@"tc"];
+			theSensor.tempTarget 	= [NSNumber numberWithInt: round([[sensor objectForKey:@"ta"] doubleValue])];
+			theSensor.tempCurrent 	= [NSNumber numberWithInt: round([[sensor objectForKey:@"tc"] doubleValue])];
 			
 			// Look for a matching BlowerID for this sensor
 			if ([blowerDict count] > 0)
@@ -364,7 +364,7 @@
 		{
 			[scanner scanUpToString:@"tgt:" intoString: nil];			// skip past the tgt:
 			[scanner scanString:@"tgt:" intoString: nil];
-			[scanner scanUpToString:@" " intoString:  &currentTarget];	// get the current target temp
+			[scanner scanUpToString:@" " intoString:  &currentTarget];	// get the current target temp (in Celsius!)
 
 			[scanner scanUpToString:@"blwr:" intoString: nil];			// skip past the blwr:
 			[scanner scanString:@"blwr:" intoString: nil];
@@ -372,7 +372,7 @@
 
 			[self updateSensor: deviceID
 					  withTemp: [currentTemp doubleValue]
-					 andTarget: [currentTarget doubleValue]];
+					 andTarget: (([currentTarget doubleValue]*(9.0/5.0)) + 32.0)];	// target value in telnet output is Celsius
 
 			StokerDevice *theBlower = [[sensorDict objectForKey: deviceID] blower];
 			
@@ -401,8 +401,8 @@
 	
 	StokerSensor *theSensor = [sensorDict objectForKey: sensorID];
 	
-	theSensor.tempCurrent = [NSNumber numberWithDouble: temp];
-	theSensor.tempTarget  = [NSNumber numberWithDouble: target];			
+	theSensor.tempCurrent = [NSNumber numberWithDouble: round(temp)];
+	theSensor.tempTarget  = [NSNumber numberWithDouble: round(target)];
 	[theSensor.plotData addObject: [NSArray arrayWithObjects: currentTime, theSensor.tempCurrent, theSensor.tempTarget, nil]];	
 }
 
@@ -707,6 +707,11 @@
 	{
 		self.shutdownCompletionBlock();
 		self.shutdownCompletionBlock = nil;
+	}
+	else if ([[sequence name] isEqualToString: @"Telnet Output Stop"])
+	{
+		[self sendStatusUpdate: @"Telnet connection terminated"];
+
 	}
 }
 

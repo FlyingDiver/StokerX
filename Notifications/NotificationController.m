@@ -120,7 +120,7 @@
 	{
 		NSNumber *index = [oldSensor objectForKey: @"index"];
 
-		NSMutableArray *newSensor = [NSMutableDictionary dictionaryWithObjectsAndKeys: sensorName, @"name", sensorID, @"id", index , @"index", nil];
+		NSMutableDictionary *newSensor = [NSMutableDictionary dictionaryWithObjectsAndKeys: sensorName, @"name", sensorID, @"id", index , @"index", nil];
 
 		[sensorList replaceObjectAtIndex: [index intValue] withObject: newSensor];
 		[sensorDict setObject: newSensor forKey: sensorID];
@@ -130,7 +130,7 @@
 	{
 		NSNumber *index = [NSNumber numberWithInt: [sensorList count]];
 		
-		NSMutableArray *newSensor = [NSMutableDictionary dictionaryWithObjectsAndKeys: sensorName, @"name", sensorID, @"id", index, @"index", nil];
+		NSMutableDictionary *newSensor = [NSMutableDictionary dictionaryWithObjectsAndKeys: sensorName, @"name", sensorID, @"id", index, @"index", nil];
 
 		[sensorList addObject: newSensor];
 		[sensorDict setObject: newSensor forKey: sensorID];
