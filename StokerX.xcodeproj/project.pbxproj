@@ -10,7 +10,6 @@
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		C908840017B6B83200B7D26F /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C90883FF17B6B83200B7D26F /* WebKit.framework */; };
 		C90C709912861E5E005D55B2 /* SendExpect.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C709712861E5E005D55B2 /* SendExpect.m */; };
 		C917FC381310C6A300B6063E /* nsColorSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = C917FC371310C6A300B6063E /* nsColorSupport.m */; };
@@ -219,17 +218,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				C920925C17D7A7FF00AA53EC /* AppKit.framework in Frameworks */,
-				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */,
 				C94128CF17DE02EC005389EC /* CoreServices.framework in Frameworks */,
+				C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */,
+				C94BED83140B28A900CA06F8 /* Security.framework in Frameworks */,
+				C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */,
+				C908840017B6B83200B7D26F /* WebKit.framework in Frameworks */,
+				C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */,
 				C9F97B97140C53DA005B2A25 /* FeedbackReporter.framework in Frameworks */,
 				C9B9BE8517CAAAC600B87DEB /* Growl.framework in Frameworks */,
 				C944AE7117D3C65100C97878 /* MailCore.framework in Frameworks */,
-				C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */,
-				C94BED83140B28A900CA06F8 /* Security.framework in Frameworks */,
 				C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */,
-				C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */,
-				C908840017B6B83200B7D26F /* WebKit.framework in Frameworks */,
 				C964799517B9B0C2002E1DC8 /* libGRMustache6-MacOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
