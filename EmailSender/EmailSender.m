@@ -14,7 +14,7 @@
 
 - (void)sendEmailMessage:(NSString *) messageBody to: (NSString *) recipient
 {	
-	MCOSMTPSession *smtpSession = [[MCOSMTPSession alloc] init];
+	MCOSMTPSession *smtpSession = [[[MCOSMTPSession alloc] init] autorelease];
 	
 	smtpSession.hostname = [[NSUserDefaults standardUserDefaults] stringForKey: kSMTPServerKey];
 	smtpSession.port = [[NSUserDefaults standardUserDefaults] integerForKey: kSMTPPortKey];
@@ -23,7 +23,7 @@
 	smtpSession.username = [SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPLogin];
 	smtpSession.password = [SSKeychain passwordForService: kStokerSMTPService account: kStokerSMTPPassword];
 
-	MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
+	MCOMessageBuilder * builder = [[[MCOMessageBuilder alloc] init] autorelease];
 	
 	[[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox: recipient]];
 
@@ -45,7 +45,7 @@
 
 - (void) validateSMTPWithCompletionHandler:(void (^)(BOOL))handler
 {	
-	MCOSMTPSession *smtpSession = [[MCOSMTPSession alloc] init];
+	MCOSMTPSession *smtpSession = [[[MCOSMTPSession alloc] init] autorelease];
 	
 	smtpSession.hostname = [[NSUserDefaults standardUserDefaults] stringForKey: kSMTPServerKey];
 	smtpSession.port = [[NSUserDefaults standardUserDefaults] integerForKey: kSMTPPortKey];

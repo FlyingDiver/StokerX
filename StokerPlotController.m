@@ -516,7 +516,7 @@
 
 -(IBAction)exportToPDF:(id)sender
 {
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 	[dateFormatter setDateFormat:@"yyyy-MM-dd"];
 	NSString *formattedDateString = [dateFormatter stringFromDate: [NSDate date]];
 		

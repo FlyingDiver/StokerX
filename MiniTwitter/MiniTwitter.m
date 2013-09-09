@@ -279,6 +279,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 		
 		NSString *encodedText = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) trimmedText, NULL,(CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
 		NSString *body = [NSString stringWithFormat: @"status=%@", encodedText];
+		[encodedText release];
 		
 		NSString *query = [@"https://api.twitter.com/1.1/statuses/update.json" stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
 		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:query]];
@@ -332,6 +333,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 				 NSString *replyMessage = [NSString stringWithFormat: @"Message received: \"%@\".", message];
 				 NSString *encodedText = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) replyMessage, NULL,(CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
 				 NSString *body = [NSString stringWithFormat: @"text=%@&user_id=%@", encodedText, senderID];
+				 [encodedText release];
 				 
 				 NSString *query = [@"https://api.twitter.com/1.1/direct_messages/new.json" stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
 				 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:query]];

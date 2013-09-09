@@ -53,7 +53,10 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notes
 {	
-	[self setStatusText: [NSString stringWithFormat: @"Starting StokerX %@", [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleShortVersionString"]]];
+	[self setStatusText: [NSString stringWithFormat: @"Starting StokerX %@ (%@)",
+						  [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleShortVersionString"],
+						  [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]
+						  ]];
 
 	//	Enabling this causes Fetcher logs to be written to the desktop!
 	
@@ -181,12 +184,12 @@
 
 	if (!shutdownNow)
 	{
-		[self setStatusText: @"StokerXAppDelegate: Termination waiting for Stoker Reset"];
+		[self setStatusText: @"Shutdown waiting for Stoker Reset"];
 		return NSTerminateLater;   
 	}
 
-	[self setStatusText: @"StokerXAppDelegate: Terminating immediately"];
-	return NSTerminateNow;			
+	NSLog(@"StokerXAppDelegate: App terminating immediately");
+	return NSTerminateNow;
 }
 - (void) updateUI
 {
@@ -215,6 +218,7 @@
 	}
 	else
 	{
+		elapsedTime = 0;
 		[totalBlowerActivityField  setStringValue: @"0%"];
 		[recentBlowerActivityField setStringValue: @"0%"];
 	}
@@ -281,7 +285,7 @@
 - (NSMutableArray *) parseDirectMessage: (NSString *) message
 {
 	NSString *token = nil;
-	NSMutableArray *tokenList = [[NSMutableArray alloc] initWithCapacity: 10];
+	NSMutableArray *tokenList = [[[NSMutableArray alloc] initWithCapacity: 10] autorelease];
 	
 	NSScanner *scanner = [NSScanner scannerWithString: message];
 	
@@ -570,9 +574,9 @@
 		prefix = [NSString stringWithFormat: @"\n(%ld) ", (long) noteNumber];
 	
 	
-    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *attributes = [[[NSMutableDictionary alloc] init] autorelease];
     [attributes setObject: [NSFont fontWithName: @"Times New Roman" size: 14.0] forKey:NSFontAttributeName];
-	NSAttributedString *string = [[NSAttributedString alloc] initWithString:  prefix attributes: attributes];
+	NSAttributedString *string = [[[NSAttributedString alloc] initWithString:  prefix attributes: attributes] autorelease];
 	
 	[[notesView textStorage] beginEditing];
 	[[notesView textStorage] appendAttributedString:string];
@@ -646,7 +650,7 @@
 	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
     NSPrintInfo *printInfo = [NSPrintInfo sharedPrintInfo];
 	
-	NSMutableDictionary *reportDict = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *reportDict = [[[NSMutableDictionary alloc] init] autorelease];
 	[reportDict setObject: @"StokerX Session Report" forKey: @"ReportTitle"];
 	
     NSSize paperSize = [printInfo paperSize];
@@ -748,15 +752,15 @@
 
 	// build an array of dicts for the sensor table
 	
-	NSMutableArray *sensors = [[NSMutableArray alloc] initWithCapacity: 10];
+	NSMutableArray *sensors = [[[NSMutableArray alloc] initWithCapacity: 10] autorelease];
 	for (int i = 0; i < [theStoker numberOfSensors]; i++)
 	{
-		[sensors addObject: [[NSDictionary alloc] initWithObjectsAndKeys:
+		[sensors addObject: [[[NSDictionary alloc] initWithObjectsAndKeys:
 							 [theStoker typeForSensor: i], @"type",
 							 [theStoker nameForSensor: i], @"name",
 							 [theStoker targetForSensor: i], @"target",
 							 [theStoker blowerForSensor: i], @"blower",
-							 nil]];
+							 nil] autorelease]];
 	}
 	[reportDict setObject: sensors forKey: @"Sensors"];
 		

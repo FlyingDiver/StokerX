@@ -138,12 +138,19 @@ static NSString *kProwlAuthCodeKey    = @"ProwlAuthCode";
 
 
 - (void) sendPushMessage: (NSString *) message
-{	
+{
+	// Don't send message if they're not enabled
+	
+	if (![[[NSUserDefaults standardUserDefaults] stringForKey: kSendPushMessagesKey] boolValue])
+		return;
+	
 	if (self.prowlAPIKey)
 	{
 		NSString *trimmedText = [message precomposedStringWithCanonicalMapping];
 		NSString *encodedText = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) trimmedText, NULL,(CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
 		NSString *body = [NSString stringWithFormat: @"apikey=%@&application=%@&event=%@", self.prowlAPIKey, @"StokerX", encodedText];
+		[encodedText release];
+		
 		NSString *query = [@"https://api.prowlapp.com/publicapi/add" stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
 		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:query]];
 		

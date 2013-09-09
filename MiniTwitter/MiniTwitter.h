@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GTMOAuth/GTMOAuthWindowController.h"
+#import "GTMOAuthWindowController.h"
 #import "PreferencesController.h"
 #import "JSON.h"
 

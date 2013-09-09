@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GTMOAuth/GTMHTTPFetcher.h"
+#import "GTMHTTPFetcher.h"
 #import "XMLReader.h"
 #import "PreferencesController.h"
 #import "StokerXAppDelegate.h"

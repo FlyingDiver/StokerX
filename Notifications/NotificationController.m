@@ -264,7 +264,7 @@
 			
 		case kTwitterNotification:
 		{
-			NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+			NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 			[dateFormatter setDateFormat:@"HH:mm:ss"];
 			NSString *formattedMessage = [NSString stringWithFormat: @"%@ \nTime: %@", message, [dateFormatter stringFromDate: [NSDate date]]];
 			
@@ -396,8 +396,6 @@
 	theRule.action			= [[actionPopup selectedItem] tag];
 	theRule.value			= [NSNumber numberWithDouble: [valueTextField doubleValue]];
 	theRule.lastNotified	= [NSNumber numberWithDouble: 0.0];	
-
-	NSLog(@"Notifications ruleEditDidEnd: new rule = %@", theRule);
 
 	[NotificationRule saveRules: ruleList];
 	[theRule release];
