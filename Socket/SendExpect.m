@@ -33,6 +33,7 @@
 - (NSString *) nextSend
 {
 	NSString *send = [[sequence objectAtIndex: next] objectForKey: @"send"];
+	NSLog(@"SendExpect next = %d, nextSend = %@", (int) next, send);
 
 	if (next == 0)
 	{
@@ -46,11 +47,13 @@
 - (NSString *) nextExpect;
 {
 	NSString *expect = [[sequence objectAtIndex: next] objectForKey: @"expect"];
+	NSLog(@"SendExpect next = %d, nextExpect = %@", (int) next, expect);
 
 	next++;			// next pair
 	
 	if (next >= [sequence count])	// all done
 	{
+		NSLog(@"SendExpect completed");
 		completed = YES;
 		if([[self delegate] respondsToSelector:@selector(sendExpectCompleted:)]) {
 			[[self delegate] sendExpectCompleted: self];

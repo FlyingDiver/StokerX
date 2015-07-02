@@ -23,6 +23,7 @@
 	NSString				*ipAddress;
 	NSTimer					*jsonTimer;
 	Boolean					isLogging;
+	Boolean					wifiStoker;
 	Boolean					httpOnlyMode;
 	Boolean					stokerAvailable;
 	
@@ -34,6 +35,7 @@
 	GCDAsyncSocket 			*socket;
 	dispatch_queue_t		socketQueue;
 	SendExpect				*mySendExpect;				// send-expect sequence for telnet interface
+	NSString				*lastExpect;
 	
 	NSMutableDictionary		*sensorDict;				// dictionary of all sensor objects, keyed by DeviceID
 	NSMutableArray			*sensorArray;				// array of sensor objects, in graphing order
@@ -49,9 +51,11 @@
 @property (nonatomic, copy)   NSString			*ipAddress;
 @property (nonatomic, retain) NSTimer       	*jsonTimer;
 @property (nonatomic, assign) Boolean			isLogging;
+@property (nonatomic, assign) Boolean			wifiStoker;
 @property (nonatomic, assign) Boolean			httpOnlyMode;
 @property (nonatomic, assign) Boolean			stokerAvailable;
 @property (nonatomic, retain) SendExpect		*mySendExpect;
+@property (nonatomic, copy)   NSString			*lastExpect;
 
 @property (copy) void (^shutdownCompletionBlock)(void);
 @property (copy) void (^connectCompletionBlock)(void);

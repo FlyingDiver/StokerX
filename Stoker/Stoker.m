@@ -12,8 +12,8 @@
 
 @implementation Stoker
 
-@synthesize delegate, stokerVersion, jsonTimer, ipAddress, isLogging;
-@synthesize httpOnlyMode, stokerAvailable, mySendExpect;
+@synthesize delegate, stokerVersion, jsonTimer, ipAddress, isLogging, wifiStoker;
+@synthesize httpOnlyMode, stokerAvailable, mySendExpect, lastExpect;
 @synthesize shutdownCompletionBlock = shutdownCompletionBlock_;
 @synthesize connectCompletionBlock  = connectCompletionBlock_;
 
@@ -48,10 +48,11 @@
 
 - (BOOL)shutdownWithCompletionHandler:(void (^)(void))handler 
 {
+	[self stopTelnetCapture];
+
 	if (telnetActive)		// don't quit with the Stoker in telnet mode
 	{
 		self.shutdownCompletionBlock = handler;
-		[self stopTelnetCapture];		
 		return NO;
 	}
 	
@@ -63,6 +64,7 @@
 - (void) startLogging
 {	
 	self.isLogging = TRUE;
+	self.wifiStoker = TRUE;
 	
 	if (httpOnlyMode)
 	{
@@ -311,7 +313,27 @@
 {
 	[self sendStatusUpdate: @"Stopping telnet connection"];
 
-	NSArray *sequence = [NSArray arrayWithObjects: 
+	if (wifiStoker)
+	{
+		NSLog(@"wifiStoker, using shortcut");
+		[socket setDelegate:nil];
+		[socket disconnect];
+		[socket release];
+		
+		// if this was a shutdown, finish it up
+		if (self.shutdownCompletionBlock)
+		{
+			self.shutdownCompletionBlock();
+			self.shutdownCompletionBlock = nil;
+		}
+		
+		connectionReady = NO;
+		telnetActive = NO;
+
+		return;
+	}
+	
+	NSArray *sequence = [NSArray arrayWithObjects:
 						  [NSDictionary dictionaryWithObjectsAndKeys: @"bbq -k\r", @"send", @">", @"expect", nil],
 						  [NSDictionary dictionaryWithObjectsAndKeys: @"gc\r",     @"send", @">", @"expect", nil],
 						  [NSDictionary dictionaryWithObjectsAndKeys: @"bbq\r",    @"send", @">", @"expect", nil],
@@ -434,8 +456,9 @@
 	
 	// on first connection, we're looking for a "login:" prompt
 	
-	NSData *colon = [@":" dataUsingEncoding:NSASCIIStringEncoding];
-	[socket readDataToData:colon withTimeout:-1 tag: 0];
+	self.lastExpect = @":";
+	NSData *colon = [self.lastExpect dataUsingEncoding:NSASCIIStringEncoding];
+	[socket readDataToData:colon withTimeout: 10 tag: 0];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock willDisconnectWithError:(NSError *)err
@@ -449,6 +472,13 @@
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
+	if (err.code == 4)
+	{
+		NSLog (@"Stoker: socketDidDisconnect:withError: read timeout, ignoring");
+		[socket readDataToData: [self.lastExpect dataUsingEncoding:NSASCIIStringEncoding] withTimeout: 10 tag: 0];
+		return;
+		
+	}
 	connectionReady = NO;
 	telnetActive = NO;
 	
@@ -468,13 +498,23 @@
 
 -(void) socket:(GCDAsyncSocket *)sock didReadData:(NSData*) sockData withTag:(long)tag
 {		
+	NSString *stokerReply = [[NSString alloc] initWithData: sockData encoding:NSASCIIStringEncoding];
+//	NSLog (@"socket:didReadData: %@", stokerReply);
+	if ([stokerReply rangeOfString:@"Welcome to slush"].location != NSNotFound)		// Gen 1 Stoker
+	{
+		NSLog (@"Slush Found!");
+		wifiStoker = FALSE;
+		
+	}
+
+	
 	if (mySendExpect)
 	{
 		NSString *send = [mySendExpect nextSend];
-		NSString *expect = [mySendExpect nextExpect];
+		self.lastExpect = [mySendExpect nextExpect];
 						
 		[socket writeData: [send dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
-		[socket readDataToData: [expect dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
+		[socket readDataToData: [self.lastExpect dataUsingEncoding:NSASCIIStringEncoding] withTimeout: 10 tag: 0];
 				
 		if (mySendExpect.completed)	// all done
 		{			
@@ -483,8 +523,6 @@
 		}
 		return;
 	}
-
-	NSString *stokerReply = [[NSString alloc] initWithData: sockData encoding:NSASCIIStringEncoding];
 	
 	[self parseTelnetOutput: stokerReply];
 	
@@ -492,8 +530,9 @@
 	
 	// from now on, we're looking for "\n"  (full lines of output)
 
-	NSData *newline = [@"\n" dataUsingEncoding:NSASCIIStringEncoding];
-	[socket readDataToData:newline withTimeout:-1 tag: 0];
+	self.lastExpect = @"\n";
+	NSData *newline = [self.lastExpect dataUsingEncoding:NSASCIIStringEncoding];
+	[socket readDataToData:newline withTimeout: 10 tag: 0];
 }
 
 
