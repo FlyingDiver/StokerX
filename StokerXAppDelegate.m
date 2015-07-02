@@ -598,7 +598,9 @@
 
 -(void)colorCell:(LVColorWellCell *)colorCell setColor:(NSColor *)nsColor forRow:(int)row
 {
-	CPTColor *cpColor = [CPTColor colorWithCGColor: CPTCreateCGColorFromNSColor(nsColor)];
+	struct CGColor *cgColor = CPTCreateCGColorFromNSColor(nsColor);
+	CPTColor *cpColor = [CPTColor colorWithCGColor: cgColor];
+	CFRelease(cgColor);
 	
 	NSString *rowID = [theStoker idForSensor: row];
 		
@@ -727,7 +729,6 @@
 	NSString *htmlString = [textString stringByReplacingOccurrencesOfString:@"\n" withString:@"<br />"];
 	[reportDict setObject: htmlString forKey: @"NotesText"];
 	[textString release];
-	[htmlString release];
 
 	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 	dateFormatter.dateStyle = NSDateFormatterShortStyle;

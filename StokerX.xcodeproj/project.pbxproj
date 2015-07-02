@@ -19,8 +19,6 @@
 		C920925C17D7A7FF00AA53EC /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C920925B17D7A7FF00AA53EC /* AppKit.framework */; };
 		C94128CF17DE02EC005389EC /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94128CE17DE02EC005389EC /* CoreServices.framework */; };
 		C944AE6E17D3BC9200C97878 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C944AE6D17D3BC9200C97878 /* SSKeychain.m */; };
-		C944AE7117D3C65100C97878 /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C944AE7017D3C65100C97878 /* MailCore.framework */; };
-		C944AE7217D3C66200C97878 /* MailCore.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C944AE7017D3C65100C97878 /* MailCore.framework */; };
 		C946B0F7140B35AD00EA46D6 /* StokerX.icns in Resources */ = {isa = PBXBuildFile; fileRef = C946B0F6140B35AD00EA46D6 /* StokerX.icns */; };
 		C94BED83140B28A900CA06F8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94BED82140B28A900CA06F8 /* Security.framework */; };
 		C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C94BED88140B293D00CA06F8 /* SystemConfiguration.framework */; };
@@ -47,13 +45,17 @@
 		C9AF1F18140D2DC2002AEEFE /* FRFeedbackReporter.sh in Resources */ = {isa = PBXBuildFile; fileRef = C9AF1F17140D2DC2002AEEFE /* FRFeedbackReporter.sh */; };
 		C9B1CF65123352B200648DF4 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9B1CF63123352B200648DF4 /* Preferences.xib */; };
 		C9B5E1AB17CBFD7700E6C195 /* Prowl.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B5E1AA17CBFD7700E6C195 /* Prowl.m */; };
-		C9B9BE8517CAAAC600B87DEB /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B9BE8417CAAAC600B87DEB /* Growl.framework */; };
-		C9B9BE8617CAAB0900B87DEB /* Growl.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C9B9BE8417CAAAC600B87DEB /* Growl.framework */; };
 		C9BE1F1D12E4C345007FAEC5 /* LVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */; };
 		C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
-		C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
-		C9CC351B1402A41300A6227A /* Sparkle.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
 		C9CC351D1402A41800A6227A /* CorePlot.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35131402A33900A6227A /* CorePlot.framework */; };
+		C9CEECCE1B458C08004EBFE5 /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C944AE7017D3C65100C97878 /* MailCore.framework */; };
+		C9CEECCF1B458C08004EBFE5 /* MailCore.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C944AE7017D3C65100C97878 /* MailCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C9CEECD01B458C15004EBFE5 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; };
+		C9CEECD11B458C15004EBFE5 /* Sparkle.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C9CC35171402A34C00A6227A /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C9CEECD21B458C24004EBFE5 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B9BE8417CAAAC600B87DEB /* Growl.framework */; };
+		C9CEECD31B458C24004EBFE5 /* Growl.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C9B9BE8417CAAAC600B87DEB /* Growl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C9CEECD41B458C2E004EBFE5 /* FeedbackReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F97B96140C53DA005B2A25 /* FeedbackReporter.framework */; };
+		C9CEECD51B458C2E004EBFE5 /* FeedbackReporter.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C9F97B96140C53DA005B2A25 /* FeedbackReporter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C9D7D85513FB4D8200E5BA00 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7D85413FB4D8200E5BA00 /* NotificationController.m */; };
 		C9E852E5142E55410030C87A /* StokerDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E852E4142E55410030C87A /* StokerDevice.m */; };
 		C9EAC342142A7C1B00CCA1EB /* StokerPlotController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EAC341142A7C1B00CCA1EB /* StokerPlotController.m */; };
@@ -64,8 +66,6 @@
 		C9EB1D261226FF930067E58E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D201226FF930067E58E /* SBJsonParser.m */; };
 		C9EB1D271226FF930067E58E /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D221226FF930067E58E /* SBJsonWriter.m */; };
 		C9EC2EEA1278F6DA00289387 /* Stoker.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC2EE91278F6DA00289387 /* Stoker.m */; };
-		C9F97B97140C53DA005B2A25 /* FeedbackReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F97B96140C53DA005B2A25 /* FeedbackReporter.framework */; };
-		C9F97B98140C55B9005B2A25 /* FeedbackReporter.framework in Copy Embedded Frameworks */ = {isa = PBXBuildFile; fileRef = C9F97B96140C53DA005B2A25 /* FeedbackReporter.framework */; };
 		C9FB66D417D10E3900791239 /* Default.html in Resources */ = {isa = PBXBuildFile; fileRef = C9FB66D017D10E3900791239 /* Default.html */; };
 		C9FB66D517D10E3900791239 /* StokerX64.png in Resources */ = {isa = PBXBuildFile; fileRef = C9FB66D117D10E3900791239 /* StokerX64.png */; };
 /* End PBXBuildFile section */
@@ -91,11 +91,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C944AE7217D3C66200C97878 /* MailCore.framework in Copy Embedded Frameworks */,
-				C9CC351B1402A41300A6227A /* Sparkle.framework in Copy Embedded Frameworks */,
-				C9B9BE8617CAAB0900B87DEB /* Growl.framework in Copy Embedded Frameworks */,
+				C9CEECD51B458C2E004EBFE5 /* FeedbackReporter.framework in Copy Embedded Frameworks */,
 				C9CC351D1402A41800A6227A /* CorePlot.framework in Copy Embedded Frameworks */,
-				C9F97B98140C55B9005B2A25 /* FeedbackReporter.framework in Copy Embedded Frameworks */,
+				C9CEECD11B458C15004EBFE5 /* Sparkle.framework in Copy Embedded Frameworks */,
+				C9CEECCF1B458C08004EBFE5 /* MailCore.framework in Copy Embedded Frameworks */,
+				C9CEECD31B458C24004EBFE5 /* Growl.framework in Copy Embedded Frameworks */,
 			);
 			name = "Copy Embedded Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -129,7 +129,7 @@
 		C94128CE17DE02EC005389EC /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/CoreServices.framework; sourceTree = DEVELOPER_DIR; };
 		C944AE6C17D3BC9200C97878 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = SSKeychain/SSKeychain.h; sourceTree = "<group>"; };
 		C944AE6D17D3BC9200C97878 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychain.m; path = SSKeychain/SSKeychain.m; sourceTree = "<group>"; };
-		C944AE7017D3C65100C97878 /* MailCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MailCore.framework; path = ../Frameworks/MailCore.framework; sourceTree = "<group>"; };
+		C944AE7017D3C65100C97878 /* MailCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MailCore.framework; path = ../../Frameworks/MailCore.framework; sourceTree = "<group>"; };
 		C946B0F6140B35AD00EA46D6 /* StokerX.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = StokerX.icns; sourceTree = "<group>"; };
 		C94BED82140B28A900CA06F8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		C94BED88140B293D00CA06F8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
@@ -168,11 +168,11 @@
 		C9B1CF64123352B200648DF4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		C9B5E1A917CBFD7700E6C195 /* Prowl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prowl.h; path = Prowl/Prowl.h; sourceTree = "<group>"; };
 		C9B5E1AA17CBFD7700E6C195 /* Prowl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Prowl.m; path = Prowl/Prowl.m; sourceTree = "<group>"; };
-		C9B9BE8417CAAAC600B87DEB /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = ../Frameworks/Growl.framework; sourceTree = "<group>"; };
+		C9B9BE8417CAAAC600B87DEB /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = ../../Frameworks/Growl.framework; sourceTree = "<group>"; };
 		C9BE1F1812E4C345007FAEC5 /* LVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LVColorWellCell.h; path = Color/LVColorWellCell.h; sourceTree = "<group>"; };
 		C9BE1F1912E4C345007FAEC5 /* LVColorWellCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LVColorWellCell.m; path = Color/LVColorWellCell.m; sourceTree = "<group>"; };
-		C9CC35131402A33900A6227A /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = ../Frameworks/CorePlot.framework; sourceTree = "<group>"; };
-		C9CC35171402A34C00A6227A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		C9CC35131402A33900A6227A /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = ../../Frameworks/CorePlot.framework; sourceTree = "<group>"; };
+		C9CC35171402A34C00A6227A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../../Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		C9D7D85313FB4D8200E5BA00 /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NotificationController.h; path = Notifications/NotificationController.h; sourceTree = "<group>"; };
 		C9D7D85413FB4D8200E5BA00 /* NotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NotificationController.m; path = Notifications/NotificationController.m; sourceTree = "<group>"; };
 		C9DF979117B998C1003C4703 /* GRMustache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GRMustache.h; path = GRMustache/GRMustache.h; sourceTree = "<group>"; };
@@ -208,7 +208,7 @@
 		C9EC2EE81278F6DA00289387 /* Stoker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Stoker.h; path = Stoker/Stoker.h; sourceTree = "<group>"; };
 		C9EC2EE91278F6DA00289387 /* Stoker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Stoker.m; path = Stoker/Stoker.m; sourceTree = "<group>"; };
 		C9F6710D140B2ADB0033F39C /* StokerX.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StokerX.png; sourceTree = "<group>"; };
-		C9F97B96140C53DA005B2A25 /* FeedbackReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FeedbackReporter.framework; path = ../Frameworks/FeedbackReporter.framework; sourceTree = "<group>"; };
+		C9F97B96140C53DA005B2A25 /* FeedbackReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FeedbackReporter.framework; path = ../../Frameworks/FeedbackReporter.framework; sourceTree = "<group>"; };
 		C9FB66D017D10E3900791239 /* Default.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Default.html; sourceTree = "<group>"; };
 		C9FB66D117D10E3900791239 /* StokerX64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StokerX64.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -220,15 +220,15 @@
 			files = (
 				C920925C17D7A7FF00AA53EC /* AppKit.framework in Frameworks */,
 				C94128CF17DE02EC005389EC /* CoreServices.framework in Frameworks */,
+				C9CEECD21B458C24004EBFE5 /* Growl.framework in Frameworks */,
+				C9CEECCE1B458C08004EBFE5 /* MailCore.framework in Frameworks */,
 				C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */,
 				C94BED83140B28A900CA06F8 /* Security.framework in Frameworks */,
+				C9CEECD41B458C2E004EBFE5 /* FeedbackReporter.framework in Frameworks */,
 				C94BED89140B293D00CA06F8 /* SystemConfiguration.framework in Frameworks */,
 				C908840017B6B83200B7D26F /* WebKit.framework in Frameworks */,
+				C9CEECD01B458C15004EBFE5 /* Sparkle.framework in Frameworks */,
 				C9CC35141402A33900A6227A /* CorePlot.framework in Frameworks */,
-				C9F97B97140C53DA005B2A25 /* FeedbackReporter.framework in Frameworks */,
-				C9B9BE8517CAAAC600B87DEB /* Growl.framework in Frameworks */,
-				C944AE7117D3C65100C97878 /* MailCore.framework in Frameworks */,
-				C9CC35181402A34C00A6227A /* Sparkle.framework in Frameworks */,
 				C964799517B9B0C2002E1DC8 /* libGRMustache6-MacOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -757,8 +757,9 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../Frameworks\"",
+					"$(SRCROOT)",
+					"\"$(SRCROOT)/../../Frameworks\"",
+					/Users/jkeenan/Projects/Frameworks,
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
@@ -768,6 +769,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -795,8 +797,9 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../Frameworks\"",
+					"$(SRCROOT)",
+					"\"$(SRCROOT)/../../Frameworks\"",
+					/Users/jkeenan/Projects/Frameworks,
 				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -804,6 +807,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "StokerX-Info.plist";
 				INSTALL_PATH = /Applications;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
