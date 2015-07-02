@@ -48,16 +48,22 @@
 
 - (BOOL)shutdownWithCompletionHandler:(void (^)(void))handler 
 {
-	[self stopTelnetCapture];
-
 	if (telnetActive)		// don't quit with the Stoker in telnet mode
+	{
+		[self stopTelnetCapture];
+	}
+
+	if (telnetActive)		// delayed shutdown, so wait for it
 	{
 		self.shutdownCompletionBlock = handler;
 		return NO;
 	}
-	
-	[jsonTimer invalidate];
-	jsonTimer = nil;
+	if (httpOnlyMode)
+	{
+		self.shutdownCompletionBlock = nil;
+		[jsonTimer invalidate];
+		jsonTimer = nil;
+	}
 	return YES;
 }
 
@@ -329,7 +335,9 @@
 		
 		connectionReady = NO;
 		telnetActive = NO;
-
+		
+		[self sendStatusUpdate: @"Telnet connection terminated"];
+		
 		return;
 	}
 	
@@ -469,16 +477,32 @@
 	}
 }
 
+- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
+				 elapsed:(NSTimeInterval)elapsed
+			   bytesDone:(NSUInteger)length
+{
+	NSLog(@"Stoker: socket:shouldTimeoutReadWithTag:elapsed: %d bytesDone: %d", (int) elapsed, (int) length);
+	
+	if (mySendExpect)
+	{
+		NSString *send = [mySendExpect nextSend];
+		self.lastExpect = [mySendExpect nextExpect];
+		
+		[socket writeData: [send dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag: 0];
+		[socket readDataToData: [self.lastExpect dataUsingEncoding:NSASCIIStringEncoding] withTimeout: 10 tag: 0];
+		
+		if (mySendExpect.completed)	// all done
+		{
+			[mySendExpect release];
+			mySendExpect = nil;
+		}
+	}
+	return 10;
+}
+
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
-	if (err.code == 4)
-	{
-		NSLog (@"Stoker: socketDidDisconnect:withError: read timeout, ignoring");
-		[socket readDataToData: [self.lastExpect dataUsingEncoding:NSASCIIStringEncoding] withTimeout: 10 tag: 0];
-		return;
-		
-	}
 	connectionReady = NO;
 	telnetActive = NO;
 	
