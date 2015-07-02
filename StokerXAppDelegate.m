@@ -598,7 +598,9 @@
 
 -(void)colorCell:(LVColorWellCell *)colorCell setColor:(NSColor *)nsColor forRow:(int)row
 {
-	CPTColor *cpColor = [CPTColor colorWithCGColor: CPTCreateCGColorFromNSColor(nsColor)];
+	struct CGColor *cgColor = CPTCreateCGColorFromNSColor(nsColor);
+	CPTColor *cpColor = [CPTColor colorWithCGColor: cgColor];
+	CFRelease(cgColor);
 	
 	NSString *rowID = [theStoker idForSensor: row];
 		
@@ -722,10 +724,12 @@
 	
 	NSAttributedString *notes = [notesView textStorage];
 	NSData *textData = [notes dataFromRange:NSMakeRange(0, notes.length) documentAttributes:
-							 [NSDictionary dictionaryWithObjectsAndKeys:NSPlainTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];
-	NSString *textString = [[[[NSString alloc] initWithData: textData encoding:NSUTF8StringEncoding] autorelease] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br />"];
-	[reportDict setObject: textString forKey: @"NotesText"];
-	
+							 [NSDictionary dictionaryWithObjectsAndKeys:NSPlainTextDocumentType, NSDocumentTypeDocumentAttribute, nil] error:NULL];	
+	NSString *textString = [[NSString alloc] initWithData: textData encoding:NSUTF8StringEncoding];
+	NSString *htmlString = [textString stringByReplacingOccurrencesOfString:@"\n" withString:@"<br />"];
+	[reportDict setObject: htmlString forKey: @"NotesText"];
+	[textString release];
+
 	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 	dateFormatter.dateStyle = NSDateFormatterShortStyle;
 	dateFormatter.timeStyle = NSDateFormatterShortStyle;

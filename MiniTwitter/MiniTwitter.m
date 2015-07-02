@@ -216,7 +216,7 @@ static NSString *const kTwitterServiceName = @"Twitter";
 	// has returned, or just cancel the sign-in sheet, as shown here
 	
 	GTMOAuthSignIn *signIn = [note object];
-	GTMOAuthWindowController *controller = [signIn delegate];
+	GTMOAuthWindowController *controller = (GTMOAuthWindowController *) [signIn delegate];
 	[controller cancelSigningIn];
 }
 

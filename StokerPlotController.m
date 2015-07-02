@@ -171,7 +171,9 @@
             sensorCount++;
             [[NSUserDefaults standardUserDefaults] setColor: plotColor forKey: [NSString stringWithFormat: @"PlotColor %@", [stoker idForSensor: i]]];
         }
-        
+		
+		struct CGColor *cgColor = CPTCreateCGColorFromNSColor(plotColor);
+		
         // Create a plot for the sensor data
         linePlot = [[[CPTScatterPlot alloc] init] autorelease];
         linePlot.identifier = [stoker idForSensor: i];
@@ -182,7 +184,7 @@
         
         lineStyle = [CPTMutableLineStyle lineStyle];
         lineStyle.lineWidth = 1.5f;
-        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTCreateCGColorFromNSColor(plotColor)];
+		lineStyle.lineColor = [CPTColor colorWithCGColor: cgColor];
         linePlot.dataLineStyle = lineStyle;
         
 		[graph addPlot:linePlot toPlotSpace:tempGraphPlotSpace];
@@ -196,10 +198,11 @@
         
         lineStyle = [CPTMutableLineStyle lineStyle];
         lineStyle.lineWidth = 2.0f;
-        lineStyle.lineColor = [CPTColor colorWithCGColor: CPTCreateCGColorFromNSColor(plotColor)];
+		lineStyle.lineColor = [CPTColor colorWithCGColor: cgColor];
         lineStyle.dashPattern = [NSArray arrayWithObjects:[NSNumber numberWithFloat:5.0f], [NSNumber numberWithFloat:5.0f], nil];
         linePlot.dataLineStyle = lineStyle;
 		
+		CFRelease(cgColor);
 		[graph addPlot:linePlot toPlotSpace:tempGraphPlotSpace];
     }
 
