@@ -34,9 +34,11 @@
 		C9849186142A4F1B001CEF85 /* GTMOAuthSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = C984917E142A4F1B001CEF85 /* GTMOAuthSignIn.m */; };
 		C9849187142A4F1B001CEF85 /* GTMOAuthWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C984917F142A4F1B001CEF85 /* GTMOAuthWindow.xib */; };
 		C9849188142A4F1B001CEF85 /* GTMOAuthWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9849181142A4F1B001CEF85 /* GTMOAuthWindowController.m */; };
-		C984918D142A5328001CEF85 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C984918C142A5328001CEF85 /* GCDAsyncSocket.m */; };
+		C984918D142A5328001CEF85 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C984918C142A5328001CEF85 /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		C98491BA142A6C33001CEF85 /* StokerSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = C98491B9142A6C33001CEF85 /* StokerSensor.m */; };
 		C98491BD142A6CAF001CEF85 /* StokerBlower.m in Sources */ = {isa = PBXBuildFile; fileRef = C98491BC142A6CAF001CEF85 /* StokerBlower.m */; };
+		C984ABE81B4841B7005EAFE5 /* Default.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9FB66D017D10E3900791239 /* Default.html */; };
+		C984ABE91B4841CD005EAFE5 /* StokerX64.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9FB66D117D10E3900791239 /* StokerX64.png */; };
 		C9867AE712330DB900023BC8 /* StokerXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9867AE612330DB900023BC8 /* StokerXAppDelegate.m */; };
 		C9867AFA123319D500023BC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9867AF9123319D500023BC8 /* QuartzCore.framework */; };
 		C99B857213FFD61700E27494 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = C99B857113FFD61700E27494 /* dsa_pub.pem */; };
@@ -66,8 +68,6 @@
 		C9EB1D261226FF930067E58E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D201226FF930067E58E /* SBJsonParser.m */; };
 		C9EB1D271226FF930067E58E /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB1D221226FF930067E58E /* SBJsonWriter.m */; };
 		C9EC2EEA1278F6DA00289387 /* Stoker.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC2EE91278F6DA00289387 /* Stoker.m */; };
-		C9FB66D417D10E3900791239 /* Default.html in Resources */ = {isa = PBXBuildFile; fileRef = C9FB66D017D10E3900791239 /* Default.html */; };
-		C9FB66D517D10E3900791239 /* StokerX64.png in Resources */ = {isa = PBXBuildFile; fileRef = C9FB66D117D10E3900791239 /* StokerX64.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -98,6 +98,17 @@
 				C9CEECD31B458C24004EBFE5 /* Growl.framework in Copy Embedded Frameworks */,
 			);
 			name = "Copy Embedded Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C984ABE71B484191005EAFE5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Templates/Default;
+			dstSubfolderSpec = 7;
+			files = (
+				C984ABE91B4841CD005EAFE5 /* StokerX64.png in CopyFiles */,
+				C984ABE81B4841B7005EAFE5 /* Default.html in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -522,6 +533,7 @@
 				C9DF300A140E881100B2853D /* Update CFBundleVersion and CFBuildDate */,
 				C9B84476140C2D8D005E4407 /* Update CFBundleShortVersionString */,
 				8D1107290486CEB800E47090 /* Resources */,
+				C984ABE71B484191005EAFE5 /* CopyFiles */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				C90DEEA713ECF722006607BC /* Copy Embedded Frameworks */,
@@ -614,8 +626,6 @@
 				C946B0F7140B35AD00EA46D6 /* StokerX.icns in Resources */,
 				C97927E117CB79AB008AB0C6 /* StokerX.png in Resources */,
 				C9AF1F18140D2DC2002AEEFE /* FRFeedbackReporter.sh in Resources */,
-				C9FB66D417D10E3900791239 /* Default.html in Resources */,
-				C9FB66D517D10E3900791239 /* StokerX64.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
